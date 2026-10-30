@@ -39,8 +39,36 @@ button {
   cursor: pointer;
 }
 
+@layer base {
+  a {
+    color: inherit;
+  }
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #9a781c;
+  outline-offset: 3px;
+}
+
 section[id] {
   scroll-margin-top: 5rem;
+}
+
+@media (min-width: 1024px) {
+  section[id] {
+    scroll-margin-top: 8.5rem;
+  }
+}
+
+.school-page section[id] {
+  scroll-margin-top: 7rem;
+}
+
+@media (min-width: 1024px) {
+  .school-page section[id] {
+    scroll-margin-top: 8rem;
+  }
 }
 
 .form-field {
@@ -66,6 +94,10 @@ section[id] {
 .form-field:focus {
   border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgb(201 168 76 / 18%);
+}
+
+.form-field[aria-invalid="true"] {
+  border-color: #b91c1c;
 }
 
 @media (prefers-reduced-motion: reduce) {
