@@ -242,17 +242,182 @@ export const schoolPageContent = {
 export const heroSlides = [
   {
     eyebrow: "School introduction",
+    badge: "School introduction",
     title: `Welcome to ${schoolName}`,
     description: schoolIntroduction,
   },
   {
     eyebrow: "Learning community",
+    badge: "Learning community",
     title: "A place to learn and grow",
     description: "Add verified information about the school's approach to learning.",
   },
   {
     eyebrow: "Our school",
+    badge: "Our school",
     title: "Discover the school sections",
     description: "Update this introduction with approved school information before publishing.",
   },
+];
+
+type CampusPerson = { name: string; image: string; role: string };
+type SchoolTopper = { name: string; image: string; score: string; stream: string };
+
+export const campusImages: {
+  hero: string[];
+  sports: string;
+  principal: string;
+  location: string;
+  trustees: CampusPerson[];
+  alumni: (CampusPerson & { batch: string; quote: string })[];
+  toppers12: SchoolTopper[];
+} = {
+  hero: [],
+  sports: "",
+  principal: "",
+  location: "",
+  trustees: [],
+  alumni: [],
+  toppers12: [],
+};
+
+export const navItems = [
+  { label: "Home", id: "home" },
+  { label: "About Us", id: "about" },
+  { label: "Academics", id: "academics" },
+  { label: "Admissions", id: "admissions" },
+  { label: "Excellence", id: "excellence" },
+  { label: "Campus Life", id: "campus-life" },
+  { label: "Contact Us", id: "contact" },
+];
+
+export const streams = [
+  {
+    icon: "flask",
+    group: "Group I",
+    title: "Pure Science",
+    subjects: ["Mathematics", "Physics", "Chemistry", "Computer Science"],
+    medium: "English Medium",
+  },
+  {
+    icon: "microscope",
+    group: "Group II",
+    title: "Bio Science",
+    subjects: ["Physics", "Chemistry", "Biology", "Mathematics"],
+    medium: "English Medium",
+  },
+  {
+    icon: "briefcase",
+    group: "Group III",
+    title: "Commerce & CS",
+    subjects: ["Commerce", "Accountancy", "Computer Applications"],
+    medium: "English & Tamil Medium",
+  },
+  {
+    icon: "chart",
+    group: "Group IV",
+    title: "Commerce & Econ.",
+    subjects: ["Commerce", "Accountancy", "Economics", "Business Mathematics"],
+    medium: "Tamil Medium",
+  },
+] as const;
+
+export const toppers10 = [
+  {
+    name: "Vikram Chandran",
+    score: "498/500",
+    stream: "General",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format",
+  },
+  {
+    name: "Ananya Rajan",
+    score: "496/500",
+    stream: "General",
+    image:
+      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&auto=format",
+  },
+  {
+    name: "Kiran Selvam",
+    score: "495/500",
+    stream: "General",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&auto=format",
+  },
+];
+
+export const centumScores = [
+  { count: "38", subject: "Mathematics" },
+  { count: "27", subject: "Computer Science" },
+  { count: "19", subject: "Accountancy" },
+  { count: "14", subject: "Chemistry" },
+];
+
+export const sportsAchievements = [
+  { title: "State Champions", sport: "Kabaddi – Boys", level: "State", year: "2025" },
+  { title: "District Gold", sport: "Athletics – 4×100m", level: "District", year: "2025" },
+  { title: "Zonal Winners", sport: "Chess – Girls", level: "Zonal", year: "2024" },
+  { title: "State Runners-up", sport: "Volleyball – Girls", level: "State", year: "2024" },
+  { title: "District Champions", sport: "Throw Ball – Boys", level: "District", year: "2024" },
+  { title: "State Qualifier", sport: "Swimming – Individual", level: "State", year: "2025" },
+];
+
+export const clubs = [
+  {
+    icon: "robot",
+    title: "Robotics Club",
+    description: "Building the engineers of tomorrow through hands-on STEM projects.",
+  },
+  {
+    icon: "leaf",
+    title: "Eco Warriors",
+    description: "Student-led sustainability initiatives and environmental conservation.",
+  },
+  {
+    icon: "book",
+    title: "Literary Society",
+    description: "Debates, elocutions, creative writing, and journalism workshops.",
+  },
+  {
+    icon: "shield",
+    title: "NCC / NSS",
+    description: "Nation-building through discipline, service, and social responsibility.",
+  },
+  {
+    icon: "palette",
+    title: "Fine Arts",
+    description: "Painting, sculpture, classical music, and Bharatanatyam.",
+  },
+  {
+    icon: "telescope",
+    title: "Science Forum",
+    description: "Science fairs, olympiad coaching, and research project mentoring.",
+  },
+] as const;
+
+export const admissionSteps = [
+  {
+    number: "01",
+    title: "Inquiry",
+    description:
+      "Fill the enquiry form or call our admissions office. We'll guide you through stream selection.",
+  },
+  {
+    number: "02",
+    title: "Campus Visit",
+    description: "Schedule a personal campus tour. Meet the Principal and subject teachers.",
+  },
+  {
+    number: "03",
+    title: "Registration",
+    description:
+      "Submit documents, complete registration formalities, and join the Saraswathi family.",
+  },
+];
+
+export const accreditation = [
+  "Tamil Nadu State Board Affiliated",
+  "CBSE Recognised (Class VI–VIII)",
+  "ISO 9001:2015 Certified",
+  "NAAC Accredited – Grade A",
 ];

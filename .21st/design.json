@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "project": {
+    "name": "smdpvc-school-website",
+    "productType": "school website",
+    "stack": [
+      "react",
+      "tailwind-v4",
+      "vite"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/index.css"
+    ],
+    "components": [],
+    "assets": [],
+    "instructions": []
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "--color-school-navy": {
+        "value": "#0f2044",
+        "source": "src/index.css"
+      },
+      "--color-school-gold": {
+        "value": "#c9a84c",
+        "source": "src/index.css"
+      },
+      "--color-school-gold-light": {
+        "value": "#e2c76f",
+        "source": "src/index.css"
+      },
+      "--color-school-gold-hover": {
+        "value": "#dec36e",
+        "source": "src/index.css"
+      },
+      "--color-school-cream": {
+        "value": "#faf8f3",
+        "source": "src/index.css"
+      },
+      "--color-school-muted": {
+        "value": "#526078",
+        "source": "src/index.css"
+      },
+      "--color-school-muted-light": {
+        "value": "#68758a",
+        "source": "src/index.css"
+      },
+      "--color-school-placeholder": {
+        "value": "#9aa3b2",
+        "source": "src/index.css"
+      },
+      "--color-school-deep": {
+        "value": "#080f22",
+        "source": "src/index.css"
+      },
+      "--color-school-map-overlay": {
+        "value": "#081022",
+        "source": "src/index.css"
+      }
+    },
+    "typography": {
+      "--font-sans": {
+        "value": "\"Plus Jakarta Sans\", system-ui, sans-serif",
+        "source": "src/index.css"
+      },
+      "--font-serif": {
+        "value": "\"Playfair Display\", Georgia, serif",
+        "source": "src/index.css"
+      }
+    },
+    "spacing": {},
+    "radius": {},
+    "shadows": {},
+    "motion": {},
+    "density": "comfortable"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [
+      "Preserve the existing Saraswathi Vidyalaya identity and supplied school information.",
+      "Keep all sections usable on desktop, tablet, and mobile.",
+      "Respect prefers-reduced-motion and maintain keyboard-visible focus."
+    ],
+    "avoid": [
+      "Do not invent school facts or present stock photography as verified campus photography.",
+      "Do not add unnecessary WebGL or animation dependencies.",
+      "Avoid excessive gradients, glass effects, and motion."
+    ]
+  },
+  "decisions": [
+    "Keep the existing navy, warm cream, and muted gold palette.",
+    "Pair editorial serif headings with the existing sans-serif body type.",
+    "Keep the CSS 3D collage desktop-only and use lightweight motion.",
+    "Use original inline SVG icons instead of adding an icon package."
+  ],
+  "evidence": [
+    {
+      "fact": "design.colorMode:light",
+      "source": "src/index.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/index.css"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:vite",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-10-30T20:47:16.398Z"
+}
