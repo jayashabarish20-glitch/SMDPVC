@@ -120,34 +120,34 @@ export const navItems = [
 
 export const streams = [
   {
-    icon: "⚗️",
+    icon: "flask",
     group: "Group I",
     title: "Pure Science",
     subjects: ["Mathematics", "Physics", "Chemistry", "Computer Science"],
     medium: "English Medium",
   },
   {
-    icon: "🔬",
+    icon: "microscope",
     group: "Group II",
     title: "Bio Science",
     subjects: ["Physics", "Chemistry", "Biology", "Mathematics"],
     medium: "English Medium",
   },
   {
-    icon: "💼",
+    icon: "briefcase",
     group: "Group III",
     title: "Commerce & CS",
     subjects: ["Commerce", "Accountancy", "Computer Applications"],
     medium: "English & Tamil Medium",
   },
   {
-    icon: "📊",
+    icon: "chart",
     group: "Group IV",
     title: "Commerce & Econ.",
     subjects: ["Commerce", "Accountancy", "Economics", "Business Mathematics"],
     medium: "Tamil Medium",
   },
-];
+] as const;
 
 export const toppers10 = [
   {
@@ -191,36 +191,36 @@ export const sportsAchievements = [
 
 export const clubs = [
   {
-    icon: "🤖",
+    icon: "robot",
     title: "Robotics Club",
     description: "Building the engineers of tomorrow through hands-on STEM projects.",
   },
   {
-    icon: "🌿",
+    icon: "leaf",
     title: "Eco Warriors",
     description: "Student-led sustainability initiatives and environmental conservation.",
   },
   {
-    icon: "📚",
+    icon: "book",
     title: "Literary Society",
     description: "Debates, elocutions, creative writing, and journalism workshops.",
   },
   {
-    icon: "🎖️",
+    icon: "shield",
     title: "NCC / NSS",
     description: "Nation-building through discipline, service, and social responsibility.",
   },
   {
-    icon: "🎨",
+    icon: "palette",
     title: "Fine Arts",
     description: "Painting, sculpture, classical music, and Bharatanatyam.",
   },
   {
-    icon: "🔭",
+    icon: "telescope",
     title: "Science Forum",
     description: "Science fairs, olympiad coaching, and research project mentoring.",
   },
-];
+] as const;
 
 export const admissionSteps = [
   {
