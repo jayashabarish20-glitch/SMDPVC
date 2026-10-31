@@ -241,22 +241,22 @@ export const schoolPageContent = {
 
 export const heroSlides = [
   {
-    eyebrow: "School introduction",
-    badge: "School introduction",
-    title: `Welcome to ${schoolName}`,
-    description: schoolIntroduction,
+    badge: "Welcome",
+    title: "A Place to Learn, Grow & Discover",
+    description:
+      "Explore the learning journey at SMDPVC. Add a verified school introduction here.",
   },
   {
-    eyebrow: "Learning community",
-    badge: "Learning community",
-    title: "A place to learn and grow",
-    description: "Add verified information about the school's approach to learning.",
+    badge: "Learning",
+    title: "Curiosity Opens New Possibilities",
+    description:
+      "Share the school's learning approach and opportunities here, using verified information.",
   },
   {
-    eyebrow: "Our school",
-    badge: "Our school",
-    title: "Discover the school sections",
-    description: "Update this introduction with approved school information before publishing.",
+    badge: "Community",
+    title: "Growing Together, Every Day",
+    description:
+      "Add a verified message about the school community and student experience here.",
   },
 ];
 
@@ -283,12 +283,10 @@ export const campusImages: {
 
 export const navItems = [
   { label: "Home", id: "home" },
-  { label: "About Us", id: "about" },
-  { label: "Academics", id: "academics" },
-  { label: "Admissions", id: "admissions" },
-  { label: "Excellence", id: "excellence" },
-  { label: "Campus Life", id: "campus-life" },
-  { label: "Contact Us", id: "contact" },
+  { label: "Our Foundation", id: "foundation" },
+  { label: "Leadership", id: "leadership" },
+  { label: "School Sections", id: "school-sections" },
+  { label: "Enquiry", id: "enquiry" },
 ];
 
 export const streams = [

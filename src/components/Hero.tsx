@@ -1,19 +1,39 @@
 import { useEffect, useState, type PointerEvent } from "react";
 import { campusImages, heroSlides } from "../data";
+import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
 
-export function Hero() {
+type HeroProps = {
+  pageHero?: SchoolPageConfig["hero"];
+  pageTitle?: string;
+};
+
+export function Hero({ pageHero, pageTitle }: HeroProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [galleryTilt, setGalleryTilt] = useState({ x: 0, y: 0 });
+  const slides = pageHero?.slides ?? heroSlides;
+  const images = pageHero?.images ?? campusImages.hero;
 
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, pageHero ? 4500 : 6000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, pageHero, slides.length]);
+
+  useEffect(() => {
+    setActiveSlide(0);
+    setIsPaused(false);
+  }, [pageHero]);
+
+  useEffect(() => {
+    images.forEach((image) => {
+      const preloadedImage = new Image();
+      preloadedImage.src = image;
+    });
+  }, [images]);
 
   const updateGalleryTilt = (e: PointerEvent<HTMLDivElement>) => {
     const bounds = e.currentTarget.getBoundingClientRect();
@@ -25,19 +45,19 @@ export function Hero() {
     });
   };
 
-  const currentSlide = heroSlides[activeSlide];
+  const currentSlide = slides[activeSlide];
 
   return (
     <section
-      id="home"
+      id={pageHero ? undefined : "home"}
       className="relative flex min-h-[640px] h-[100svh] flex-col justify-end overflow-hidden pt-20"
-      aria-label="School highlights"
+      aria-label={pageHero ? `${pageTitle} highlights` : "School highlights"}
       aria-roledescription="carousel"
     >
       {/* Background Slides with Apple-grade cinematic cross-fade */}
-      {campusImages.hero.map((image, index) => (
+      {images.map((image, index) => (
         <div
-          key={`hero-slide-${index}`}
+          key={`${image}-${index}`}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
             index === activeSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
           }`}
@@ -88,7 +108,7 @@ export function Hero() {
               loading="lazy"
             />
             <span className="absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest text-school-navy">
-              Sports Champions
+              Campus Activities
             </span>
           </div>
 
@@ -106,7 +126,7 @@ export function Hero() {
               loading="lazy"
             />
             <span className="absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest text-school-navy">
-              Academic Vision
+              School Community
             </span>
           </div>
 
@@ -124,7 +144,7 @@ export function Hero() {
               fetchPriority="low"
             />
             <span className="absolute bottom-2 left-0 right-0 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-school-navy">
-              Holistic Learning
+              Learning at SMDPVC
             </span>
           </div>
 
@@ -149,30 +169,34 @@ export function Hero() {
           </div>
 
           {/* High-impact Serif Headline */}
-          <h1 className="mt-4 font-serif text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            {currentSlide.title}
-          </h1>
+          <div
+            key={`${pageTitle ?? "home"}-${activeSlide}`}
+            className={pageHero ? "school-hero-copy-enter" : ""}
+          >
+            <h1 className="mt-4 font-serif text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+              {currentSlide.title}
+            </h1>
 
-          {/* Clean Sub-paragraph */}
-          <p className="mt-5 max-w-2xl text-base font-normal leading-relaxed text-white/80 sm:text-lg">
-            {currentSlide.description}
-          </p>
+            <p className="mt-5 max-w-2xl text-base font-normal leading-relaxed text-white/80 sm:text-lg">
+              {currentSlide.description}
+            </p>
+          </div>
 
           {/* Dual Action Buttons */}
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <button
-              onClick={() => scrollToSection("admissions")}
+              onClick={() => scrollToSection(pageHero?.firstSectionId ?? "enquiry")}
               className="group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-school-gold-light via-school-gold to-school-gold-hover px-7 py-3.5 text-sm font-bold text-school-navy shadow-[0_10px_25px_rgba(197,160,70,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-98"
             >
-              Explore Admissions 2026–27
+              {pageHero ? `Explore ${pageTitle}` : "Make an Enquiry"}
               <Icon name="arrow" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
 
             <button
-              onClick={() => scrollToSection("about")}
+              onClick={() => scrollToSection(pageHero?.firstSectionId ?? "foundation")}
               className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:border-white/40 active:scale-98"
             >
-              Discover Our Legacy
+              {pageHero ? "About This Section" : "Our Foundation"}
             </button>
 
             {/* Play/Pause Toggle */}
@@ -189,7 +213,7 @@ export function Hero() {
 
         {/* Carousel Slide Indicators */}
         <div className="mt-12 flex items-center gap-2.5">
-          {heroSlides.map((_, index) => (
+          {slides.map((_, index) => (
             <button
               key={`dot-${index}`}
               type="button"
@@ -207,4 +231,3 @@ export function Hero() {
     </section>
   );
 }
-

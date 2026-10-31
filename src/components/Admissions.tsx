@@ -1,20 +1,21 @@
 import { useState, type FormEvent } from "react";
-import { admissionSteps } from "../data";
 import { useInView } from "../hooks/useInView";
 import { Icon } from "./Icon";
 
 export function Admissions() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setStatus(
+      "Your details are valid, but this website has no enquiry backend. Your message has not been sent or stored.",
+    );
     e.currentTarget.reset();
   };
 
   return (
-    <section id="admissions" className="relative scroll-mt-20 bg-school-cream py-24 lg:py-36 overflow-hidden">
+    <section id="enquiry" className="relative scroll-mt-20 bg-school-cream py-24 lg:py-36 overflow-hidden">
       <div
         ref={ref}
         className={`mx-auto max-w-7xl px-6 lg:px-16 transition-all duration-1000 ${
@@ -24,142 +25,96 @@ export function Admissions() {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-school-gold">
-            Academic Year 2026–2027
+            Enquiry
           </p>
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-school-navy sm:text-4xl lg:text-5xl">
-            Begin Your Educational Journey
+            Get in Touch
           </h2>
           <p className="mt-4 text-base leading-relaxed text-school-muted">
-            Join a legacy that values integrity, intellectual rigour, and holistic personal growth.
+            Send a question to the school. Required fields are validated in your browser.
           </p>
         </div>
 
-        {/* 3 Step Process Architecture */}
-        <div className="mb-16 grid gap-6 md:grid-cols-3">
-          {admissionSteps.map((step) => (
-            <div
-              key={step.number}
-              className="relative rounded-3xl bg-white p-8 shadow-[0_10px_35px_rgba(11,23,54,0.04)] border border-school-navy/8 transition-all duration-300 hover:border-school-gold/40 hover:-translate-y-1"
-            >
-              <span className="font-serif text-5xl font-extrabold text-school-gold/60">
-                {step.number}
-              </span>
-              <h3 className="mt-4 font-serif text-xl font-bold text-school-navy">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-school-muted">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Apple-style Glassmorphic Admission Request Form */}
         <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl bg-white shadow-[0_20px_60px_rgba(11,23,54,0.08)] border border-school-navy/10">
           <div className="bg-school-navy p-8 text-white sm:px-10">
             <span className="rounded-full bg-school-gold/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-school-gold-light">
-              Admission Registration
+              School Enquiry
             </span>
             <h3 className="mt-3 font-serif text-2xl sm:text-3xl font-bold">
-              Request a Prospectus or Advisory Callback
+              How Can We Help?
             </h3>
             <p className="mt-2 text-xs sm:text-sm text-white/70">
-              Submit your enquiry below and our admissions team will connect with you.
+              Complete the form below. It is not connected to a submission service.
             </p>
           </div>
 
-          <form className="p-8 sm:p-10 space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="space-y-6 p-8 sm:p-10"
+            onSubmit={handleSubmit}
+            onInvalid={() => setStatus("Please check the required fields and correct any invalid entries.")}
+          >
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
-                  Student Name *
+                <label htmlFor="enquiry-name" className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
+                  Student / Parent Name *
                 </label>
                 <input
                   className="form-field"
+                  id="enquiry-name"
                   type="text"
-                  name="studentName"
+                  name="name"
                   placeholder="Full name"
                   autoComplete="name"
                   required
-                  onChange={() => setSubmitted(false)}
+                  onChange={() => setStatus("")}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
-                  Class Applying For *
-                </label>
-                <select
-                  className="form-field"
-                  name="classApplyingFor"
-                  defaultValue=""
-                  required
-                  onChange={() => setSubmitted(false)}
-                >
-                  <option value="" disabled>Select class stream</option>
-                  <option>Class XI – Pure Science (Group I)</option>
-                  <option>Class XI – Bio Science (Group II)</option>
-                  <option>Class XI – Commerce &amp; CS (Group III)</option>
-                  <option>Class XI – Commerce &amp; Econ (Group IV)</option>
-                  <option>Class VI – VIII (Foundation)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
-                  Parent Phone Contact *
+                <label htmlFor="enquiry-contact" className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
+                  Contact Number *
                 </label>
                 <input
                   className="form-field"
+                  id="enquiry-contact"
                   type="tel"
-                  name="parentContact"
-                  placeholder="+91 98421 XXXXX"
+                  name="contact"
+                  placeholder="Phone number"
                   autoComplete="tel"
+                  pattern="[+]?[0-9\s().-]{7,20}"
+                  title="Enter a valid phone number using 7 to 20 digits, spaces, or + ( ) . - characters."
                   required
-                  onChange={() => setSubmitted(false)}
+                  onChange={() => setStatus("")}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
+                <label htmlFor="enquiry-email" className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
                   Email Address
                 </label>
                 <input
                   className="form-field"
+                  id="enquiry-email"
                   type="email"
                   name="email"
                   placeholder="parent@email.com"
                   autoComplete="email"
-                  onChange={() => setSubmitted(false)}
+                  onChange={() => setStatus("")}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
-                Preferred Instruction Medium
-              </label>
-              <select
-                className="form-field"
-                name="medium"
-                defaultValue=""
-                onChange={() => setSubmitted(false)}
-              >
-                <option value="">Select medium preference</option>
-                <option>English Medium</option>
-                <option>Tamil Medium</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
-                Specific Inquiries or Requirements
+              <label htmlFor="enquiry-message" className="block text-xs font-bold uppercase tracking-wider text-school-navy mb-2">
+                Enquiry Message *
               </label>
               <textarea
                 className="form-field min-h-28 resize-y"
+                id="enquiry-message"
                 name="message"
-                placeholder="Mention any questions regarding syllabus, hostel, or transport..."
-                onChange={() => setSubmitted(false)}
+                placeholder="How can the school help?"
+                required
+                onChange={() => setStatus("")}
               />
             </div>
 
@@ -167,13 +122,16 @@ export function Admissions() {
               type="submit"
               className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-school-gold-light via-school-gold to-school-gold-hover py-4 text-sm font-bold text-school-navy shadow-[0_10px_25px_rgba(197,160,70,0.3)] transition-all duration-300 hover:scale-[1.01] active:scale-98"
             >
-              Submit Prospectus Request
+              Submit Enquiry
               <Icon name="arrow" className="h-4 w-4" />
             </button>
 
-            {submitted && (
-              <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-center text-xs sm:text-sm font-medium text-emerald-800 animate-in fade-in duration-300">
-                ✓ Thank you. Your prospectus request has been recorded for review.
+            {status && (
+              <div
+                role="status"
+                className="rounded-2xl border border-school-gold/30 bg-school-cream-alt p-4 text-center text-xs font-medium text-school-navy sm:text-sm"
+              >
+                {status}
               </div>
             )}
           </form>
@@ -182,4 +140,3 @@ export function Admissions() {
     </section>
   );
 }
-

@@ -74,20 +74,20 @@ section[id] {
   scroll-margin-top: 5rem;
 }
 
-@media (min-width: 1024px) {
-  section[id] {
-    scroll-margin-top: 8.5rem;
+@keyframes school-hero-copy-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.school-page section[id] {
-  scroll-margin-top: 7rem;
-}
-
-@media (min-width: 1024px) {
-  .school-page section[id] {
-    scroll-margin-top: 8rem;
-  }
+.school-hero-copy-enter {
+  animation: school-hero-copy-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Glassmorphic utilities */

@@ -1,112 +1,202 @@
-import { campusImages } from "../data";
+import type { ReactNode } from "react";
+import { schoolContact } from "../homepageContent";
 import { useInView } from "../hooks/useInView";
 import { Icon } from "./Icon";
 
 export function Contact() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const mapUrl =
-    "https://www.google.com/maps/search/?api=1&query=No.+47%2C+Rajaji+Salai%2C+Kumbakonam+612001";
+  const hasContactDetails =
+    Boolean(schoolContact.address) ||
+    schoolContact.phoneNumbers.length > 0 ||
+    schoolContact.emailAddresses.length > 0 ||
+    Boolean(schoolContact.website) ||
+    Boolean(schoolContact.workingHours);
 
   return (
-    <section id="contact" className="relative scroll-mt-20 bg-school-navy py-24 lg:py-36 text-white overflow-hidden">
+    <section
+      id="enquiry"
+      className="relative scroll-mt-20 overflow-hidden bg-school-navy py-24 text-white lg:py-36"
+    >
       <div
         ref={ref}
-        className={`mx-auto max-w-7xl px-6 lg:px-16 transition-all duration-1000 ${
-          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`mx-auto max-w-7xl px-6 transition-all duration-1000 lg:px-16 ${
+          isInView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
       >
-        {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-school-gold">
-            Campus Admissions &amp; Inquiries
+            Contact Information &amp; Location
           </p>
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Connect With Our Campus
+            Visit Our School
           </h2>
           <p className="mt-4 text-base leading-relaxed text-white/70">
-            We welcome parents, prospective students, and alumni to visit our campus in Kumbakonam.
+            Connect with SMDPVC for school information, admissions enquiries,
+            and assistance.
           </p>
         </div>
 
-        {/* 3 Contact Cards */}
-        <div className="grid gap-6 md:grid-cols-3">
-          {/* Address */}
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-school-gold/40">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-school-gold">
-              <Icon name="pin" className="h-6 w-6" />
-            </span>
-            <h3 className="mt-6 font-serif text-xl font-bold text-white">Campus Location</h3>
-            <p className="mt-3 text-sm leading-relaxed text-white/70">
-              No. 47, Rajaji Salai,<br />
-              Kumbakonam – 612 001,<br />
-              Tamil Nadu, India
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.2)] sm:p-9">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-school-gold">
+              School Contact Information
             </p>
-          </div>
+            <h3 className="mt-3 font-serif text-2xl font-bold text-white">
+              {schoolContact.schoolName}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-white/65">
+              Contact details will be added after they are confirmed by the school.
+            </p>
 
-          {/* Telephone */}
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-school-gold/40">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-school-gold">
-              <Icon name="phone" className="h-6 w-6" />
-            </span>
-            <h3 className="mt-6 font-serif text-xl font-bold text-white">Direct Lines</h3>
-            <div className="mt-3 space-y-1.5 text-sm text-white/70">
-              <a className="block transition-colors hover:text-school-gold" href="tel:+914352421000">
-                +91 435 242 1000
-              </a>
-              <a className="block transition-colors hover:text-school-gold" href="tel:+914352421001">
-                +91 435 242 1001
-              </a>
-              <a className="block font-semibold text-school-gold transition-colors hover:text-white" href="tel:+919842100000">
-                Admissions: +91 98421 00000
-              </a>
+            <div className="mt-7 space-y-5">
+              <ContactRow icon="pin" label="Postal address">
+                {schoolContact.address ? (
+                  schoolContact.mapsUrl ? (
+                    <a
+                      href={schoolContact.mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm leading-relaxed text-white/85 transition-colors hover:text-school-gold-light"
+                    >
+                      {schoolContact.address}
+                    </a>
+                  ) : (
+                    <p className="text-sm leading-relaxed text-white/85">
+                      {schoolContact.address}
+                    </p>
+                  )
+                ) : (
+                  <p className="text-sm leading-relaxed text-white/55">
+                    Address to be confirmed
+                  </p>
+                )}
+              </ContactRow>
+
+              <ContactRow icon="phone" label="Phone">
+                {schoolContact.phoneNumbers.length ? (
+                  <div className="space-y-1">
+                    {schoolContact.phoneNumbers.map((contact) => (
+                      <a
+                        key={`${contact.label}-${contact.number}`}
+                        href={`tel:${contact.number.replace(/[^\d+]/g, "")}`}
+                        className="block text-sm text-white/85 transition-colors hover:text-school-gold-light"
+                      >
+                        {contact.label}: {contact.number}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-white/55">Phone number to be confirmed</p>
+                )}
+              </ContactRow>
+
+              <ContactRow icon="mail" label="Email">
+                {schoolContact.emailAddresses.length ? (
+                  <div className="space-y-1 break-all">
+                    {schoolContact.emailAddresses.map((contact) => (
+                      <a
+                        key={`${contact.label}-${contact.address}`}
+                        href={`mailto:${contact.address}`}
+                        className="block text-sm text-white/85 transition-colors hover:text-school-gold-light"
+                      >
+                        {contact.label}: {contact.address}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-white/55">Email address to be confirmed</p>
+                )}
+              </ContactRow>
+
+              {(schoolContact.website || schoolContact.workingHours) && (
+                <ContactRow icon="compass" label="More information">
+                  <div className="space-y-1 text-sm text-white/85">
+                    {schoolContact.website && (
+                      <a
+                        href={schoolContact.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block hover:text-school-gold-light"
+                      >
+                        {schoolContact.website}
+                      </a>
+                    )}
+                    {schoolContact.workingHours && <p>{schoolContact.workingHours}</p>}
+                  </div>
+                </ContactRow>
+              )}
             </div>
           </div>
 
-          {/* Electronic Mail */}
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-school-gold/40">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-school-gold">
-              <Icon name="mail" className="h-6 w-6" />
-            </span>
-            <h3 className="mt-6 font-serif text-xl font-bold text-white">Official Correspondence</h3>
-            <div className="mt-3 space-y-1.5 text-sm text-white/70 break-all">
-              <a className="block transition-colors hover:text-school-gold" href="mailto:principal@saraswathividyalaya.edu.in">
-                principal@saraswathividyalaya.edu.in
+          <div className="relative min-h-80 overflow-hidden rounded-3xl border border-white/15 bg-school-deep shadow-[0_20px_55px_rgba(0,0,0,0.25)] sm:min-h-[440px]">
+            {schoolContact.mapEmbedUrl ? (
+              <iframe
+                title={`${schoolContact.schoolName} location map`}
+                src={schoolContact.mapEmbedUrl}
+                className="absolute inset-0 h-full w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_var(--color-school-navy-light),_var(--color-school-deep)_70%)] px-8 text-center">
+                <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-school-gold/30 bg-white/5 text-school-gold">
+                  <Icon name="pin" className="h-8 w-8" />
+                </span>
+                <h3 className="mt-5 font-serif text-xl font-bold text-white">
+                  School Location
+                </h3>
+                <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/60">
+                  A map preview and directions will appear here when the school's
+                  address and map location are verified.
+                </p>
+              </div>
+            )}
+
+            {schoolContact.mapsUrl && (
+              <a
+                href={schoolContact.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="absolute bottom-5 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-5 py-3 text-xs font-bold text-school-navy shadow-lg transition-transform hover:scale-[1.02] sm:bottom-7 sm:px-7 sm:text-sm"
+              >
+                <Icon name="pin" className="h-4 w-4" />
+                Open in Maps
+                <Icon name="arrow" className="h-4 w-4" />
               </a>
-              <a className="block transition-colors hover:text-school-gold" href="mailto:admissions@saraswathividyalaya.edu.in">
-                admissions@saraswathividyalaya.edu.in
-              </a>
-              <a className="block transition-colors hover:text-school-gold" href="mailto:info@saraswathividyalaya.edu.in">
-                info@saraswathividyalaya.edu.in
-              </a>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Map Experience Card */}
-        <div className="relative mt-10 h-72 sm:h-96 overflow-hidden rounded-3xl border border-white/15 bg-school-deep shadow-2xl">
-          <img
-            src={campusImages.location}
-            alt="City view near the Saraswathi Vidyalaya campus"
-            className="h-full w-full object-cover opacity-50 transition-transform duration-700 hover:scale-105"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-school-deep via-school-deep/40 to-transparent" />
-          
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-md px-6 text-center">
-            <a
-              href={mapUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-7 py-3.5 text-xs sm:text-sm font-bold text-school-navy shadow-[0_10px_25px_rgba(197,160,70,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              <Icon name="pin" className="h-4 w-4" />
-              Open Campus Location on Google Maps
-              <Icon name="arrow" className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
+        {!hasContactDetails && (
+          <p className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.15em] text-white/40">
+            Contact fields are editable in the homepage content data and are intentionally unfilled until verified.
+          </p>
+        )}
       </div>
     </section>
   );
 }
 
+function ContactRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: "pin" | "phone" | "mail" | "compass";
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4 border-t border-white/10 pt-5">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-school-gold/10 text-school-gold">
+        <Icon name={icon} className="h-5 w-5" />
+      </span>
+      <div className="min-w-0">
+        <h4 className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-school-gold-light">
+          {label}
+        </h4>
+        {children}
+      </div>
+    </div>
+  );
+}

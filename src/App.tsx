@@ -1,233 +1,102 @@
-import {
-  useEffect,
-  useState,
-  type FormEventHandler,
-  type ReactNode,
-  type SVGProps,
-} from "react";
-import {
-  heroSlides,
-  managementMembers,
-  managementMessages,
-  schoolHistory,
-  schoolIntroduction,
-  schoolMission,
-  schoolName,
-  schoolPageContent,
-  schoolSections,
-  schoolVision,
-} from "./data";
+import { useEffect, useState } from "react";
+import { schoolBrandingByRoute } from "./homepageContent";
+import { schoolPages } from "./schoolPageData";
+import { About } from "./components/About";
+import { Contact } from "./components/Contact";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
+import { Hero } from "./components/Hero";
+import { Icon, scrollToSection } from "./components/Icon";
+import { Leadership } from "./components/Leadership";
+import { SchoolPage } from "./components/SchoolPage";
+import { SchoolSections } from "./components/SchoolSections";
 
-type IconName = "menu" | "close" | "arrow";
-type PageKey = "home" | keyof typeof schoolPageContent;
-type NavigationItem = { id: string; title: string };
-type EnquiryField =
-  | "parentName"
-  | "studentName"
-  | "contactNumber"
-  | "email"
-  | "section"
-  | "currentClass"
-  | "message";
-type EnquiryErrors = Partial<Record<EnquiryField, string>>;
-
-const homeNavigation: NavigationItem[] = [
-  { id: "home", title: "Home" },
-  { id: "about", title: "About Us" },
-  { id: "foundation", title: "Our Foundation" },
-  { id: "leadership", title: "Leadership" },
-  { id: "school-sections", title: "School Sections" },
-  { id: "enquiry", title: "Enquiry" },
-];
-
-function currentPage(): PageKey {
-  const path = window.location.pathname.replace(/\/+$/, "").toLowerCase();
-  if (path === "/nursery") return "nursery";
-  if (path === "/primary") return "primary";
-  if (path === "/higher-secondary") return "higher-secondary";
-  return "home";
+function currentPath() {
+  const path = window.location.pathname.replace(/\/+$/, "");
+  return path || "/";
 }
 
-function Icon({
-  name,
-  ...props
-}: SVGProps<SVGSVGElement> & { name: IconName }) {
-  const paths: Record<IconName, ReactNode> = {
-    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
-    close: <path d="m6 6 12 12M18 6 6 18" />,
-    arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
-  };
-
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.8"
-      {...props}
-    >
-      {paths[name]}
-    </svg>
-  );
-}
-
-const pageLabels: Record<PageKey, string> = {
-  home: "School Home",
-  nursery: "Nursery",
-  primary: "Primary",
-  "higher-secondary": "Higher Secondary",
-};
-
-function Logo({ page }: { page: PageKey }) {
-  return (
-    <a
-      href="/"
-      className="flex shrink-0 items-center gap-3"
-      aria-label={`${schoolName} home`}
-    >
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9a84c] font-serif text-lg font-bold text-[#0f2044]">
-        S
-      </span>
-      <span className="leading-tight">
-        <span className="block text-sm font-bold text-[#0f2044]">{schoolName}</span>
-        <span className="mt-0.5 block text-[10px] uppercase leading-none tracking-widest text-[#7b6220]">
-          {pageLabels[page]}
-        </span>
-      </span>
-    </a>
-  );
-}
-
-function Header({ page }: { page: PageKey }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const sections: readonly NavigationItem[] =
-    page === "home" ? homeNavigation : schoolPageContent[page].sections;
-  const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "");
+export function App() {
+  const [path, setPath] = useState(currentPath);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const page = schoolPages[path.slice(1)];
 
   useEffect(() => {
-    if (page === "home" || typeof IntersectionObserver === "undefined") return;
+    const handleNavigation = () => {
+      setPath(currentPath());
+      window.scrollTo(0, 0);
+    };
+    const handleScroll = () => setShowScrollTop(window.scrollY > 600);
+    const handleRouteClick = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
 
-    setActiveSection(sections[0]?.id ?? "");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSection = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visibleSection) setActiveSection(visibleSection.target.id);
-      },
-      { rootMargin: "-176px 0px -65% 0px", threshold: 0 },
-    );
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>("a[href]");
+      if (!link || link.target || link.hasAttribute("download")) return;
 
-    sections.forEach(({ id }) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
+      const destination = new URL(link.href);
+      const destinationPath = destination.pathname.replace(/\/+$/, "") || "/";
+      if (
+        destination.origin !== window.location.origin ||
+        !(destinationPath in schoolBrandingByRoute) ||
+        (destinationPath === currentPath() && destination.hash)
+      ) {
+        return;
+      }
 
-    return () => observer.disconnect();
-  }, [page, sections]);
+      event.preventDefault();
+      window.history.pushState({}, "", destination.href);
+      setPath(destinationPath);
+      setShowScrollTop(false);
+      window.scrollTo(0, 0);
+    };
 
-  useEffect(() => {
-    if (page === "home" || !activeSection) return;
-    const activeLink = document.querySelector<HTMLElement>(
-      `[data-section-link="${activeSection}"]`,
-    );
-    const nav = activeLink?.closest<HTMLElement>("[data-school-section-nav]");
-    if (!activeLink || !nav) return;
+    window.addEventListener("popstate", handleNavigation);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("click", handleRouteClick);
+    return () => {
+      window.removeEventListener("popstate", handleNavigation);
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("click", handleRouteClick);
+    };
+  }, []);
 
-    const linkBounds = activeLink.getBoundingClientRect();
-    const navBounds = nav.getBoundingClientRect();
-    const left = nav.scrollLeft + linkBounds.left - navBounds.left;
-    const right = left + linkBounds.width;
-
-    if (left < nav.scrollLeft) {
-      nav.scrollTo({ left, behavior: "smooth" });
-    } else if (right > nav.scrollLeft + nav.clientWidth) {
-      nav.scrollTo({ left: right - nav.clientWidth, behavior: "smooth" });
-    }
-  }, [activeSection, page]);
-
+  const branding =
+    schoolBrandingByRoute[path as keyof typeof schoolBrandingByRoute] ??
+    schoolBrandingByRoute["/"];
   return (
-    <header className="sticky top-0 z-50 border-b border-[#0f2044]/10 bg-white/95 shadow-sm backdrop-blur">
-      {page === "home" ? (
-        <div className="mx-auto flex min-h-16 max-w-[1440px] items-center justify-between gap-4 px-5 sm:gap-4 sm:px-8 lg:px-16">
-          <Logo page={page} />
-          <>
-            <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
-              {sections.map((section) => (
-                <a
-                  key={section.id}
-                  href={`#${section.id}`}
-                  aria-current={activeSection === section.id ? "location" : undefined}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`rounded px-3 py-2 text-sm font-medium transition-colors ${
-                    activeSection === section.id
-                      ? "text-[#8c6b14]"
-                      : "text-[#0f2044] hover:text-[#8c6b14]"
-                  }`}
-                >
-                  {section.title}
-                </a>
-              ))}
-            </nav>
-            <button
-              className="rounded p-2 text-[#0f2044] hover:bg-[#0f2044]/5 lg:hidden"
-              type="button"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-navigation"
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              <Icon name={menuOpen ? "close" : "menu"} className="h-6 w-6" />
-            </button>
-          </>
-        </div>
+    <div className="min-h-screen bg-school-cream text-school-navy selection:bg-school-gold/25 selection:text-school-navy">
+      <Header key={path} page={page} branding={branding} />
+      {page ? (
+        <SchoolPage page={page} />
       ) : (
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-16">
-          <Logo page={page} />
-          <div className="min-w-0 flex-1">
-            <nav
-              data-school-section-nav
-              className="overflow-x-auto border-b border-[#0f2044]/10 pb-2"
-              aria-label={`${pageLabels[page]} page sections`}
-            >
-              <div className="flex w-max min-w-full justify-end gap-1">
-                {sections.map((section) => (
-                  <a
-                    key={section.id}
-                    href={`#${section.id}`}
-                    data-section-link={section.id}
-                    aria-current={activeSection === section.id ? "location" : undefined}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`shrink-0 whitespace-nowrap rounded px-3 py-2 text-xs font-semibold transition-colors lg:px-2 lg:text-[11px] ${
-                      activeSection === section.id
-                        ? "bg-[#14264B] text-white hover:bg-[#14264B] hover:text-white focus-visible:bg-[#14264B] focus-visible:text-white"
-                        : "bg-white text-[#14264B] hover:bg-[#c9a84c]/35 hover:text-[#14264B] focus-visible:text-[#14264B]"
-                    }`}
-                  >
-                    {section.title}
-                  </a>
-                ))}
-              </div>
-            </nav>
-            <div className="flex justify-end pt-2">
-              <a
-                href="/"
-                className="inline-flex shrink-0 rounded px-3 py-2 text-sm font-medium text-[#14264B] transition-colors hover:bg-[#c9a84c]/35 hover:text-[#14264B] focus-visible:text-[#14264B]"
-              >
-                Back to Home
-              </a>
-            </div>
-          </div>
-        </div>
+        <main>
+          <Hero />
+          <About />
+          <Leadership />
+          <SchoolSections />
+          <Contact />
+        </main>
       )}
-      {page === "home" && menuOpen && (
-        <nav
-          id="mobile-navigation"
-          className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-[#0f2044]/10 bg-white px-5 py-3 lg:hidden"
-          aria-label="Mobile navigation"
+      <Footer />
+      {showScrollTop && (
+        <button
+          type="button"
+          aria-label="Scroll to top"
+          onClick={() =>
+            scrollToSection(page?.sections[0]?.id ?? "home")
+          }
+          className="fixed bottom-7 right-7 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-school-navy text-school-gold shadow-2xl backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95"
         >
           {page !== "home" && (
             <a
