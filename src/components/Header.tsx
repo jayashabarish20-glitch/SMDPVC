@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navItems } from "../data";
 import type { schoolBrandingByRoute } from "../homepageContent";
 import type { SchoolPageConfig } from "../schoolPageData";
-import { Icon } from "./Icon";
+import { Icon, scrollToSection } from "./Icon";
 
 type HeaderProps = {
   page?: SchoolPageConfig;
@@ -134,6 +134,29 @@ export function Header({ page, branding }: HeaderProps) {
       window.history.back();
     }
     setMenuOpen(false);
+  };
+
+  const handleMobileNavClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    id: string
+  ) => {
+    setMenuOpen(false);
+
+    if (window.history.state?.mobileMenu) {
+      window.history.back();
+    }
+
+    if (href.startsWith("#")) {
+      event.preventDefault();
+      const targetId = href.slice(1) || id;
+      if (window.location.hash !== "#" + targetId) {
+        window.history.replaceState(null, "", "#" + targetId);
+      }
+      setTimeout(() => {
+        scrollToSection(targetId);
+      }, 50);
+    }
   };
   const navClass = page
     ? useSchoolMenu
@@ -382,7 +405,7 @@ export function Header({ page, branding }: HeaderProps) {
                     ref={index === 0 ? firstMenuLinkRef : undefined}
                     href={item.href}
                     aria-current={activeItem === item.id ? "location" : undefined}
-                    onClick={closeMenu}
+                    onClick={(e) => handleMobileNavClick(e, item.href, item.id)}
                     custom={index}
                     initial={shouldReduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -426,7 +449,7 @@ export function Header({ page, branding }: HeaderProps) {
               {/* CTA button — enters last, exits first */}
               <motion.a
                 href={page ? "/" : "#enquiry"}
-                onClick={closeMenu}
+                onClick={(e) => handleMobileNavClick(e, page ? "/" : "#enquiry", "enquiry")}
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={
