@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { schoolContact } from "../homepageContent";
-import { useInView } from "../hooks/useInView";
 import { Icon } from "./Icon";
 
 export function Contact() {
-  const { ref, isInView } = useInView({ threshold: 0.1 });
+  const shouldReduceMotion = useReducedMotion();
   const hasContactDetails =
     Boolean(schoolContact.address) ||
     schoolContact.phoneNumbers.length > 0 ||
@@ -17,13 +17,14 @@ export function Contact() {
       id="enquiry"
       className="relative scroll-mt-20 overflow-hidden bg-school-navy py-24 text-white lg:py-36"
     >
-      <div
-        ref={ref}
-        className={`mx-auto max-w-7xl px-6 transition-all duration-1000 lg:px-16 ${
-          isInView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-        }`}
-      >
-        <div className="mx-auto mb-14 max-w-3xl text-center">
+      <div className="mx-auto max-w-7xl px-6 lg:px-16">
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mb-14 max-w-3xl text-center"
+        >
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-school-gold">
             Contact Information &amp; Location
           </p>
@@ -34,10 +35,16 @@ export function Contact() {
             Connect with SMDPVC for school information, admissions enquiries,
             and assistance.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.2)] sm:p-9">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="rounded-3xl border border-white/10 bg-white/[0.05] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.2)] sm:p-9"
+          >
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-school-gold">
               School Contact Information
             </p>
@@ -126,9 +133,15 @@ export function Contact() {
                 </ContactRow>
               )}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="relative min-h-80 overflow-hidden rounded-3xl border border-white/15 bg-school-deep shadow-[0_20px_55px_rgba(0,0,0,0.25)] sm:min-h-[440px]">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative min-h-80 overflow-hidden rounded-3xl border border-white/15 bg-school-deep shadow-[0_20px_55px_rgba(0,0,0,0.25)] sm:min-h-[440px]"
+          >
             {schoolContact.mapEmbedUrl ? (
               <iframe
                 title={`${schoolContact.schoolName} location map`}
@@ -153,18 +166,20 @@ export function Contact() {
             )}
 
             {schoolContact.mapsUrl && (
-              <a
+              <motion.a
                 href={schoolContact.mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="absolute bottom-5 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-5 py-3 text-xs font-bold text-school-navy shadow-lg transition-transform hover:scale-[1.02] sm:bottom-7 sm:px-7 sm:text-sm"
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="absolute bottom-5 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-5 py-3 text-xs font-bold text-school-navy shadow-lg sm:bottom-7 sm:px-7 sm:text-sm"
               >
                 <Icon name="pin" className="h-4 w-4" />
                 Open in Maps
                 <Icon name="arrow" className="h-4 w-4" />
-              </a>
+              </motion.a>
             )}
-          </div>
+          </motion.div>
         </div>
 
         {!hasContactDetails && (

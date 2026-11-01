@@ -14,7 +14,7 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-school-gold-light to-school-gold font-serif text-lg font-bold text-school-navy shadow-sm">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-school-gold-light to-school-gold font-serif text-lg font-bold text-school-navy shadow-sm transition-transform duration-300 hover:scale-105">
                 S
               </span>
               <div>
@@ -39,7 +39,7 @@ export function Footer() {
                 <a
                   key={item.id}
                   href={item.id === "home" ? "/" : `/#${item.id}`}
-                  className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+                  className="inline-block text-xs font-medium text-white/60 transition-all duration-200 hover:translate-x-1 hover:text-white"
                 >
                   {item.label}
                 </a>
@@ -56,9 +56,13 @@ export function Footer() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-2 text-xs font-medium text-white/60 transition-colors hover:text-white"
+                  className="group inline-flex items-center gap-2 text-xs font-medium text-white/60 transition-all duration-200 hover:translate-x-1 hover:text-white"
                 >
-                  {link.label} <Icon name="arrow" className="h-3 w-3" />
+                  {link.label}
+                  <Icon
+                    name="arrow"
+                    className="h-3 w-3 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:opacity-100"
+                  />
                 </a>
               ))}
             </div>
