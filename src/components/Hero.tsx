@@ -1,5 +1,9 @@
+/// <reference types="vite/client" />
 import { useEffect, useMemo, useState, type PointerEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import schoolIntroImage3 from "../../assests/images/School intro image3.jpeg";
+import schoolIntroIma2e1 from "../../assests/images/School intro ima2e1.jpeg";
+import schoolIntroImage1 from "../../assests/images/School intro image1.jpeg";
 import { campusImages, heroSlides } from "../data";
 import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
@@ -14,6 +18,12 @@ type GalleryImageProps = {
   alt: string;
   className: string;
 };
+
+const homepageHeroImages = [
+  schoolIntroImage3,
+  schoolIntroIma2e1,
+  schoolIntroImage1,
+];
 
 function GalleryImage({ src, alt, className }: GalleryImageProps) {
   if (src) {
@@ -48,7 +58,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
   const slides = pageHero?.slides ?? heroSlides;
   const images = useMemo(
     () =>
-      (pageHero?.images ?? campusImages.hero).filter(
+      (pageHero ? pageHero.images : homepageHeroImages).filter(
         (image): image is string => Boolean(image),
       ),
     [pageHero?.images],

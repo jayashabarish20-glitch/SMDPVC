@@ -1,3 +1,10 @@
+/// <reference types="vite/client" />
+import primaryIntroImage3 from "../assests/images/Primary/primary intro image3 .jpeg";
+import primaryIntroImage2 from "../assests/images/Primary/primary intro image2.jpeg";
+import primaryIntroImage1 from "../assests/images/Primary/primary intro image1.jpeg";
+import higherSecondaryIntroImage3 from "../assests/images/higher-secondary/highersecondary intro image3.jpeg";
+import higherSecondaryIntroImage2 from "../assests/images/higher-secondary/highersecondary intro image2.jpeg";
+import higherSecondaryIntroImage1 from "../assests/images/higher-secondary/highersecondary intro image1.jpeg";
 import { campusImages } from "./data";
 
 export type SchoolPageSection = {
@@ -49,7 +56,7 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
   primary: {
     title: "Primary",
     hero: {
-      images: [campusImages.hero[1], campusImages.location, campusImages.hero[0]],
+      images: [primaryIntroImage3, primaryIntroImage2, primaryIntroImage1],
       slides: [
         { badge: "Primary", title: "Building Strong Foundations", description: "Explore the Primary section. Add the school's verified educational overview here." },
         { badge: "Learning", title: "Curiosity in Every Classroom", description: "Share confirmed information about teaching approaches and the Primary learning experience here." },
@@ -59,8 +66,6 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
     },
     sections: [
       { id: "primary-about", title: "About Primary", description: editablePlaceholder },
-      { id: "primary-infrastructure", title: "Infrastructure", description: editablePlaceholder },
-      { id: "primary-facilities", title: "Facilities", description: editablePlaceholder },
       { id: "primary-classes", title: "Classes", description: editablePlaceholder },
       { id: "primary-learning", title: "Learning Activities", description: editablePlaceholder },
       { id: "primary-calendar", title: "Academic Calendar", description: editablePlaceholder },
@@ -70,7 +75,11 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
   "higher-secondary": {
     title: "Higher Secondary",
     hero: {
-      images: [campusImages.hero[0], campusImages.hero[1], campusImages.principal],
+      images: [
+        higherSecondaryIntroImage3,
+        higherSecondaryIntroImage2,
+        higherSecondaryIntroImage1,
+      ],
       slides: [
         { badge: "Higher Secondary", title: "Preparing for What Comes Next", description: "Explore the Higher Secondary section. Add a school-approved introduction here." },
         { badge: "Academic Journey", title: "Focus, Discover, Develop", description: "Share verified details about courses and academic learning when confirmed by the school." },
@@ -81,7 +90,6 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
     sections: [
       { id: "higher-about", title: "About Higher Secondary", description: editablePlaceholder },
       { id: "higher-infrastructure", title: "Infrastructure", description: editablePlaceholder },
-      { id: "higher-facilities", title: "Facilities", description: editablePlaceholder },
       {
         id: "higher-courses",
         title: "Courses Offered",
