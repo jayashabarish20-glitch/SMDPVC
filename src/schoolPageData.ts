@@ -116,6 +116,7 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
       { id: "higher-clubs", title: "Clubs", description: editablePlaceholder },
       { id: "higher-calendar", title: "Academic Calendar", description: editablePlaceholder },
       { id: "higher-extracurricular", title: "Extracurricular Activities", description: editablePlaceholder },
+      { id: "higher-sports", title: "Sports", description: editablePlaceholder },
     ],
   },
 };
