@@ -65,7 +65,7 @@ export function Header({ page, branding }: HeaderProps) {
   }, [items]);
 
   useEffect(() => {
-    if (!menuOpen || !window.matchMedia("(max-width: 1279px)").matches) return;
+    if (!menuOpen || !window.matchMedia("(max-width: 1023px)").matches) return;
 
     // Push state so mobile back button/gesture triggers an animated menu close
     window.history.pushState({ mobileMenu: true }, "");
@@ -161,13 +161,13 @@ export function Header({ page, branding }: HeaderProps) {
   const navClass = page
     ? useSchoolMenu
       ? "hidden"
-      : "hidden xl:flex"
-    : "hidden md:flex";
+      : "hidden lg:flex"
+    : "hidden lg:flex";
   const toggleClass = page
     ? useSchoolMenu
       ? "flex"
-      : "flex xl:hidden"
-    : "flex md:hidden";
+      : "flex lg:hidden"
+    : "flex lg:hidden";
 
   return (
     <>
@@ -347,7 +347,7 @@ export function Header({ page, branding }: HeaderProps) {
               delay: shouldReduceMotion ? 0 : 0.35, // Let items reverse stagger out first before overlay fades
               ease: "easeInOut",
             }}
-            className="fixed inset-0 z-40 flex items-start justify-center bg-[rgba(5,11,26,0.76)] px-4 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] pt-[calc(env(safe-area-inset-top)+5.5rem)] backdrop-blur-md xl:hidden"
+            className="fixed inset-0 z-40 flex items-start justify-center bg-[rgba(5,11,26,0.76)] px-4 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] pt-[calc(env(safe-area-inset-top)+5.5rem)] backdrop-blur-md lg:hidden"
             onClick={(event) => {
               if (event.target === event.currentTarget) closeMenu();
             }}
