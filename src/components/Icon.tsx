@@ -26,7 +26,12 @@ export type IconName =
   | "mail"
   | "sparkles"
   | "award"
-  | "compass";
+  | "compass"
+  | "plus"
+  | "trash"
+  | "upload"
+  | "image"
+  | "x";
 
 export function Icon({
   name,
@@ -182,6 +187,36 @@ export function Icon({
         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
       </>
     ),
+    plus: (
+      <>
+        <path d="M12 5v14" />
+        <path d="M5 12h14" />
+      </>
+    ),
+    trash: (
+      <>
+        <path d="M3 6h18" />
+        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        <path d="M5 6v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
+        <path d="M10 11v6" />
+        <path d="M14 11v6" />
+      </>
+    ),
+    upload: (
+      <>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="17 8 12 3 7 8" />
+        <line x1="12" y1="3" x2="12" y2="15" />
+      </>
+    ),
+    image: (
+      <>
+        <rect width="18" height="18" x="3" y="3" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="m21 15-5-5L5 21" />
+      </>
+    ),
+    x: <path d="m6 6 12 12M18 6 6 18" />,
   };
 
   return (

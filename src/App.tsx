@@ -11,6 +11,7 @@ import { Icon, scrollToSection } from "./components/Icon";
 import { Leadership } from "./components/Leadership";
 import { SchoolPage } from "./components/SchoolPage";
 import { SchoolSections } from "./components/SchoolSections";
+import { AdminPanel } from "./pages/AdminPanel";
 
 function currentPath() {
   const path = window.location.pathname.replace(/\/+$/, "");
@@ -21,6 +22,7 @@ export function App() {
   const [path, setPath] = useState(currentPath);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const isAdminPath = path === "/admin/photos";
   const page = schoolPages[path.slice(1)];
 
   useEffect(() => {
@@ -76,6 +78,11 @@ export function App() {
   const branding =
     schoolBrandingByRoute[path as keyof typeof schoolBrandingByRoute] ??
     schoolBrandingByRoute["/"];
+
+  // Admin panel route
+  if (isAdminPath) {
+    return <AdminPanel />;
+  }
 
   return (
     <div className="min-h-screen bg-school-cream text-school-navy selection:bg-school-gold/25 selection:text-school-navy">

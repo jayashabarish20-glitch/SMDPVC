@@ -1,12 +1,27 @@
 import { motion, useReducedMotion } from "motion/react";
 import { leadershipProfiles } from "../homepageContent";
 import { Icon } from "./Icon";
+import { usePhotoConfig } from "../hooks/useAdminPhotos";
 
 export function Leadership() {
   const shouldReduceMotion = useReducedMotion();
+  const photoConfig = usePhotoConfig();
+
   const profiles = leadershipProfiles
     .filter((profile) => profile.isActive)
-    .sort((a, b) => a.displayOrder - b.displayOrder);
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .map((profile, index) => {
+      // Get photo from admin config for this leadership position
+      let photo = profile.photo;
+      if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.dataUrl) {
+        photo = photoConfig.leadershipPhotos.managementPhoto.dataUrl;
+      } else if (index === 1 && photoConfig.leadershipPhotos.trusteePhoto?.dataUrl) {
+        photo = photoConfig.leadershipPhotos.trusteePhoto.dataUrl;
+      } else if (index === 2 && photoConfig.leadershipPhotos.principalPhoto?.dataUrl) {
+        photo = photoConfig.leadershipPhotos.principalPhoto.dataUrl;
+      }
+      return { ...profile, photo };
+    });
 
   return (
     <section id="leadership" className="scroll-mt-20 bg-white py-24 lg:py-36">

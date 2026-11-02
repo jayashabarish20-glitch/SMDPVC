@@ -7,6 +7,7 @@ import schoolIntroImage1 from "../../assests/images/School intro image1.jpeg";
 import { campusImages, heroSlides } from "../data";
 import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
+import { useAdminPhotos } from "../hooks/useAdminPhotos";
 
 type HeroProps = {
   pageHero?: SchoolPageConfig["hero"];
@@ -55,13 +56,17 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const shouldReduceMotion = useReducedMotion();
   const [galleryTilt, setGalleryTilt] = useState({ x: 0, y: 0 });
+  const adminPhotos = useAdminPhotos();
   const slides = pageHero?.slides ?? heroSlides;
+
   const images = useMemo(
-    () =>
-      (pageHero ? pageHero.images : homepageHeroImages).filter(
+    () => {
+      const imageArray: string[] = pageHero?.images ?? adminPhotos.hero ?? homepageHeroImages;
+      return imageArray.filter(
         (image): image is string => Boolean(image),
-      ),
-    [pageHero?.images],
+      );
+    },
+    [pageHero?.images, adminPhotos.hero],
   );
 
   useEffect(() => {
@@ -78,7 +83,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
   }, [pageHero]);
 
   useEffect(() => {
-    images.forEach((image) => {
+    images.forEach((image: string) => {
       const preloadedImage = new Image();
       preloadedImage.src = image;
     });
@@ -105,7 +110,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
       aria-roledescription="carousel"
     >
       {/* Background Slides with Apple-grade cinematic cross-fade */}
-      {images.map((image, index) => (
+      {images.map((image: string, index: number) => (
         <div
           key={`${image}-${index}`}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
