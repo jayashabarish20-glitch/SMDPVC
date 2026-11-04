@@ -120,7 +120,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
           aria-hidden="true"
         >
           <img
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain object-[center_35%] sm:object-contain sm:object-[center_35%] md:object-cover md:object-center"
             src={image}
             alt=""
             fetchPriority={index === 0 ? "high" : "auto"}
