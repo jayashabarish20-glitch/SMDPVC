@@ -4,16 +4,19 @@ import {
   updatePhotoConfig,
   type PhotoConfig,
   type PhotoMetadata,
+  type LeadershipProfileData,
+  type PrimaryClassesGalleryConfig,
+  type PrimaryAboutConfig,
 } from '../data/photoService';
 
 /**
  * Hook for accessing and updating photo configuration
  *
  * Abstracts data access and provides state management for the admin panel.
- * Currently uses in-memory storage; can be updated to use persistent storage.
+ * Currently uses localStorage for persistence; re-reads on every update.
  *
  * Usage:
- * const { config, updateCampusImages, updateLeadershipPhotos } = usePhotoConfig();
+ * const { config, updateCampusImages, updateLeadershipPhotos, updateLeadershipProfile } = usePhotoConfig();
  */
 export function usePhotoConfig() {
   const [config, setConfig] = useState<PhotoConfig>(() => getPhotoConfig());
@@ -29,11 +32,51 @@ export function usePhotoConfig() {
     [config.campusImages]
   );
 
-  // Update leadership photos (management, trustee, principal)
+  // Update leadership photos only (backward-compatible, preserves profiles text)
   const updateLeadershipPhotos = useCallback(
     (updates: Partial<PhotoConfig['leadershipPhotos']>) => {
       const newConfig = updatePhotoConfig({
         leadershipPhotos: { ...config.leadershipPhotos, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.leadershipPhotos]
+  );
+
+  // Update a single leadership profile's text + optional photo together
+  const updateLeadershipProfile = useCallback(
+    (
+      key: 'management' | 'trustee' | 'principal',
+      data: Partial<LeadershipProfileData>
+    ) => {
+      const currentProfiles = config.leadershipPhotos.profiles ?? {
+        management: { photo: null, name: '', designation: '', shortBio: '', message: '' },
+        trustee: { photo: null, name: '', designation: '', shortBio: '', message: '' },
+        principal: { photo: null, name: '', designation: '', shortBio: '', message: '' },
+      };
+      const updated = {
+        ...currentProfiles,
+        [key]: { ...currentProfiles[key], ...data },
+      };
+
+      // Also keep legacy top-level photo fields in sync
+      const photoFieldMap: Record<string, keyof PhotoConfig['leadershipPhotos']> = {
+        management: 'managementPhoto',
+        trustee: 'trusteePhoto',
+        principal: 'principalPhoto',
+      };
+      const legacyUpdate: Partial<PhotoConfig['leadershipPhotos']> = {};
+      if (data.photo !== undefined) {
+        const field = photoFieldMap[key] as 'managementPhoto' | 'trusteePhoto' | 'principalPhoto';
+        legacyUpdate[field] = data.photo;
+      }
+
+      const newConfig = updatePhotoConfig({
+        leadershipPhotos: {
+          ...config.leadershipPhotos,
+          ...legacyUpdate,
+          profiles: updated,
+        },
       });
       setConfig(newConfig);
     },
@@ -60,6 +103,30 @@ export function usePhotoConfig() {
       setConfig(newConfig);
     },
     [config.schoolPageHeroes]
+  );
+
+  // Update the Primary Classes Gallery (photos + description) — independent of Primary Hero
+  const updatePrimaryClassesGallery = useCallback(
+    (updates: Partial<PrimaryClassesGalleryConfig>) => {
+      const current = config.primaryClassesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryClassesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryClassesGallery]
+  );
+
+  // Update the Primary About section independently from the gallery and hero.
+  const updatePrimaryAbout = useCallback(
+    (updates: Partial<PrimaryAboutConfig>) => {
+      const current = config.primaryAbout ?? { photo: null, description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryAbout: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryAbout]
   );
 
   // Add photo to array (hero, alumni, toppers)
@@ -127,8 +194,11 @@ export function usePhotoConfig() {
     config,
     updateCampusImages,
     updateLeadershipPhotos,
+    updateLeadershipProfile,
     updateSchoolSectionPhotos,
     updateSchoolPageHeroes,
+    updatePrimaryClassesGallery,
+    updatePrimaryAbout,
     addPhoto,
     removePhoto,
     reorderPhotos,

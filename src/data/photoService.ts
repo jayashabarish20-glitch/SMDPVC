@@ -24,10 +24,24 @@ export interface CampusImagesConfig {
   toppers12: PhotoMetadata[];
 }
 
+export interface LeadershipProfileData {
+  photo: PhotoMetadata | null;
+  name: string;
+  designation: string;
+  shortBio: string;
+  message: string;
+}
+
 export interface LeadershipPhotoConfig {
   managementPhoto: PhotoMetadata | null;
   trusteePhoto: PhotoMetadata | null;
   principalPhoto: PhotoMetadata | null;
+  /** Full profile data including text fields — keyed by profile id */
+  profiles: {
+    management: LeadershipProfileData;
+    trustee: LeadershipProfileData;
+    principal: LeadershipProfileData;
+  };
 }
 
 export interface SchoolSectionPhotosConfig {
@@ -42,11 +56,23 @@ export interface SchoolPageHeroConfig {
   higherSecondary: PhotoMetadata[];
 }
 
+export interface PrimaryClassesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
+export interface PrimaryAboutConfig {
+  photo: PhotoMetadata | null;
+  description: string;
+}
+
 export interface PhotoConfig {
   campusImages: CampusImagesConfig;
   leadershipPhotos: LeadershipPhotoConfig;
   schoolSectionPhotos: SchoolSectionPhotosConfig;
   schoolPageHeroes: SchoolPageHeroConfig;
+  primaryClassesGallery: PrimaryClassesGalleryConfig;
+  primaryAbout: PrimaryAboutConfig | null;
   lastUpdated: string;
 }
 
@@ -64,6 +90,29 @@ const defaultPhotoConfig: PhotoConfig = {
     managementPhoto: null,
     trusteePhoto: null,
     principalPhoto: null,
+    profiles: {
+      management: {
+        photo: null,
+        name: '',
+        designation: '',
+        shortBio: '',
+        message: '',
+      },
+      trustee: {
+        photo: null,
+        name: '',
+        designation: '',
+        shortBio: '',
+        message: '',
+      },
+      principal: {
+        photo: null,
+        name: '',
+        designation: '',
+        shortBio: '',
+        message: '',
+      },
+    },
   },
   schoolSectionPhotos: {
     nursery: null,
@@ -75,6 +124,11 @@ const defaultPhotoConfig: PhotoConfig = {
     primary: [],
     higherSecondary: [],
   },
+  primaryClassesGallery: {
+    photos: [],
+    description: '',
+  },
+  primaryAbout: null,
   lastUpdated: new Date().toISOString(),
 };
 
@@ -99,7 +153,14 @@ function loadFromStorage(): PhotoConfig {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Merge with defaults so new fields exist when loading older stored data.
+      return {
+        ...JSON.parse(JSON.stringify(defaultPhotoConfig)),
+        ...parsed,
+        primaryClassesGallery: parsed.primaryClassesGallery ?? defaultPhotoConfig.primaryClassesGallery,
+        primaryAbout: parsed.primaryAbout ?? defaultPhotoConfig.primaryAbout,
+      };
     }
   } catch (error) {
     console.error('Failed to load photo config from localStorage:', error);

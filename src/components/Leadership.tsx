@@ -7,20 +7,41 @@ export function Leadership() {
   const shouldReduceMotion = useReducedMotion();
   const photoConfig = usePhotoConfig();
 
+  // Map static profile order to their admin profile keys
+  const profileKeyMap: Array<'management' | 'trustee' | 'principal'> = [
+    'management',
+    'trustee',
+    'principal',
+  ];
+
+  const savedProfiles = photoConfig.leadershipPhotos.profiles;
+
   const profiles = leadershipProfiles
     .filter((profile) => profile.isActive)
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((profile, index) => {
-      // Get photo from admin config for this leadership position
+      const profileKey = profileKeyMap[index];
+      const adminProfile = savedProfiles?.[profileKey];
+
+      // Overlay saved text fields — only if the admin has entered a non-empty value
+      const name = adminProfile?.name?.trim() ? adminProfile.name : profile.name;
+      const designation = adminProfile?.designation?.trim() ? adminProfile.designation : profile.designation;
+      const shortBio = adminProfile?.shortBio?.trim() ? adminProfile.shortBio : profile.shortBio;
+      const message = adminProfile?.message?.trim() ? adminProfile.message : profile.message;
+
+      // Resolve photo: prefer the profile-level photo, then legacy top-level photo fields
       let photo = profile.photo;
-      if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.dataUrl) {
+      if (adminProfile?.photo?.dataUrl) {
+        photo = adminProfile.photo.dataUrl;
+      } else if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.dataUrl) {
         photo = photoConfig.leadershipPhotos.managementPhoto.dataUrl;
       } else if (index === 1 && photoConfig.leadershipPhotos.trusteePhoto?.dataUrl) {
         photo = photoConfig.leadershipPhotos.trusteePhoto.dataUrl;
       } else if (index === 2 && photoConfig.leadershipPhotos.principalPhoto?.dataUrl) {
         photo = photoConfig.leadershipPhotos.principalPhoto.dataUrl;
       }
-      return { ...profile, photo };
+
+      return { ...profile, photo, name, designation, shortBio, message };
     });
 
   return (
