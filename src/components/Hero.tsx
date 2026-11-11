@@ -61,7 +61,9 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
 
   const images = useMemo(
     () => {
-      const imageArray: string[] = pageHero?.images ?? adminPhotos.hero ?? homepageHeroImages;
+      const imageArray: string[] =
+        pageHero?.images ??
+        (adminPhotos.hero.length > 0 ? adminPhotos.hero : homepageHeroImages);
       return imageArray.filter(
         (image): image is string => Boolean(image),
       );

@@ -12,6 +12,7 @@ export interface PhotoMetadata {
   filename: string;
   alt: string;
   updatedAt: string;
+  imageUrl?: string;
   dataUrl?: string; // Base64 encoded image for storage/display
 }
 
@@ -131,6 +132,10 @@ const defaultPhotoConfig: PhotoConfig = {
   primaryAbout: null,
   lastUpdated: new Date().toISOString(),
 };
+
+export function createDefaultPhotoConfig(): PhotoConfig {
+  return JSON.parse(JSON.stringify(defaultPhotoConfig));
+}
 
 /**
  * localStorage key for persisting photo configuration

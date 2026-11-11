@@ -13,12 +13,12 @@ export function SchoolSections() {
       let image = card.image;
 
       // Override with admin photo if available
-      if (card.href === '/nursery' && photoConfig.schoolSectionPhotos.nursery?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.nursery.dataUrl;
-      } else if (card.href === '/primary' && photoConfig.schoolSectionPhotos.primary?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.primary.dataUrl;
-      } else if (card.href === '/higher-secondary' && photoConfig.schoolSectionPhotos.higherSecondary?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.higherSecondary.dataUrl;
+      if (card.href === '/nursery' && photoConfig.schoolSectionPhotos.nursery?.imageUrl) {
+        image = photoConfig.schoolSectionPhotos.nursery.imageUrl;
+      } else if (card.href === '/primary' && photoConfig.schoolSectionPhotos.primary?.imageUrl) {
+        image = photoConfig.schoolSectionPhotos.primary.imageUrl;
+      } else if (card.href === '/higher-secondary' && photoConfig.schoolSectionPhotos.higherSecondary?.imageUrl) {
+        image = photoConfig.schoolSectionPhotos.higherSecondary.imageUrl;
       }
 
       return { ...card, image };

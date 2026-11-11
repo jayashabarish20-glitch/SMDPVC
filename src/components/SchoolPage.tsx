@@ -52,10 +52,10 @@ export function SchoolPage({ page }: SchoolPageProps) {
             </h2>
             {section.id === "primary-about" && primaryAboutData ? (
               <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
-                {primaryAboutData.photo?.dataUrl && (
+                {primaryAboutData.photo?.imageUrl && (
                   <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
                     <img
-                      src={primaryAboutData.photo.dataUrl}
+                      src={primaryAboutData.photo.imageUrl}
                       alt={primaryAboutData.photo.alt || "Primary About"}
                       className="max-h-[28rem] w-full object-contain"
                     />
@@ -197,9 +197,9 @@ function PrimaryClassesGallery({
               transition={{ duration: 0.38, ease: [0.32, 0, 0.67, 0] }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              {currentPhoto?.dataUrl ? (
+              {currentPhoto?.imageUrl ? (
                 <img
-                  src={currentPhoto.dataUrl}
+                  src={currentPhoto.imageUrl}
                   alt={currentPhoto.alt || `Classes photo ${activeIndex + 1}`}
                   className="h-full w-full object-contain"
                   draggable={false}
@@ -335,7 +335,7 @@ function PrimaryClassesGallery({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.22 }}
-                src={photos[activeIndex]?.dataUrl ?? ""}
+                src={photos[activeIndex]?.imageUrl ?? ""}
                 alt={photos[activeIndex]?.alt || `Classes photo ${activeIndex + 1}`}
                 className="max-h-[88vh] max-w-[88vw] rounded-xl object-contain shadow-2xl"
                 onClick={(e) => e.stopPropagation()}

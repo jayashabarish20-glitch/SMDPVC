@@ -4,3 +4,7 @@ dist/
 *.tsbuildinfo
 __pycache__/
 *.pyc
+.env
+.venv/
+venv/
+backend/data/

@@ -31,14 +31,14 @@ export function Leadership() {
 
       // Resolve photo: prefer the profile-level photo, then legacy top-level photo fields
       let photo = profile.photo;
-      if (adminProfile?.photo?.dataUrl) {
-        photo = adminProfile.photo.dataUrl;
-      } else if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.managementPhoto.dataUrl;
-      } else if (index === 1 && photoConfig.leadershipPhotos.trusteePhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.trusteePhoto.dataUrl;
-      } else if (index === 2 && photoConfig.leadershipPhotos.principalPhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.principalPhoto.dataUrl;
+      if (adminProfile?.photo?.imageUrl) {
+        photo = adminProfile.photo.imageUrl;
+      } else if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.imageUrl) {
+        photo = photoConfig.leadershipPhotos.managementPhoto.imageUrl;
+      } else if (index === 1 && photoConfig.leadershipPhotos.trusteePhoto?.imageUrl) {
+        photo = photoConfig.leadershipPhotos.trusteePhoto.imageUrl;
+      } else if (index === 2 && photoConfig.leadershipPhotos.principalPhoto?.imageUrl) {
+        photo = photoConfig.leadershipPhotos.principalPhoto.imageUrl;
       }
 
       return { ...profile, photo, name, designation, shortBio, message };
