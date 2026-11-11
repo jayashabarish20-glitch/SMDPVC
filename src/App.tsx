@@ -111,7 +111,8 @@ export function App() {
 
       // Not authenticated, redirect to login
       if (!isAuthenticated) {
-        window.location.pathname = "/admin/login";
+        window.history.pushState({}, "", "/admin/login");
+        window.dispatchEvent(new PopStateEvent("popstate"));
         return (
           <div className="min-h-screen bg-school-cream flex items-center justify-center">
             <p className="text-school-muted">Redirecting to login...</p>

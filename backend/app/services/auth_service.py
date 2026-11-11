@@ -32,7 +32,11 @@ def verify_password(plain_password: str, password_hash: str) -> bool:
     Returns:
         True if password matches hash, False otherwise.
     """
-    return pwd_context.verify(plain_password, password_hash)
+    try:
+        return pwd_context.verify(plain_password, password_hash)
+    except Exception:
+        # Handle malformed or invalid hashes (e.g., UnknownHashError)
+        return False
 
 
 def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = None) -> str:

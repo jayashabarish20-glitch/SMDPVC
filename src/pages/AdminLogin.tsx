@@ -47,7 +47,8 @@ export function AdminLogin() {
     try {
       await login(email, password);
       // On successful login, redirect to admin photos
-      window.location.pathname = '/admin/photos';
+      window.history.pushState({}, "", "/admin/photos");
+      window.dispatchEvent(new PopStateEvent("popstate"));
     } catch (err) {
       // Error is displayed via the error state
       console.error('Login failed:', err);

@@ -15,7 +15,8 @@ export function AdminLogout() {
     if (window.confirm('Are you sure you want to log out?')) {
       try {
         await logout();
-        window.location.pathname = '/admin/login';
+        window.history.pushState({}, "", '/admin/login');
+        window.dispatchEvent(new PopStateEvent('popstate'));
       } catch (error) {
         console.error('Logout failed:', error);
       }
