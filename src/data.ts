@@ -89,33 +89,31 @@ export const campusImages = {
 
 export const heroSlides = [
   {
-    badge: "Since 1957",
-    title: "Fostering Academic Excellence & Character",
+    badge: "Welcome",
+    title: "A Place to Learn, Grow & Discover",
     description:
-      "A legacy of 68 years nurturing scholars, athletes, and leaders who shape the world.",
+      "Explore the learning journey at SMDPVC. Add a verified school introduction here.",
   },
   {
-    badge: "State Board Affiliated",
-    title: "Where Curiosity Meets Opportunity",
+    badge: "Learning",
+    title: "Curiosity Opens New Possibilities",
     description:
-      "Industry-aligned curriculum, world-class faculty, and a vibrant campus community.",
+      "Share the school's learning approach and opportunities here, using verified information.",
   },
   {
-    badge: "2400+ University Placements",
-    title: "Building Tomorrow's Leaders Today",
+    badge: "Community",
+    title: "Growing Together, Every Day",
     description:
-      "Holistic education that develops intellectual rigor, ethical values, and life-ready skills.",
+      "Add a verified message about the school community and student experience here.",
   },
 ];
 
 export const navItems = [
   { label: "Home", id: "home" },
-  { label: "About Us", id: "about" },
-  { label: "Academics", id: "academics" },
-  { label: "Admissions", id: "admissions" },
-  { label: "Excellence", id: "excellence" },
-  { label: "Campus Life", id: "campus-life" },
-  { label: "Contact Us", id: "contact" },
+  { label: "Our Foundation", id: "foundation" },
+  { label: "Leadership", id: "leadership" },
+  { label: "School Sections", id: "school-sections" },
+  { label: "Enquiry", id: "enquiry" },
 ];
 
 export const streams = [
