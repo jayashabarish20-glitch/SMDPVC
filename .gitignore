@@ -2,5 +2,8 @@ node_modules/
 dist/
 .vite/
 *.tsbuildinfo
+.env.local
+.env.*.local
+.data/
 __pycache__/
 *.pyc

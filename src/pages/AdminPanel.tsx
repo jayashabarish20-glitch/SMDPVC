@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { AdminLayout } from '../components/admin/AdminLayout';
 import { HomeHeroManager } from '../components/admin/HomeHeroManager';
 import { LeadershipPhotosManager } from '../components/admin/LeadershipPhotosManager';
@@ -10,12 +10,19 @@ import { CampusLifeManager } from '../components/admin/CampusLifeManager';
 import { PrimaryClassesGalleryManager } from '../components/admin/PrimaryClassesGalleryManager';
 import { PrimaryAboutManager } from '../components/admin/PrimaryAboutManager';
 
+const NurseryAcademicCalendarManager = lazy(() =>
+  import('../components/admin/NurseryAcademicCalendarManager').then((module) => ({
+    default: module.NurseryAcademicCalendarManager,
+  }))
+);
+
 type AdminSection =
   | 'home-hero'
   | 'leadership'
   | 'school-sections'
   | 'hero-3d'
   | 'nursery-hero'
+  | 'nursery-academic-calendar'
   | 'primary-hero'
   | 'primary-classes-gallery'
   | 'primary-about'
@@ -32,6 +39,7 @@ export function AdminPanel() {
     { id: '3', label: 'School Sections Cards', section: 'school-sections' as AdminSection },
     { id: '4', label: 'Hero 3D Cards', section: 'hero-3d' as AdminSection },
     { id: '5', label: 'Nursery Page Hero', section: 'nursery-hero' as AdminSection },
+    { id: '5b', label: 'Nursery – Academic Calendar', section: 'nursery-academic-calendar' as AdminSection },
     { id: '6', label: 'Primary Page Hero', section: 'primary-hero' as AdminSection },
     { id: '6b', label: 'Primary – Classes Gallery', section: 'primary-classes-gallery' as AdminSection },
     { id: '6c', label: 'Primary – About', section: 'primary-about' as AdminSection },
@@ -57,6 +65,17 @@ export function AdminPanel() {
           pagePath="/nursery"
           description="Manage the background images for the Nursery page hero carousel. Add, remove, or reorder images."
         />
+      )}
+      {activeSection === 'nursery-academic-calendar' && (
+        <Suspense
+          fallback={
+            <p className="text-sm text-school-muted" role="status">
+              Loading the Nursery calendar manager…
+            </p>
+          }
+        >
+          <NurseryAcademicCalendarManager />
+        </Suspense>
       )}
       {activeSection === 'primary-hero' && (
         <SchoolPageHeroManager

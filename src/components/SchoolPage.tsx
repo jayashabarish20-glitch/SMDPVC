@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import type { SchoolPageConfig } from "../schoolPageData";
 import type { PhotoMetadata } from "../data/photoService";
 import { Hero } from "./Hero";
 import { usePhotoConfig } from "../hooks/useAdminPhotos";
 import { Icon } from "./Icon";
+
+const NurseryAcademicCalendar = lazy(() =>
+  import("./NurseryAcademicCalendar").then((module) => ({
+    default: module.NurseryAcademicCalendar,
+  }))
+);
 
 type SchoolPageProps = {
   page: SchoolPageConfig;
@@ -50,7 +56,17 @@ export function SchoolPage({ page }: SchoolPageProps) {
             <h2 className="mt-2 font-serif text-2xl font-bold text-school-navy sm:text-3xl">
               {section.title}
             </h2>
-            {section.id === "primary-about" && primaryAboutData ? (
+            {section.id === "nursery-calendar" ? (
+              <Suspense
+                fallback={
+                  <p className="mt-5 text-sm text-school-muted" role="status">
+                    Loading the Nursery Academic Calendar…
+                  </p>
+                }
+              >
+                <NurseryAcademicCalendar />
+              </Suspense>
+            ) : section.id === "primary-about" && primaryAboutData ? (
               <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
                 {primaryAboutData.photo?.dataUrl && (
                   <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
