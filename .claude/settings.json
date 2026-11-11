@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "figma-to-code-design-to-react-vue-and-html@anthropic-plugin-directory": true,
+    "claude-code-setup@anthropic-plugin-directory": true,
+    "playwright@anthropic-plugin-directory": true
+  }
+}

@@ -1,5 +1,12 @@
 {
   "servers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "@playwright/mcp@0.0.84"
+      ]
+    },
     "21st": {
       "type": "http",
       "url": "https://21st.dev/api/mcp",

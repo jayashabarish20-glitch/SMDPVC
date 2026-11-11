@@ -1,91 +1,243 @@
-export const campusImages = {
-  hero: [
-    "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1440&h=800&fit=crop&auto=format",
-    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1440&h=800&fit=crop&auto=format",
-    "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1440&h=800&fit=crop&auto=format",
-  ],
-  principal:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?w=700&h=500&fit=crop&auto=format",
-  trustees: [
-    {
-      name: "Thiru R. Venkataraman",
-      role: "President",
-      image:
-        "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Tmt. S. Lalitha Devi",
-      role: "Secretary",
-      image:
-        "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Thiru K. Muthukumar",
-      role: "Treasurer",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Tmt. P. Saraswathi",
-      role: "Board Member",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&auto=format",
-    },
-  ],
-  toppers12: [
-    {
-      name: "Priya Subramaniam",
-      score: "598/600",
-      stream: "Pure Science",
-      image:
-        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Arun Karthikeyan",
-      score: "595/600",
-      stream: "Bio Science",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Meena Lakshmi",
-      score: "593/600",
-      stream: "Commerce",
-      image:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&h=200&fit=crop&auto=format",
-    },
-  ],
-  alumni: [
-    {
-      name: "Dr. Kavya Menon",
-      batch: "Batch of 2008",
-      role: "Cardiothoracic Surgeon, AIIMS Delhi",
-      quote: "This school gave me the foundation to dare greatly.",
-      image:
-        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Sriram Balaji",
-      batch: "Batch of 2012",
-      role: "IAS Officer, Tamil Nadu Cadre",
-      quote: "The values instilled here shaped every decision I make.",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&auto=format",
-    },
-    {
-      name: "Nithya Krishnan",
-      batch: "Batch of 2015",
-      role: "Senior Engineer, Google Bangalore",
-      quote: "My love for computers was kindled right here in the CS lab.",
-      image:
-        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&auto=format",
-    },
-  ],
-  sports:
-    "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=1200&h=400&fit=crop&auto=format",
-  location:
-    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&h=300&fit=crop&auto=format",
+export const schoolName = "SMDPVC";
+export const schoolIntroduction =
+  "School introduction placeholder — replace with the approved school profile.";
+export const schoolHistory = "[Add verified school history here]";
+
+export const schoolVision = {
+  content: "School vision statement placeholder.",
+  detail: "Replace with the approved school vision.",
 };
+
+export const schoolMission = {
+  content: "School mission statement placeholder.",
+  detail: "Replace with the approved school mission.",
+};
+
+export interface ManagementMember {
+  name: string;
+  designation: string;
+  photo: string | null;
+}
+
+export interface ManagementMessage {
+  name: string;
+  designation: string;
+  message: string;
+  photo: string | null;
+}
+
+export const managementMembers: ManagementMember[] = [
+  {
+    name: "Name to be supplied",
+    designation: "Designation to be supplied",
+    photo: null,
+  },
+];
+
+export const managementMessages: ManagementMessage[] = [
+  {
+    message: "Approved management message to be added.",
+    name: "Name to be supplied",
+    designation: "Designation to be supplied",
+    photo: null,
+  },
+];
+
+export const schoolSections = [
+  {
+    title: "Nursery",
+    description: "Introduction, facilities, classes, and learning activities.",
+    href: "/nursery",
+    key: "nursery",
+  },
+  {
+    title: "Primary",
+    description: "Introduction, facilities, classes, and learning activities.",
+    href: "/primary",
+    key: "primary",
+  },
+  {
+    title: "Higher Secondary",
+    description: "School information, academic details, and student life.",
+    href: "/higher-secondary",
+    key: "higher-secondary",
+  },
+] as const;
+
+const schoolApprovedNote = "School-approved information to be added.";
+
+export const schoolPageContent = {
+  nursery: {
+    title: "Nursery",
+    sections: [
+      {
+        id: "nursery-introduction",
+        title: "Introduction",
+        content: "Nursery introduction to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "nursery-infrastructure",
+        title: "Infrastructure and Facilities",
+        content: "Nursery infrastructure and facilities to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "nursery-classes-learning",
+        title: "Classes and Learning Activities",
+        content: "Nursery class information and learning activities to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "nursery-academic-calendar",
+        title: "Academic Calendar",
+        content: "Approved Nursery academic calendar to be supplied, if available.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "nursery-extracurricular",
+        title: "Extracurricular Activities",
+        content: "Nursery extracurricular activities to be supplied, if available.",
+        detail: schoolApprovedNote,
+      },
+    ],
+  },
+  primary: {
+    title: "Primary",
+    sections: [
+      {
+        id: "primary-introduction",
+        title: "Introduction",
+        content: "Primary introduction to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "primary-infrastructure",
+        title: "Infrastructure and Facilities",
+        content: "Primary infrastructure and facilities to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "primary-classes-learning",
+        title: "Classes and Learning Activities",
+        content: "Primary class information and learning activities to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "primary-academic-calendar",
+        title: "Academic Calendar",
+        content: "Approved Primary academic calendar to be supplied, if available.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "primary-extracurricular",
+        title: "Extracurricular Activities",
+        content: "Primary extracurricular activities to be supplied, if available.",
+        detail: schoolApprovedNote,
+      },
+    ],
+  },
+  "higher-secondary": {
+    title: "Higher Secondary",
+    sections: [
+      {
+        id: "higher-secondary-introduction",
+        title: "Introduction",
+        content: "Higher Secondary introduction to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-infrastructure",
+        title: "Infrastructure and Facilities",
+        content: "Verified facilities information to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-courses-offered",
+        title: "Courses Offered",
+        content: "Verified courses and subject combinations to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-classes-academic",
+        title: "Classes and Academic Information",
+        content: "Class structure and academic information to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-achievements",
+        title: "Achievements",
+        achievements: [
+          {
+            title: "Academic Achievements",
+            fields: ["Academic year", "Achievement", "Supporting details"],
+          },
+          {
+            title: "School Toppers",
+            fields: [
+              "Academic year",
+              "Student name",
+              "Examination",
+              "Marks or percentage",
+              "Rank",
+            ],
+          },
+          {
+            title: "Subject-wise Toppers",
+            fields: [
+              "Academic year",
+              "Student name",
+              "Subject",
+              "Marks or percentage",
+            ],
+          },
+          {
+            title: "10th Standard Results",
+            fields: [
+              "Academic year",
+              "Student name",
+              "Marks or percentage",
+              "Achievement",
+            ],
+          },
+          {
+            title: "12th Standard Results",
+            fields: [
+              "Academic year",
+              "Student name",
+              "Marks or percentage",
+              "Achievement",
+            ],
+          },
+        ],
+      },
+      {
+        id: "higher-secondary-alumni-details",
+        title: "Alumni Details",
+        content: "Verified alumni profiles and details to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-clubs",
+        title: "Clubs",
+        content: "Verified club names and descriptions to be supplied.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-academic-calendar",
+        title: "Academic Calendar",
+        content: "Approved academic calendar to be supplied, if applicable.",
+        detail: schoolApprovedNote,
+      },
+      {
+        id: "higher-secondary-extracurricular",
+        title: "Extracurricular Activities",
+        content: "Verified extracurricular information to be supplied, if applicable.",
+        detail: schoolApprovedNote,
+      },
+    ],
+  },
+} as const;
 
 export const heroSlides = [
   {
@@ -107,6 +259,27 @@ export const heroSlides = [
       "Add a verified message about the school community and student experience here.",
   },
 ];
+
+type CampusPerson = { name: string; image: string; role: string };
+type SchoolTopper = { name: string; image: string; score: string; stream: string };
+
+export const campusImages: {
+  hero: string[];
+  sports: string;
+  principal: string;
+  location: string;
+  trustees: CampusPerson[];
+  alumni: (CampusPerson & { batch: string; quote: string })[];
+  toppers12: SchoolTopper[];
+} = {
+  hero: [],
+  sports: "",
+  principal: "",
+  location: "",
+  trustees: [],
+  alumni: [],
+  toppers12: [],
+};
 
 export const navItems = [
   { label: "Home", id: "home" },

@@ -1,0 +1,140 @@
+FASTAPI JWT/UUID AUTHENTICATION FIX
+====================================
+
+PROBLEM
+-------
+When calling GET /api/auth/me with a valid JWT token, the endpoint returned:
+"Internal server error" with the following SQLAlchemy error:
+
+    sqlalchemy.exc.StatementError: (builtins.AttributeError) 'str' object has no attribute 'hex'
+    [SQL: SELECT admin_users.email ... WHERE admin_users.id = ?]
+
+ROOT CAUSE
+----------
+1. The JWT token stores the admin user ID as a string in the "sub" claim:
+   - In admin_auth.py line 52: create_access_token(data={"sub": str(admin_user.id)})
+   - This converts UUID to string because JWT is JSON-based
+
+2. When verifying the token in require_admin():
+   - The payload extraction returns "sub" as a string
+   - Old code: admin_id = payload.get("sub")  # This is a STRING
+
+3. Database query fails because:
+   - AdminUser.id is defined as: Mapped[uuid.UUID] (in models/base.py)
+   - SQLAlchemy expected a UUID object, not a string
+   - When SQLAlchemy tried to convert the string to match UUID column type,
+     it failed because strings don't have a .hex attribute that UUID objects have
+
+THE FIX
+-------
+File: C:\Users\acer\SMDPVC\backend\app\dependencies.py
+
+1. Added UUID import:
+   from uuid import UUID
+
+2. Modified require_admin() function to convert string to UUID:
+
+   OLD CODE (lines 55-63):
+   ---------------------
+   admin_id = payload.get("sub")
+   if not admin_id:
+       raise HTTPException(...)
+   stmt = select(AdminUser).where(AdminUser.id == admin_id)  # FAILS - admin_id is string
+
+   NEW CODE (lines 56-74):
+   ----------------------
+   admin_id_str = payload.get("sub")
+   if not admin_id_str:
+       raise HTTPException(...)
+
+   # Convert string UUID from JWT to UUID object
+   try:
+       admin_id = UUID(admin_id_str)
+   except (ValueError, TypeError):
+       raise HTTPException(
+           status_code=status.HTTP_401_UNAUTHORIZED,
+           detail="Invalid token claims",
+           headers={"WWW-Authenticate": "Bearer"},
+       )
+
+   stmt = select(AdminUser).where(AdminUser.id == admin_id)  # NOW WORKS - admin_id is UUID
+
+3. Error Handling:
+   - If the "sub" claim is not a valid UUID string, a 401 Unauthorized error is raised
+   - This handles malformed tokens gracefully
+
+AUTHENTICATION FLOW (AFTER FIX)
+-------------------------------
+1. Login Endpoint (POST /api/auth/login):
+   - Create admin user with UUID id
+   - Generate token with: {"sub": str(admin_user.id)}  # String
+
+2. Client sends request:
+   - Header: Authorization: Bearer <token>
+
+3. GET /api/auth/me Endpoint:
+   - require_admin() dependency extracts token
+   - Calls verify_token() which decodes JWT
+   - Gets "sub" from payload (string UUID)
+   - Converts string to UUID object using UUID()
+   - Queries database: AdminUser.id == admin_id (UUID object matches UUID column)
+   - Returns AdminUser object with fields:
+     - id: UUID
+     - email: str
+     - is_active: bool
+     - created_at: datetime
+     - updated_at: datetime
+
+RESPONSE SCHEMA
+---------------
+The endpoint returns AdminUserResponse with these fields:
+- id: UUID (Admin user ID)
+- email: str (Admin email address)
+- is_active: bool (Whether admin account is active)
+- created_at: datetime (Account creation timestamp)
+- updated_at: datetime (Account last update timestamp)
+
+ERROR HANDLING
+--------------
+The fix includes proper error handling for:
+1. Missing authorization header -> 401 "Missing authorization header"
+2. Invalid authorization header format -> 401 "Invalid authorization header format"
+3. Invalid or expired token -> 401 "Invalid or expired token"
+4. Invalid token claims (missing "sub") -> 401 "Invalid token claims"
+5. Invalid UUID in "sub" claim -> 401 "Invalid token claims"
+6. Admin user not found -> 401 "Admin user not found or inactive"
+7. Admin user is inactive -> 401 "Admin user not found or inactive"
+
+TEST COVERAGE
+-------------
+Comprehensive test file created: tests/test_admin_auth.py
+
+Tests cover:
+1. test_login_returns_token: Login endpoint returns valid JWT token
+2. test_get_current_user_with_valid_token: GET /auth/me works with valid token
+3. test_get_current_user_without_token: Returns 401 without Authorization header
+4. test_get_current_user_with_invalid_token: Returns 401 with invalid token
+5. test_get_current_user_with_inactive_user: Returns 401 for inactive admin
+
+To run tests:
+    pip install -r requirements-dev.txt
+    pytest tests/test_admin_auth.py -v
+
+FILES MODIFIED
+--------------
+1. app/dependencies.py - Fixed UUID conversion in require_admin() function
+   - Added: from uuid import UUID
+   - Added: Try-except block to convert string to UUID
+   - Changed: admin_id = payload.get("sub") to admin_id_str + UUID conversion
+
+2. tests/test_admin_auth.py - NEW test file for auth endpoints
+   - Comprehensive tests for login and /auth/me endpoints
+
+VERIFICATION
+------------
+The fix ensures that:
+✓ JWT tokens are properly decoded
+✓ String UUIDs from JWT are converted to UUID objects
+✓ Database queries work with proper UUID types
+✓ Error handling is comprehensive and returns proper HTTP status codes
+✓ The GET /api/auth/me endpoint returns user object with all required fields
