@@ -67,23 +67,23 @@ jobs:
             echo "========== COMPREHENSIVE DIAGNOSTICS =========="
             echo ""
             echo "--- Docker Engine ---"
-            docker --version
-            docker version --format 'Client: {{.Client.Version}} | Server: {{.Server.Version}}'
+            sudo docker --version || echo "ERROR: Cannot access docker"
+            sudo docker version --format 'Client: {{.Client.Version}} | Server: {{.Server.Version}}' 2>/dev/null || true
             echo ""
 
             echo "--- Docker Compose ---"
-            docker compose version
+            sudo docker compose version 2>/dev/null || echo "ERROR: Docker Compose not available"
             echo ""
 
             echo "--- BuildKit Status ---"
-            docker buildx version 2>/dev/null || echo "Buildx: NOT INSTALLED"
-            docker buildx ls 2>/dev/null || echo "Buildx builders: UNABLE TO LIST"
-            docker buildx inspect 2>/dev/null || echo "Buildx default builder: NOT AVAILABLE"
+            sudo docker buildx version 2>/dev/null || echo "Buildx: NOT INSTALLED"
+            sudo docker buildx ls 2>/dev/null || echo "Buildx builders: UNABLE TO LIST"
+            sudo docker buildx inspect 2>/dev/null || echo "Buildx default builder: NOT AVAILABLE"
             echo ""
 
             echo "--- Docker Daemon Health ---"
-            docker ps -q | head -3 > /dev/null && echo "Daemon: RESPONSIVE" || echo "Daemon: UNRESPONSIVE"
-            docker system df 2>/dev/null | head -5 || echo "System df: UNAVAILABLE"
+            sudo docker ps -q 2>/dev/null | wc -l | xargs -I {} echo "Running containers: {}" || echo "Daemon: UNRESPONSIVE"
+            sudo docker system df 2>/dev/null | head -5 || echo "System df: UNAVAILABLE"
             echo ""
 
             echo "--- System Resources ---"
@@ -98,7 +98,7 @@ jobs:
             echo "--- Build Backend Detection ---"
             echo "DOCKER_BUILDKIT env: ${DOCKER_BUILDKIT:-unset}"
             echo "COMPOSE_BUILDER env: ${COMPOSE_BUILDER:-unset}"
-            docker info 2>/dev/null | grep -i buildkit || echo "BuildKit not mentioned in docker info"
+            sudo docker info 2>/dev/null | grep -i buildkit || echo "BuildKit: not in docker info"
             echo ""
 
             echo "========== ATTEMPTING DOCKER COMPOSE BUILD =========="
@@ -106,27 +106,28 @@ jobs:
 
             # Strategy 1: Try with DOCKER_BUILDKIT=0 (disable BuildKit)
             echo "[Attempt 1] Building with DOCKER_BUILDKIT=0..."
-            if sudo env DOCKER_BUILDKIT=0 docker compose up -d --build --remove-orphans 2>&1; then
+            if sudo env DOCKER_BUILDKIT=0 docker compose up -d --build --remove-orphans; then
               echo "✓ Build succeeded with DOCKER_BUILDKIT=0"
             else
               BUILD_ERROR=$?
-              echo "✗ Build failed with DOCKER_BUILDKIT=0 (exit: $BUILD_ERROR)"
+              echo "✗ Build failed with DOCKER_BUILDKIT=0 (exit code: $BUILD_ERROR)"
               echo ""
-              echo "Trying fallback strategy..."
+              echo "Attempting fallback strategy..."
 
               # Strategy 2: Try without BuildKit-related env vars
               echo "[Attempt 2] Building with standard docker compose..."
-              if sudo docker compose up -d --build --remove-orphans 2>&1; then
+              if sudo docker compose up -d --build --remove-orphans; then
                 echo "✓ Build succeeded with standard docker compose"
               else
                 BUILD_ERROR2=$?
-                echo "✗ Build failed with standard docker compose (exit: $BUILD_ERROR2)"
+                echo "✗ Build failed with standard docker compose (exit code: $BUILD_ERROR2)"
                 echo ""
                 echo "=== DOCKER COMPOSE LOGS ==="
-                sudo docker compose logs --tail=50
+                sudo docker compose logs --tail=50 || true
                 echo ""
                 echo "=== DOCKER DAEMON LOGS ==="
                 sudo journalctl -u docker.service -n 30 --no-pager 2>/dev/null || echo "(daemon logs unavailable)"
+                echo ""
                 exit 1
               fi
             fi
