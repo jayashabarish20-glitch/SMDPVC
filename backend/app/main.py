@@ -10,12 +10,14 @@ from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.database import engine
+from app.database_init import initialize_database
 from app.routers.admin_auth import router as admin_auth_router
 from app.routers.admin_leadership import router as admin_leadership_router
 from app.routers.admin_photos import router as admin_photos_router
 from app.routers.health import router as health_router
 from app.routers.media import router as media_router
 from app.routers.public import router as public_router
+from app.services.admin_bootstrap import bootstrap_admin_user
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -23,6 +25,8 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    await initialize_database()
+    await bootstrap_admin_user(settings.admin_email, settings.admin_password)
     yield
     await engine.dispose()
 

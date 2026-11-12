@@ -12,6 +12,16 @@ def _default_database_url() -> str:
     return f"sqlite+aiosqlite:///{database_path.as_posix()}"
 
 
+def _get_env_file() -> Path:
+    """Get path to .env file (in project root, not backend directory)."""
+    backend_dir = Path(__file__).resolve().parents[1]
+    project_root = backend_dir.parent
+    env_file = project_root / ".env"
+    if env_file.exists():
+        return env_file
+    return Path(".env")
+
+
 class Settings(BaseSettings):
     database_url: str = Field(
         default_factory=_default_database_url,
@@ -51,9 +61,21 @@ class Settings(BaseSettings):
         gt=0,
         validation_alias="JWT_EXPIRATION_HOURS",
     )
+    admin_username: str | None = Field(
+        default=None,
+        validation_alias="ADMIN_USERNAME",
+    )
+    admin_email: str | None = Field(
+        default=None,
+        validation_alias="ADMIN_EMAIL",
+    )
+    admin_password: str | None = Field(
+        default=None,
+        validation_alias="ADMIN_PASSWORD",
+    )
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_get_env_file(),
         env_file_encoding="utf-8",
         extra="ignore",
     )
