@@ -30,19 +30,23 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
           script: |
             set -e
 
             if ! command -v docker >/dev/null 2>&1; then
               sudo apt-get update
-              sudo apt-get install -y docker.io docker-compose-v2 git
+              sudo apt-get install -y docker.io docker-compose-v2 git curl
               sudo systemctl enable --now docker
             fi
 
             if ! docker compose version >/dev/null 2>&1; then
               sudo apt-get update
-              sudo apt-get install -y docker-compose-v2
+              sudo apt-get install -y docker-compose-v2 curl
+            fi
+
+            if ! command -v curl >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y curl
             fi
 
             mkdir -p ~/SMDPVC
@@ -60,7 +64,7 @@ jobs:
               exit 1
             fi
 
-            sudo docker compose up -d --build --remove-orphans
+            sudo env COMPOSE_BAKE=false docker compose up -d --build --remove-orphans
 
             for i in $(seq 1 30); do
               if curl -fsS http://localhost/api/health; then
