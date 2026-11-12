@@ -64,7 +64,72 @@ jobs:
               exit 1
             fi
 
-            sudo env COMPOSE_BAKE=false docker compose up -d --build --remove-orphans
+            echo "========== COMPREHENSIVE DIAGNOSTICS =========="
+            echo ""
+            echo "--- Docker Engine ---"
+            docker --version
+            docker version --format 'Client: {{.Client.Version}} | Server: {{.Server.Version}}'
+            echo ""
+
+            echo "--- Docker Compose ---"
+            docker compose version
+            echo ""
+
+            echo "--- BuildKit Status ---"
+            docker buildx version 2>/dev/null || echo "Buildx: NOT INSTALLED"
+            docker buildx ls 2>/dev/null || echo "Buildx builders: UNABLE TO LIST"
+            docker buildx inspect 2>/dev/null || echo "Buildx default builder: NOT AVAILABLE"
+            echo ""
+
+            echo "--- Docker Daemon Health ---"
+            docker ps -q | head -3 > /dev/null && echo "Daemon: RESPONSIVE" || echo "Daemon: UNRESPONSIVE"
+            docker system df 2>/dev/null | head -5 || echo "System df: UNAVAILABLE"
+            echo ""
+
+            echo "--- System Resources ---"
+            echo "Disk:"
+            df -h / | tail -1
+            echo "Memory:"
+            free -h | grep Mem
+            echo "CPU:"
+            nproc --all
+            echo ""
+
+            echo "--- Build Backend Detection ---"
+            echo "DOCKER_BUILDKIT env: ${DOCKER_BUILDKIT:-unset}"
+            echo "COMPOSE_BUILDER env: ${COMPOSE_BUILDER:-unset}"
+            docker info 2>/dev/null | grep -i buildkit || echo "BuildKit not mentioned in docker info"
+            echo ""
+
+            echo "========== ATTEMPTING DOCKER COMPOSE BUILD =========="
+            echo ""
+
+            # Strategy 1: Try with DOCKER_BUILDKIT=0 (disable BuildKit)
+            echo "[Attempt 1] Building with DOCKER_BUILDKIT=0..."
+            if sudo env DOCKER_BUILDKIT=0 docker compose up -d --build --remove-orphans 2>&1; then
+              echo "✓ Build succeeded with DOCKER_BUILDKIT=0"
+            else
+              BUILD_ERROR=$?
+              echo "✗ Build failed with DOCKER_BUILDKIT=0 (exit: $BUILD_ERROR)"
+              echo ""
+              echo "Trying fallback strategy..."
+
+              # Strategy 2: Try without BuildKit-related env vars
+              echo "[Attempt 2] Building with standard docker compose..."
+              if sudo docker compose up -d --build --remove-orphans 2>&1; then
+                echo "✓ Build succeeded with standard docker compose"
+              else
+                BUILD_ERROR2=$?
+                echo "✗ Build failed with standard docker compose (exit: $BUILD_ERROR2)"
+                echo ""
+                echo "=== DOCKER COMPOSE LOGS ==="
+                sudo docker compose logs --tail=50
+                echo ""
+                echo "=== DOCKER DAEMON LOGS ==="
+                sudo journalctl -u docker.service -n 30 --no-pager 2>/dev/null || echo "(daemon logs unavailable)"
+                exit 1
+              fi
+            fi
 
             for i in $(seq 1 30); do
               if curl -fsS http://localhost/api/health; then
