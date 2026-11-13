@@ -7,11 +7,13 @@ import {
   type LeadershipProfileData,
   type PrimaryClassesGalleryConfig,
   type PrimaryAboutConfig,
+  type NurseryAboutConfig,
   type NurseryClassesGalleryConfig,
   type NurseryLearningActivitiesGalleryConfig,
   type NurseryExtracurricularGalleryConfig,
   type PrimaryLearningActivitiesGalleryConfig,
   type PrimaryExtracurricularGalleryConfig,
+  type GroupOfSchoolsInfrastructureConfig,
 } from '../data/photoService';
 
 /**
@@ -134,6 +136,18 @@ export function usePhotoConfig() {
     [config.primaryAbout]
   );
 
+  // Update the Nursery About section independently from the gallery and hero.
+  const updateNurseryAbout = useCallback(
+    (updates: Partial<NurseryAboutConfig>) => {
+      const current = config.nurseryAbout ?? { photo: null, description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryAbout: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryAbout]
+  );
+
   // Update Nursery Classes Gallery (photos + description)
   const updateNurseryClassesGallery = useCallback(
     (updates: Partial<NurseryClassesGalleryConfig>) => {
@@ -192,6 +206,18 @@ export function usePhotoConfig() {
       setConfig(newConfig);
     },
     [config.primaryExtracurricularGallery]
+  );
+
+  // Update Group of Schools Infrastructure Gallery (photos + description)
+  const updateGroupOfSchoolsInfrastructure = useCallback(
+    (updates: Partial<GroupOfSchoolsInfrastructureConfig>) => {
+      const current = config.groupOfSchoolsInfrastructure ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        groupOfSchoolsInfrastructure: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.groupOfSchoolsInfrastructure]
   );
 
   // Add photo to array (hero, alumni, toppers)
@@ -264,11 +290,13 @@ export function usePhotoConfig() {
     updateSchoolPageHeroes,
     updatePrimaryClassesGallery,
     updatePrimaryAbout,
+    updateNurseryAbout,
     updateNurseryClassesGallery,
     updateNurseryLearningActivitiesGallery,
     updateNurseryExtracurricularGallery,
     updatePrimaryLearningActivitiesGallery,
     updatePrimaryExtracurricularGallery,
+    updateGroupOfSchoolsInfrastructure,
     addPhoto,
     removePhoto,
     reorderPhotos,

@@ -8,6 +8,24 @@ from app.schemas.base import EntityRead, Schema
 from app.schemas.media import MediaRead
 
 
+class AboutSectionCreate(Schema):
+    section_key: str = Field(min_length=1, max_length=80)
+    description: str = ""
+    media_id: UUID | None = None
+
+
+class AboutSectionUpdate(Schema):
+    description: str | None = None
+    media_id: UUID | None = None
+
+
+class AboutSectionRead(EntityRead):
+    section_key: str
+    description: str
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
 class LeadershipProfileCreate(Schema):
     profile_key: str = Field(min_length=1, max_length=80)
     name: str = Field(min_length=1, max_length=160)

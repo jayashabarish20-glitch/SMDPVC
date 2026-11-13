@@ -56,6 +56,9 @@ class Media(UUIDPrimaryKey, TimestampMixin, Base):
     leadership_profiles: Mapped[list["LeadershipProfile"]] = relationship(
         back_populates="media",
     )
+    about_sections: Mapped[list["AboutSection"]] = relationship(
+        back_populates="media",
+    )
     school_sections: Mapped[list["SchoolSection"]] = relationship(
         back_populates="card_media",
     )

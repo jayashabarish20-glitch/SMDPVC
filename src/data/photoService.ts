@@ -67,6 +67,11 @@ export interface PrimaryAboutConfig {
   description: string;
 }
 
+export interface NurseryAboutConfig {
+  photo: PhotoMetadata | null;
+  description: string;
+}
+
 export interface NurseryClassesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
@@ -92,6 +97,11 @@ export interface PrimaryExtracurricularGalleryConfig {
   description: string;
 }
 
+export interface GroupOfSchoolsInfrastructureConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
 export interface PhotoConfig {
   campusImages: CampusImagesConfig;
   leadershipPhotos: LeadershipPhotoConfig;
@@ -99,11 +109,13 @@ export interface PhotoConfig {
   schoolPageHeroes: SchoolPageHeroConfig;
   primaryClassesGallery: PrimaryClassesGalleryConfig;
   primaryAbout: PrimaryAboutConfig | null;
+  nurseryAbout: NurseryAboutConfig | null;
   nurseryClassesGallery: NurseryClassesGalleryConfig;
   nurseryLearningActivitiesGallery: NurseryLearningActivitiesGalleryConfig;
   nurseryExtracurricularGallery: NurseryExtracurricularGalleryConfig;
   primaryLearningActivitiesGallery: PrimaryLearningActivitiesGalleryConfig;
   primaryExtracurricularGallery: PrimaryExtracurricularGalleryConfig;
+  groupOfSchoolsInfrastructure: GroupOfSchoolsInfrastructureConfig;
   lastUpdated: string;
 }
 
@@ -160,6 +172,7 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
   },
   primaryAbout: null,
+  nurseryAbout: null,
   nurseryClassesGallery: {
     photos: [],
     description: '',
@@ -177,6 +190,10 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
   },
   primaryExtracurricularGallery: {
+    photos: [],
+    description: '',
+  },
+  groupOfSchoolsInfrastructure: {
     photos: [],
     description: '',
   },
@@ -215,6 +232,8 @@ function loadFromStorage(): PhotoConfig {
         ...parsed,
         primaryClassesGallery: parsed.primaryClassesGallery ?? defaultPhotoConfig.primaryClassesGallery,
         primaryAbout: parsed.primaryAbout ?? defaultPhotoConfig.primaryAbout,
+        nurseryAbout: parsed.nurseryAbout ?? defaultPhotoConfig.nurseryAbout,
+        groupOfSchoolsInfrastructure: parsed.groupOfSchoolsInfrastructure ?? defaultPhotoConfig.groupOfSchoolsInfrastructure,
       };
     }
   } catch (error) {

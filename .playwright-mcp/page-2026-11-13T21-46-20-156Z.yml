@@ -9,21 +9,9 @@
         - generic [ref=e9]:
           - generic [ref=e10]: SMDPVC
           - generic "SMDPVC Group Of Schools" [ref=e11]: Group Of Schools
-      - navigation "Main navigation" [ref=e12]:
-        - link "Home" [ref=e13] [cursor=pointer]:
-          - /url: /
-        - link "Our Foundation" [ref=e14] [cursor=pointer]:
-          - /url: "#foundation"
-        - link "Leadership" [ref=e15] [cursor=pointer]:
-          - /url: "#leadership"
-        - link "School Sections" [ref=e16] [cursor=pointer]:
-          - /url: "#school-sections"
-        - link "Enquiry" [ref=e17] [cursor=pointer]:
-          - /url: "#enquiry"
-      - link "Enquiry" [ref=e19] [cursor=pointer]:
-        - /url: "#enquiry"
-  - main [ref=e23]:
-    - region "School highlights" [ref=e24]:
+      - button "Open menu" [ref=e13] [cursor=pointer]
+  - main [ref=e20]:
+    - region "School highlights" [ref=e21]:
       - generic [ref=e25]:
         - generic [ref=e26]:
           - generic [ref=e27]: Welcome
@@ -160,18 +148,20 @@
               - /url: /#leadership
             - link "School Sections" [ref=e222] [cursor=pointer]:
               - /url: /#school-sections
-            - link "Enquiry" [ref=e223] [cursor=pointer]:
+            - link "Infrastructure" [ref=e223] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=e224] [cursor=pointer]:
               - /url: /#enquiry
-        - generic [ref=e224]:
-          - heading "School Sections" [level=4] [ref=e225]
-          - generic [ref=e226]:
-            - link "Nursery" [ref=e227] [cursor=pointer]:
+        - generic [ref=e225]:
+          - heading "School Sections" [level=4] [ref=e226]
+          - generic [ref=e227]:
+            - link "Nursery" [ref=e228] [cursor=pointer]:
               - /url: /nursery
-            - link "Primary" [ref=e230] [cursor=pointer]:
+            - link "Primary" [ref=e231] [cursor=pointer]:
               - /url: /primary
-            - link "Higher Secondary" [ref=e233] [cursor=pointer]:
+            - link "Higher Secondary" [ref=e234] [cursor=pointer]:
               - /url: /higher-secondary
-      - generic [ref=e236]:
-        - paragraph [ref=e237]: © 2026 SMDPVC.
-        - link "Back to Home" [ref=e238] [cursor=pointer]:
+      - generic [ref=e237]:
+        - paragraph [ref=e238]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=e239] [cursor=pointer]:
           - /url: /

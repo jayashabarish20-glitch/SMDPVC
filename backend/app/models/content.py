@@ -57,6 +57,22 @@ class LeadershipProfile(UUIDPrimaryKey, TimestampMixin, Base):
     )
 
 
+class AboutSection(UUIDPrimaryKey, TimestampMixin, Base):
+    """Admin-managed About section (photo, description) for Primary and Nursery pages."""
+
+    __tablename__ = "about_sections"
+    __table_args__ = (
+        UniqueConstraint("section_key", name="unique_about_section_key"),
+    )
+
+    section_key: Mapped[str] = mapped_column(String(80), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="about_sections")
+
+
 class ContentItem(UUIDPrimaryKey, TimestampMixin, Base):
     """Admin-managed card (photo, title, description) for a page section."""
 

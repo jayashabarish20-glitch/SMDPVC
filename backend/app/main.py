@@ -12,6 +12,7 @@ from app.config import get_settings
 from app.database import engine
 from app.database_init import initialize_database
 from app.routers.admin_auth import router as admin_auth_router
+from app.routers.admin_about_sections import router as admin_about_sections_router
 from app.routers.admin_content_items import router as admin_content_items_router
 from app.routers.admin_leadership import router as admin_leadership_router
 from app.routers.admin_photos import router as admin_photos_router
@@ -76,6 +77,7 @@ app.include_router(health_router, prefix="/api")
 app.include_router(admin_auth_router, prefix="/api")
 app.include_router(admin_leadership_router, prefix="/api/admin")
 app.include_router(admin_content_items_router, prefix="/api/admin")
+app.include_router(admin_about_sections_router, prefix="/api/admin")
 app.include_router(admin_photos_router, prefix="/api/admin")
 app.include_router(media_router, prefix="/api/media")
 app.include_router(public_router, prefix="/api")

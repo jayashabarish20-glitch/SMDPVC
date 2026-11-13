@@ -6,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.database import get_db
-from app.models.content import ContentItem, LeadershipProfile
+from app.models.content import ContentItem, LeadershipProfile, AboutSection
 from app.models.media import Media, PhotoConfiguration
-from app.schemas.content import ContentItemRead, LeadershipProfileRead
+from app.schemas.content import ContentItemRead, LeadershipProfileRead, AboutSectionRead
 from app.schemas.media import PhotoConfigurationRead
 from app.services import content_item_service
 
@@ -62,3 +62,27 @@ async def list_public_content_items(
         )
     except Exception:
         return []
+
+
+@router.get("/about-sections", response_model=list[AboutSectionRead])
+async def list_public_about_sections(
+    session: DatabaseSession,
+) -> list[AboutSection]:
+    result = await session.scalars(
+        select(AboutSection)
+        .options(joinedload(AboutSection.media))
+    )
+    return list(result.unique().all())
+
+
+@router.get("/about-sections/{section_key}", response_model=AboutSectionRead | None)
+async def get_public_about_section(
+    section_key: str,
+    session: DatabaseSession,
+) -> AboutSection | None:
+    result = await session.scalar(
+        select(AboutSection)
+        .where(AboutSection.section_key == section_key)
+        .options(joinedload(AboutSection.media))
+    )
+    return result
