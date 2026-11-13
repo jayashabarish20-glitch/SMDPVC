@@ -56,6 +56,9 @@ async def list_public_content_items(
     page: Annotated[str | None, Query(max_length=80)] = None,
     section: Annotated[str | None, Query(max_length=80)] = None,
 ) -> list[ContentItem]:
-    return await content_item_service.list_items(
-        session, page, section, active_only=True
-    )
+    try:
+        return await content_item_service.list_items(
+            session, page, section, active_only=True
+        )
+    except Exception:
+        return []

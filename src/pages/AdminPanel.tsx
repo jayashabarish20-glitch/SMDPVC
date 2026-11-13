@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { AdminLayout } from '../components/admin/AdminLayout';
-import { ContentItemsManager } from '../components/admin/ContentItemsManager';
 import { HomeHeroManager } from '../components/admin/HomeHeroManager';
 import { LeadershipPhotosManager } from '../components/admin/LeadershipPhotosManager';
 import { SchoolSectionsManager } from '../components/admin/SchoolSectionsManager';
@@ -10,6 +9,8 @@ import { ExcellenceManager } from '../components/admin/ExcellenceManager';
 import { CampusLifeManager } from '../components/admin/CampusLifeManager';
 import { PrimaryClassesGalleryManager } from '../components/admin/PrimaryClassesGalleryManager';
 import { PrimaryAboutManager } from '../components/admin/PrimaryAboutManager';
+import { NurseryClassesManager } from '../components/admin/NurseryClassesManager';
+import { ContentItemsManager } from '../components/admin/ContentItemsManager';
 
 type AdminSection =
   | 'home-hero'
@@ -82,7 +83,7 @@ export function AdminPanel() {
           description="Manage the background images for the Primary page hero carousel, including the location photo."
         />
       )}
-      {activeSection === 'content-nursery-classes' && <ContentItemsManager />}
+      {activeSection === 'content-nursery-classes' && <NurseryClassesManager />}
       {activeSection === 'content-nursery-learning' && <ContentItemsManager />}
       {activeSection === 'content-nursery-extracurricular' && <ContentItemsManager />}
       {activeSection === 'content-primary-classes' && <ContentItemsManager />}
