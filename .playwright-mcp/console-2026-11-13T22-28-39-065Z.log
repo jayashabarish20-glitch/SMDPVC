@@ -1,0 +1,59 @@
+[     266ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:22163
+[   36295ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ SchoolPage 1. useState                   useState
+2. useState                   useState
+3. useCallback                useCallback
+4. useCallback                useCallback
+5. useCallback                useCallback
+6. useCallback                useCallback
+7. useCallback                useCallback
+8. useCallback                useCallback
+9. useCallback                useCallback
+10. useCallback               useCallback
+11. useCallback               useCallback
+12. useCallback               useCallback
+13. useCallback               useCallback
+14. useCallback               useCallback
+15. useCallback               useCallback
+16. useCallback               useCallback
+17. useCallback               useCallback
+18. useCallback               useCallback
+19. useCallback               useCallback
+20. undefined                 useCallback
+ @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:5856
+[   36323ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:6056:19)
+    at updateCallback (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:6788:20)
+    at Object.useCallback (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:20683:18)
+    at exports.useCallback (http://localhost:5173/node_modules/.vite/deps/chunk-RTDQCKL7.js?v=e778991e:959:36)
+    at usePhotoConfig (http://localhost:5173/src/hooks/usePhotoConfig.ts?t=1794608954456:200:23)
+    at SchoolPage (http://localhost:5173/src/components/SchoolPage.tsx?t=1794608954456:30:23)
+    at Object.react_stack_bottom_frame (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:20257:20)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:5916:24)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:7761:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:8841:20)
+[   36312ms] [WARNING] %s
+
+%s
+ An error occurred in the <SchoolPage> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:7239
+[  142302ms] ReferenceError: primaryAcademicCalendar is not defined
+    at http://localhost:5173/src/components/SchoolPage.tsx?t=1794609060360:68:15
+    at Array.map (<anonymous>)
+    at SchoolPage (http://localhost:5173/src/components/SchoolPage.tsx?t=1794609060360:57:136)
+    at Object.react_stack_bottom_frame (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:20257:20)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:5916:24)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:7761:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:8841:20)
+    at runWithFiberInDEV (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:1131:72)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:13596:98)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:13459:43)
+[  142297ms] [WARNING] %s
+
+%s
+ An error occurred in the <SchoolPage> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=e778991e:7239

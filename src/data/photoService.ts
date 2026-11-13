@@ -109,6 +109,12 @@ export interface GroupOfSchoolsInfrastructureConfig {
   fullScreen?: boolean;
 }
 
+export interface AcademicCalendarData {
+  filename: string;
+  dataUrl: string; // Base64 encoded PDF
+  uploadedAt: string;
+}
+
 export interface PhotoConfig {
   campusImages: CampusImagesConfig;
   leadershipPhotos: LeadershipPhotoConfig;
@@ -123,6 +129,8 @@ export interface PhotoConfig {
   primaryLearningActivitiesGallery: PrimaryLearningActivitiesGalleryConfig;
   primaryExtracurricularGallery: PrimaryExtracurricularGalleryConfig;
   groupOfSchoolsInfrastructure: GroupOfSchoolsInfrastructureConfig;
+  academicCalendarPrimary: AcademicCalendarData | null;
+  academicCalendarNursery: AcademicCalendarData | null;
   lastUpdated: string;
 }
 
@@ -211,6 +219,8 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
     fullScreen: true,
   },
+  academicCalendarPrimary: null,
+  academicCalendarNursery: null,
   lastUpdated: new Date().toISOString(),
 };
 
@@ -248,6 +258,8 @@ function loadFromStorage(): PhotoConfig {
         primaryAbout: parsed.primaryAbout ?? defaultPhotoConfig.primaryAbout,
         nurseryAbout: parsed.nurseryAbout ?? defaultPhotoConfig.nurseryAbout,
         groupOfSchoolsInfrastructure: parsed.groupOfSchoolsInfrastructure ?? defaultPhotoConfig.groupOfSchoolsInfrastructure,
+        academicCalendarPrimary: parsed.academicCalendarPrimary ?? defaultPhotoConfig.academicCalendarPrimary,
+        academicCalendarNursery: parsed.academicCalendarNursery ?? defaultPhotoConfig.academicCalendarNursery,
       };
     }
   } catch (error) {

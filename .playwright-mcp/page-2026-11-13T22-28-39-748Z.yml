@@ -1,0 +1,86 @@
+- generic [ref=f10e3]:
+  - link "Skip to main content" [ref=f10e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - generic [ref=f10e6]:
+      - link "SMDPVC Primary home" [ref=f10e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f10e8]: S
+        - generic [ref=f10e9]:
+          - generic [ref=f10e10]: SMDPVC
+          - generic "SMDPVC Primary" [ref=f10e11]: Primary
+      - generic [ref=f10e12]:
+        - link "Back to Home" [ref=f10e13] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=f10e14] [cursor=pointer]
+  - main [ref=f10e21]:
+    - region "Primary highlights" [ref=f10e22]:
+      - generic [ref=f10e26]:
+        - generic [ref=f10e27]:
+          - generic [ref=f10e28]: Primary
+          - generic [ref=f10e31]:
+            - heading "Building Strong Foundations" [level=1] [ref=f10e32]
+            - paragraph [ref=f10e33]: Explore the Primary section. Add the school's verified educational overview here.
+          - generic [ref=f10e34]:
+            - button "Explore Primary" [ref=f10e35] [cursor=pointer]
+            - button "About This Section" [ref=f10e38] [cursor=pointer]
+        - generic [ref=f10e39]:
+          - button "Slide 1" [ref=f10e40] [cursor=pointer]
+          - button "Slide 2" [ref=f10e41] [cursor=pointer]
+          - button "Slide 3" [ref=f10e42] [cursor=pointer]
+    - generic [ref=f10e43]:
+      - generic [ref=f10e44]:
+        - paragraph [ref=f10e45]: Primary
+        - heading "About Primary" [level=2] [ref=f10e46]
+        - paragraph [ref=f10e47]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f10e48]:
+        - paragraph [ref=f10e49]: Primary
+        - heading "Classes" [level=2] [ref=f10e50]
+      - generic [ref=f10e56]:
+        - paragraph [ref=f10e57]: Primary
+        - heading "Learning Activities" [level=2] [ref=f10e58]
+      - generic [ref=f10e64]:
+        - paragraph [ref=f10e65]: Primary
+        - heading "Academic Calendar" [level=2] [ref=f10e66]
+        - paragraph [ref=f10e67]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f10e68]:
+        - paragraph [ref=f10e69]: Primary
+        - heading "Extracurricular Activities" [level=2] [ref=f10e70]
+  - contentinfo [ref=f10e76]:
+    - generic [ref=f10e77]:
+      - generic [ref=f10e78]:
+        - generic [ref=f10e79]:
+          - generic [ref=f10e80]:
+            - generic [ref=f10e81]: S
+            - generic [ref=f10e82]:
+              - paragraph [ref=f10e83]: SMDPVC
+              - paragraph [ref=f10e84]: Higher Secondary School
+          - paragraph [ref=f10e85]: School information and contact details can be added here after confirmation by the school.
+        - generic [ref=f10e86]:
+          - heading "Home" [level=4] [ref=f10e87]
+          - generic [ref=f10e88]:
+            - link "Home" [ref=f10e89] [cursor=pointer]:
+              - /url: /
+            - link "Our Foundation" [ref=f10e90] [cursor=pointer]:
+              - /url: /#foundation
+            - link "Leadership" [ref=f10e91] [cursor=pointer]:
+              - /url: /#leadership
+            - link "School Sections" [ref=f10e92] [cursor=pointer]:
+              - /url: /#school-sections
+            - link "Infrastructure" [ref=f10e93] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=f10e94] [cursor=pointer]:
+              - /url: /#enquiry
+        - generic [ref=f10e95]:
+          - heading "School Sections" [level=4] [ref=f10e96]
+          - generic [ref=f10e97]:
+            - link "Nursery" [ref=f10e98] [cursor=pointer]:
+              - /url: /nursery
+            - link "Primary" [ref=f10e101] [cursor=pointer]:
+              - /url: /primary
+            - link "Higher Secondary" [ref=f10e104] [cursor=pointer]:
+              - /url: /higher-secondary
+      - generic [ref=f10e107]:
+        - paragraph [ref=f10e108]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=f10e109] [cursor=pointer]:
+          - /url: /

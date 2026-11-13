@@ -14,6 +14,7 @@ import {
   type PrimaryLearningActivitiesGalleryConfig,
   type PrimaryExtracurricularGalleryConfig,
   type GroupOfSchoolsInfrastructureConfig,
+  type AcademicCalendarData,
 } from '../data/photoService';
 
 /**
@@ -220,6 +221,28 @@ export function usePhotoConfig() {
     [config.groupOfSchoolsInfrastructure]
   );
 
+  // Update Primary Academic Calendar
+  const updatePrimaryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarPrimary: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
+  // Update Nursery Academic Calendar
+  const updateNurseryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarNursery: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
   // Add photo to array (hero, alumni, toppers)
   const addPhoto = useCallback(
     (section: string, photo: PhotoMetadata) => {
@@ -297,6 +320,8 @@ export function usePhotoConfig() {
     updatePrimaryLearningActivitiesGallery,
     updatePrimaryExtracurricularGallery,
     updateGroupOfSchoolsInfrastructure,
+    updatePrimaryAcademicCalendar,
+    updateNurseryAcademicCalendar,
     addPhoto,
     removePhoto,
     reorderPhotos,

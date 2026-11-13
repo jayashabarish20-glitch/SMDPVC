@@ -9,6 +9,8 @@ import { ExcellenceManager } from '../components/admin/ExcellenceManager';
 import { CampusLifeManager } from '../components/admin/CampusLifeManager';
 import { PrimaryAboutManager } from '../components/admin/PrimaryAboutManager';
 import { NurseryAboutManager } from '../components/admin/NurseryAboutManager';
+import { PrimaryAcademicCalendarManager } from '../components/admin/PrimaryAcademicCalendarManager';
+import { NurseryAcademicCalendarManager } from '../components/admin/NurseryAcademicCalendarManager';
 import { NurseryClassesGalleryManager } from '../components/admin/NurseryClassesGalleryManager';
 import { NurseryLearningActivitiesGalleryManager } from '../components/admin/NurseryLearningActivitiesGalleryManager';
 import { NurseryExtracurricularGalleryManager } from '../components/admin/NurseryExtracurricularGalleryManager';
@@ -33,6 +35,8 @@ type AdminSection =
   | 'nursery-about'
   | 'primary-hero'
   | 'primary-about'
+  | 'primary-academic-calendar'
+  | 'nursery-academic-calendar'
   | 'hs-hero'
   | 'excellence'
   | 'campus-life';
@@ -51,11 +55,13 @@ export function AdminPanel() {
     { id: '5b', label: 'Nursery – Learning Activities Gallery', section: 'content-nursery-learning' as AdminSection },
     { id: '5c', label: 'Nursery – Extracurricular Gallery', section: 'content-nursery-extracurricular' as AdminSection },
     { id: '5d', label: 'Nursery – About', section: 'nursery-about' as AdminSection },
+    { id: '5e', label: 'Nursery – Academic Calendar', section: 'nursery-academic-calendar' as AdminSection },
     { id: '6', label: 'Primary Page Hero', section: 'primary-hero' as AdminSection },
     { id: '6a', label: 'Primary – Classes Gallery', section: 'content-primary-classes' as AdminSection },
     { id: '6b', label: 'Primary – Learning Activities Gallery', section: 'content-primary-learning' as AdminSection },
     { id: '6c', label: 'Primary – Extracurricular Gallery', section: 'content-primary-extracurricular' as AdminSection },
     { id: '6d', label: 'Primary – About', section: 'primary-about' as AdminSection },
+    { id: '6e', label: 'Primary – Academic Calendar', section: 'primary-academic-calendar' as AdminSection },
     { id: '7', label: 'Higher Secondary Hero', section: 'hs-hero' as AdminSection },
     { id: '8', label: 'Excellence & Toppers', section: 'excellence' as AdminSection },
     { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' as AdminSection },
@@ -106,6 +112,8 @@ export function AdminPanel() {
       {activeSection === 'excellence' && <ExcellenceManager />}
       {activeSection === 'campus-life' && <CampusLifeManager />}
       {activeSection === 'primary-about' && <PrimaryAboutManager />}
+      {activeSection === 'primary-academic-calendar' && <PrimaryAcademicCalendarManager />}
+      {activeSection === 'nursery-academic-calendar' && <NurseryAcademicCalendarManager />}
     </AdminLayout>
   );
 }

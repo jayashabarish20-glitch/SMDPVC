@@ -52,6 +52,8 @@ export function SchoolPage({ page }: SchoolPageProps) {
   const isNurseryPage = page.title === "Nursery";
   const primaryAboutData = isPrimaryPage ? config.primaryAbout : null;
   const nurseryAboutData = isNurseryPage ? config.nurseryAbout : null;
+  const primaryAcademicCalendarData = isPrimaryPage ? config.academicCalendarPrimary : null;
+  const nurseryAcademicCalendarData = isNurseryPage ? config.academicCalendarNursery : null;
 
   return (
     <main
@@ -71,6 +73,8 @@ export function SchoolPage({ page }: SchoolPageProps) {
               page={page}
               primaryAboutData={primaryAboutData}
               nurseryAboutData={nurseryAboutData}
+              primaryAcademicCalendar={primaryAcademicCalendarData}
+              nurseryAcademicCalendar={nurseryAcademicCalendarData}
               galleryData={galleryData}
               shouldReduceMotion={shouldReduceMotion}
               contentItemMapping={contentItemMapping}
@@ -90,6 +94,8 @@ interface SectionWithContentItemsProps {
   page: SchoolPageConfig;
   primaryAboutData: unknown;
   nurseryAboutData: unknown;
+  primaryAcademicCalendar: unknown;
+  nurseryAcademicCalendar: unknown;
   galleryData: unknown;
   shouldReduceMotion: boolean | null;
   contentItemMapping: { page_slug: string; section_key: string } | null;
@@ -108,6 +114,8 @@ function SectionWithContentItems({
   page,
   primaryAboutData,
   nurseryAboutData,
+  primaryAcademicCalendar,
+  nurseryAcademicCalendar,
   galleryData,
   shouldReduceMotion,
   contentItemMapping,
@@ -177,6 +185,28 @@ function SectionWithContentItems({
               {(nurseryAboutData as any).description}
             </p>
           )}
+        </div>
+      ) : section.id === "primary-academic-calendar" && primaryAcademicCalendar ? (
+        <div className="mt-6">
+          <a
+            href={(primaryAcademicCalendar as any).dataUrl}
+            download={(primaryAcademicCalendar as any).filename}
+            className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
+          >
+            <Icon name="arrow" className="h-4 w-4" />
+            Download Academic Calendar
+          </a>
+        </div>
+      ) : section.id === "nursery-academic-calendar" && nurseryAcademicCalendar ? (
+        <div className="mt-6">
+          <a
+            href={(nurseryAcademicCalendar as any).dataUrl}
+            download={(nurseryAcademicCalendar as any).filename}
+            className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
+          >
+            <Icon name="arrow" className="h-4 w-4" />
+            Download Academic Calendar
+          </a>
         </div>
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
