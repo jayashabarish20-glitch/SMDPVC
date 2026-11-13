@@ -186,28 +186,36 @@ function SectionWithContentItems({
             </p>
           )}
         </div>
-      ) : section.id === "primary-academic-calendar" && primaryAcademicCalendar ? (
-        <div className="mt-6">
-          <a
-            href={(primaryAcademicCalendar as any).dataUrl}
-            download={(primaryAcademicCalendar as any).filename}
-            className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
-          >
-            <Icon name="arrow" className="h-4 w-4" />
-            Download Academic Calendar
-          </a>
-        </div>
-      ) : section.id === "nursery-academic-calendar" && nurseryAcademicCalendar ? (
-        <div className="mt-6">
-          <a
-            href={(nurseryAcademicCalendar as any).dataUrl}
-            download={(nurseryAcademicCalendar as any).filename}
-            className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
-          >
-            <Icon name="arrow" className="h-4 w-4" />
-            Download Academic Calendar
-          </a>
-        </div>
+      ) : section.id === "primary-academic-calendar" ? (
+        primaryAcademicCalendar ? (
+          <div className="mt-6">
+            <a
+              href={(primaryAcademicCalendar as any).dataUrl}
+              download={(primaryAcademicCalendar as any).filename}
+              className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
+            >
+              <Icon name="arrow" className="h-4 w-4" />
+              Download Academic Calendar
+            </a>
+          </div>
+        ) : (
+          <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
+        )
+      ) : section.id === "nursery-academic-calendar" ? (
+        nurseryAcademicCalendar ? (
+          <div className="mt-6">
+            <a
+              href={(nurseryAcademicCalendar as any).dataUrl}
+              download={(nurseryAcademicCalendar as any).filename}
+              className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
+            >
+              <Icon name="arrow" className="h-4 w-4" />
+              Download Academic Calendar
+            </a>
+          </div>
+        ) : (
+          <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
+        )
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
           <ContentItemCards items={items} loading={loading} />
