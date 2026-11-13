@@ -10,6 +10,10 @@ import { CampusLifeManager } from '../components/admin/CampusLifeManager';
 import { PrimaryClassesGalleryManager } from '../components/admin/PrimaryClassesGalleryManager';
 import { PrimaryAboutManager } from '../components/admin/PrimaryAboutManager';
 import { NurseryClassesManager } from '../components/admin/NurseryClassesManager';
+import { NurseryLearningActivitiesManager } from '../components/admin/NurseryLearningActivitiesManager';
+import { NurseryExtracurricularManager } from '../components/admin/NurseryExtracurricularManager';
+import { PrimaryLearningActivitiesManager } from '../components/admin/PrimaryLearningActivitiesManager';
+import { PrimaryExtracurricularManager } from '../components/admin/PrimaryExtracurricularManager';
 import { ContentItemsManager } from '../components/admin/ContentItemsManager';
 
 type AdminSection =
@@ -84,11 +88,11 @@ export function AdminPanel() {
         />
       )}
       {activeSection === 'content-nursery-classes' && <NurseryClassesManager />}
-      {activeSection === 'content-nursery-learning' && <ContentItemsManager />}
-      {activeSection === 'content-nursery-extracurricular' && <ContentItemsManager />}
+      {activeSection === 'content-nursery-learning' && <NurseryLearningActivitiesManager />}
+      {activeSection === 'content-nursery-extracurricular' && <NurseryExtracurricularManager />}
       {activeSection === 'content-primary-classes' && <ContentItemsManager />}
-      {activeSection === 'content-primary-learning' && <ContentItemsManager />}
-      {activeSection === 'content-primary-extracurricular' && <ContentItemsManager />}
+      {activeSection === 'content-primary-learning' && <PrimaryLearningActivitiesManager />}
+      {activeSection === 'content-primary-extracurricular' && <PrimaryExtracurricularManager />}
       {activeSection === 'hs-hero' && (
         <SchoolPageHeroManager
           pageKey="higherSecondary"
