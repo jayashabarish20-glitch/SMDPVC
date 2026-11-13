@@ -7,6 +7,11 @@ import {
   type LeadershipProfileData,
   type PrimaryClassesGalleryConfig,
   type PrimaryAboutConfig,
+  type NurseryClassesGalleryConfig,
+  type NurseryLearningActivitiesGalleryConfig,
+  type NurseryExtracurricularGalleryConfig,
+  type PrimaryLearningActivitiesGalleryConfig,
+  type PrimaryExtracurricularGalleryConfig,
 } from '../data/photoService';
 
 /**
@@ -129,6 +134,66 @@ export function usePhotoConfig() {
     [config.primaryAbout]
   );
 
+  // Update Nursery Classes Gallery (photos + description)
+  const updateNurseryClassesGallery = useCallback(
+    (updates: Partial<NurseryClassesGalleryConfig>) => {
+      const current = config.nurseryClassesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryClassesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryClassesGallery]
+  );
+
+  // Update Nursery Learning Activities Gallery (photos + description)
+  const updateNurseryLearningActivitiesGallery = useCallback(
+    (updates: Partial<NurseryLearningActivitiesGalleryConfig>) => {
+      const current = config.nurseryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryLearningActivitiesGallery]
+  );
+
+  // Update Nursery Extracurricular Gallery (photos + description)
+  const updateNurseryExtracurricularGallery = useCallback(
+    (updates: Partial<NurseryExtracurricularGalleryConfig>) => {
+      const current = config.nurseryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryExtracurricularGallery]
+  );
+
+  // Update Primary Learning Activities Gallery (photos + description)
+  const updatePrimaryLearningActivitiesGallery = useCallback(
+    (updates: Partial<PrimaryLearningActivitiesGalleryConfig>) => {
+      const current = config.primaryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryLearningActivitiesGallery]
+  );
+
+  // Update Primary Extracurricular Gallery (photos + description)
+  const updatePrimaryExtracurricularGallery = useCallback(
+    (updates: Partial<PrimaryExtracurricularGalleryConfig>) => {
+      const current = config.primaryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryExtracurricularGallery]
+  );
+
   // Add photo to array (hero, alumni, toppers)
   const addPhoto = useCallback(
     (section: string, photo: PhotoMetadata) => {
@@ -199,6 +264,11 @@ export function usePhotoConfig() {
     updateSchoolPageHeroes,
     updatePrimaryClassesGallery,
     updatePrimaryAbout,
+    updateNurseryClassesGallery,
+    updateNurseryLearningActivitiesGallery,
+    updateNurseryExtracurricularGallery,
+    updatePrimaryLearningActivitiesGallery,
+    updatePrimaryExtracurricularGallery,
     addPhoto,
     removePhoto,
     reorderPhotos,

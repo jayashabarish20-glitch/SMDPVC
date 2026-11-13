@@ -9,11 +9,11 @@ import { ExcellenceManager } from '../components/admin/ExcellenceManager';
 import { CampusLifeManager } from '../components/admin/CampusLifeManager';
 import { PrimaryClassesGalleryManager } from '../components/admin/PrimaryClassesGalleryManager';
 import { PrimaryAboutManager } from '../components/admin/PrimaryAboutManager';
-import { NurseryClassesManager } from '../components/admin/NurseryClassesManager';
-import { NurseryLearningActivitiesManager } from '../components/admin/NurseryLearningActivitiesManager';
-import { NurseryExtracurricularManager } from '../components/admin/NurseryExtracurricularManager';
-import { PrimaryLearningActivitiesManager } from '../components/admin/PrimaryLearningActivitiesManager';
-import { PrimaryExtracurricularManager } from '../components/admin/PrimaryExtracurricularManager';
+import { NurseryClassesGalleryManager } from '../components/admin/NurseryClassesGalleryManager';
+import { NurseryLearningActivitiesGalleryManager } from '../components/admin/NurseryLearningActivitiesGalleryManager';
+import { NurseryExtracurricularGalleryManager } from '../components/admin/NurseryExtracurricularGalleryManager';
+import { PrimaryLearningActivitiesGalleryManager } from '../components/admin/PrimaryLearningActivitiesGalleryManager';
+import { PrimaryExtracurricularGalleryManager } from '../components/admin/PrimaryExtracurricularGalleryManager';
 import { ContentItemsManager } from '../components/admin/ContentItemsManager';
 
 type AdminSection =
@@ -46,13 +46,13 @@ export function AdminPanel() {
     { id: '3a', label: 'Group of Schools – Infrastructure', section: 'content-infrastructure' as AdminSection },
     { id: '4', label: 'Hero 3D Cards', section: 'hero-3d' as AdminSection },
     { id: '5', label: 'Nursery Page Hero', section: 'nursery-hero' as AdminSection },
-    { id: '5a', label: 'Nursery – Classes', section: 'content-nursery-classes' as AdminSection },
-    { id: '5b', label: 'Nursery – Learning Activities', section: 'content-nursery-learning' as AdminSection },
-    { id: '5c', label: 'Nursery – Extracurricular', section: 'content-nursery-extracurricular' as AdminSection },
+    { id: '5a', label: 'Nursery – Classes Gallery', section: 'content-nursery-classes' as AdminSection },
+    { id: '5b', label: 'Nursery – Learning Activities Gallery', section: 'content-nursery-learning' as AdminSection },
+    { id: '5c', label: 'Nursery – Extracurricular Gallery', section: 'content-nursery-extracurricular' as AdminSection },
     { id: '6', label: 'Primary Page Hero', section: 'primary-hero' as AdminSection },
     { id: '6a', label: 'Primary – Classes', section: 'content-primary-classes' as AdminSection },
-    { id: '6b', label: 'Primary – Learning Activities', section: 'content-primary-learning' as AdminSection },
-    { id: '6c', label: 'Primary – Extracurricular', section: 'content-primary-extracurricular' as AdminSection },
+    { id: '6b', label: 'Primary – Learning Activities Gallery', section: 'content-primary-learning' as AdminSection },
+    { id: '6c', label: 'Primary – Extracurricular Gallery', section: 'content-primary-extracurricular' as AdminSection },
     { id: '6d', label: 'Primary – Classes Gallery', section: 'primary-classes-gallery' as AdminSection },
     { id: '6e', label: 'Primary – About', section: 'primary-about' as AdminSection },
     { id: '7', label: 'Higher Secondary Hero', section: 'hs-hero' as AdminSection },
@@ -87,12 +87,12 @@ export function AdminPanel() {
           description="Manage the background images for the Primary page hero carousel, including the location photo."
         />
       )}
-      {activeSection === 'content-nursery-classes' && <NurseryClassesManager />}
-      {activeSection === 'content-nursery-learning' && <NurseryLearningActivitiesManager />}
-      {activeSection === 'content-nursery-extracurricular' && <NurseryExtracurricularManager />}
+      {activeSection === 'content-nursery-classes' && <NurseryClassesGalleryManager />}
+      {activeSection === 'content-nursery-learning' && <NurseryLearningActivitiesGalleryManager />}
+      {activeSection === 'content-nursery-extracurricular' && <NurseryExtracurricularGalleryManager />}
       {activeSection === 'content-primary-classes' && <ContentItemsManager />}
-      {activeSection === 'content-primary-learning' && <PrimaryLearningActivitiesManager />}
-      {activeSection === 'content-primary-extracurricular' && <PrimaryExtracurricularManager />}
+      {activeSection === 'content-primary-learning' && <PrimaryLearningActivitiesGalleryManager />}
+      {activeSection === 'content-primary-extracurricular' && <PrimaryExtracurricularGalleryManager />}
       {activeSection === 'hs-hero' && (
         <SchoolPageHeroManager
           pageKey="higherSecondary"

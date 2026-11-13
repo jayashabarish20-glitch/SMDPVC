@@ -67,6 +67,31 @@ export interface PrimaryAboutConfig {
   description: string;
 }
 
+export interface NurseryClassesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
+export interface NurseryLearningActivitiesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
+export interface NurseryExtracurricularGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
+export interface PrimaryLearningActivitiesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
+export interface PrimaryExtracurricularGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+}
+
 export interface PhotoConfig {
   campusImages: CampusImagesConfig;
   leadershipPhotos: LeadershipPhotoConfig;
@@ -74,6 +99,11 @@ export interface PhotoConfig {
   schoolPageHeroes: SchoolPageHeroConfig;
   primaryClassesGallery: PrimaryClassesGalleryConfig;
   primaryAbout: PrimaryAboutConfig | null;
+  nurseryClassesGallery: NurseryClassesGalleryConfig;
+  nurseryLearningActivitiesGallery: NurseryLearningActivitiesGalleryConfig;
+  nurseryExtracurricularGallery: NurseryExtracurricularGalleryConfig;
+  primaryLearningActivitiesGallery: PrimaryLearningActivitiesGalleryConfig;
+  primaryExtracurricularGallery: PrimaryExtracurricularGalleryConfig;
   lastUpdated: string;
 }
 
@@ -130,6 +160,26 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
   },
   primaryAbout: null,
+  nurseryClassesGallery: {
+    photos: [],
+    description: '',
+  },
+  nurseryLearningActivitiesGallery: {
+    photos: [],
+    description: '',
+  },
+  nurseryExtracurricularGallery: {
+    photos: [],
+    description: '',
+  },
+  primaryLearningActivitiesGallery: {
+    photos: [],
+    description: '',
+  },
+  primaryExtracurricularGallery: {
+    photos: [],
+    description: '',
+  },
   lastUpdated: new Date().toISOString(),
 };
 
