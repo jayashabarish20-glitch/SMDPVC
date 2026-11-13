@@ -45,8 +45,6 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
     },
     sections: [
       { id: "nursery-about", title: "About Nursery", description: editablePlaceholder },
-      { id: "nursery-infrastructure", title: "Infrastructure", description: editablePlaceholder },
-      { id: "nursery-facilities", title: "Facilities", description: editablePlaceholder },
       { id: "nursery-classes", title: "Classes", description: editablePlaceholder },
       { id: "nursery-learning", title: "Learning Activities", description: editablePlaceholder },
       { id: "nursery-calendar", title: "Academic Calendar", description: editablePlaceholder },
@@ -89,7 +87,6 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
     },
     sections: [
       { id: "higher-about", title: "About Higher Secondary", description: editablePlaceholder },
-      { id: "higher-infrastructure", title: "Infrastructure", description: editablePlaceholder },
       {
         id: "higher-courses",
         title: "Courses Offered",

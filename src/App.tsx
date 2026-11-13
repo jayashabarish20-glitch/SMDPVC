@@ -8,6 +8,7 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Icon, scrollToSection } from "./components/Icon";
+import { Infrastructure } from "./components/Infrastructure";
 import { Leadership } from "./components/Leadership";
 import { SchoolPage } from "./components/SchoolPage";
 import { SchoolSections } from "./components/SchoolSections";
@@ -147,6 +148,7 @@ export function App() {
               <About />
               <Leadership />
               <SchoolSections />
+              <Infrastructure />
               <Contact />
             </main>
           )}

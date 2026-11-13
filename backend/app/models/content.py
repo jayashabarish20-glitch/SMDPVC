@@ -57,6 +57,43 @@ class LeadershipProfile(UUIDPrimaryKey, TimestampMixin, Base):
     )
 
 
+class ContentItem(UUIDPrimaryKey, TimestampMixin, Base):
+    """Admin-managed card (photo, title, description) for a page section."""
+
+    __tablename__ = "content_items"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_display_order"),
+        Index(
+            "ix_content_items_section_order",
+            "page_slug",
+            "section_key",
+            "is_active",
+            "display_order",
+        ),
+    )
+
+    page_slug: Mapped[str] = mapped_column(String(80), nullable=False)
+    section_key: Mapped[str] = mapped_column(String(80), nullable=False)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="content_items")
+
+
 class SchoolSection(UUIDPrimaryKey, TimestampMixin, Base):
     __tablename__ = "school_sections"
     __table_args__ = (

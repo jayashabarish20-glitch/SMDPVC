@@ -286,6 +286,7 @@ export const navItems = [
   { label: "Our Foundation", id: "foundation" },
   { label: "Leadership", id: "leadership" },
   { label: "School Sections", id: "school-sections" },
+  { label: "Infrastructure", id: "infrastructure" },
   { label: "Enquiry", id: "enquiry" },
 ];
 

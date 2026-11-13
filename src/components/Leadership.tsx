@@ -5,34 +5,24 @@ import { Icon } from "./Icon";
 
 export function Leadership() {
   const shouldReduceMotion = useReducedMotion();
-  const { profiles: savedProfiles, error } = usePublicLeadershipProfiles();
+  const { profiles: apiProfiles, error } = usePublicLeadershipProfiles();
 
-  // Map static profile order to their admin profile keys
-  const profileKeyMap: Array<'management' | 'trustee' | 'principal'> = [
-    'management',
-    'trustee',
-    'principal',
-  ];
-
-  const profiles = leadershipProfiles
-    .filter((profile) => profile.isActive)
-    .sort((a, b) => a.displayOrder - b.displayOrder)
-    .map((profile, index) => {
-      const profileKey = profileKeyMap[index];
-      const adminProfile = savedProfiles.find(
-        (savedProfile) => savedProfile.profile_key === profileKey,
-      );
-
-      // Overlay saved text fields — only if the admin has entered a non-empty value
-      const name = adminProfile?.name?.trim() ? adminProfile.name : profile.name;
-      const designation = adminProfile?.designation?.trim() ? adminProfile.designation : profile.designation;
-      const shortBio = adminProfile?.short_bio?.trim() ? adminProfile.short_bio : profile.shortBio;
-      const message = adminProfile?.message?.trim() ? adminProfile.message : profile.message;
-
-      const photo = adminProfile?.media?.image_url ?? profile.photo;
-
-      return { ...profile, photo, name, designation, shortBio, message };
-    });
+  // Use API profiles if available, otherwise fall back to static placeholders
+  const profiles = apiProfiles.length > 0
+    ? apiProfiles.map((profile) => ({
+        id: profile.id,
+        name: profile.name,
+        designation: profile.designation,
+        category: profile.category || "",
+        shortBio: profile.short_bio || "",
+        message: profile.message || "",
+        photo: profile.media?.image_url || null,
+        isActive: profile.is_active,
+        displayOrder: profile.display_order,
+      }))
+    : leadershipProfiles
+        .filter((profile) => profile.isActive)
+        .sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <section id="leadership" className="scroll-mt-20 bg-white py-24 lg:py-36">

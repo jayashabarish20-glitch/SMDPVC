@@ -11,7 +11,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
-from app.models.content import GalleryImage, LeadershipProfile, SchoolSection, Topper
+from app.models.content import (
+    ContentItem,
+    GalleryImage,
+    LeadershipProfile,
+    SchoolSection,
+    Topper,
+)
 from app.models.media import CloudinaryCleanup, Media, PhotoConfiguration
 from app.services.cloudinary_service import (
     CloudinaryStorage,
@@ -330,6 +336,7 @@ async def _count_media_references(session: AsyncSession, media_id: UUID) -> int:
         (LeadershipProfile, LeadershipProfile.media_id),
         (SchoolSection, SchoolSection.card_media_id),
         (Topper, Topper.media_id),
+        (ContentItem, ContentItem.media_id),
         (PhotoConfiguration, PhotoConfiguration.media_id),
     )
     try:

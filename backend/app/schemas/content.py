@@ -45,6 +45,55 @@ class LeadershipProfileRead(EntityRead):
     media: MediaRead | None = None
 
 
+class LeadershipProfileCreateNew(Schema):
+    """Create payload; the server generates profile_key."""
+
+    name: str = Field(min_length=1, max_length=160)
+    designation: str = Field(default="", max_length=160)
+    category: str = Field(default="", max_length=100)
+    short_bio: str = ""
+    message: str = ""
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class ReorderRequest(Schema):
+    ids: list[UUID] = Field(min_length=1, max_length=500)
+
+
+class ContentItemCreate(Schema):
+    page_slug: str = Field(min_length=1, max_length=80)
+    section_key: str = Field(min_length=1, max_length=80)
+    title: str = Field(min_length=1, max_length=200)
+    description: str = Field(default="", max_length=5000)
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class ContentItemUpdate(Schema):
+    title: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = Field(default=None, max_length=5000)
+    is_active: bool | None = None
+    media_id: UUID | None = None
+
+
+class ContentItemReorder(Schema):
+    page_slug: str = Field(min_length=1, max_length=80)
+    section_key: str = Field(min_length=1, max_length=80)
+    ids: list[UUID] = Field(min_length=1, max_length=500)
+
+
+class ContentItemRead(EntityRead):
+    page_slug: str
+    section_key: str
+    title: str
+    description: str
+    display_order: int
+    is_active: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
 class SchoolSectionCreate(Schema):
     slug: str = Field(min_length=1, max_length=80)
     title: str = Field(min_length=1, max_length=160)
@@ -254,6 +303,10 @@ __all__ = [
     "AnnouncementCreate",
     "AnnouncementRead",
     "AnnouncementUpdate",
+    "ContentItemCreate",
+    "ContentItemRead",
+    "ContentItemReorder",
+    "ContentItemUpdate",
     "GalleryCollectionCreate",
     "GalleryCollectionRead",
     "GalleryCollectionUpdate",
@@ -261,6 +314,8 @@ __all__ = [
     "GalleryImageRead",
     "GalleryImageUpdate",
     "LeadershipProfileCreate",
+    "LeadershipProfileCreateNew",
+    "ReorderRequest",
     "LeadershipProfileRead",
     "LeadershipProfileUpdate",
     "SchoolSectionCreate",

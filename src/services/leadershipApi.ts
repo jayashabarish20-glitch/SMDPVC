@@ -70,6 +70,20 @@ async function request<T>(
   return response.json() as Promise<T>;
 }
 
+export interface LeadershipProfileCreateNew {
+  name: string;
+  designation: string;
+  category?: string;
+  short_bio?: string;
+  message?: string;
+  is_active?: boolean;
+  media_id?: string | null;
+}
+
+export interface ReorderRequest {
+  ids: string[];
+}
+
 export const leadershipApi = {
   getPublicProfiles(): Promise<LeadershipProfile[]> {
     return request<LeadershipProfile[]>("/public/leadership-profiles");
@@ -89,6 +103,38 @@ export const leadershipApi = {
       {
         method: "PUT",
         body: JSON.stringify(profile),
+      },
+      true,
+    );
+  },
+
+  createProfile(
+    data: LeadershipProfileCreateNew,
+  ): Promise<LeadershipProfile> {
+    return request<LeadershipProfile>(
+      "/admin/leadership-profiles",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true,
+    );
+  },
+
+  deleteProfile(profileKey: string): Promise<void> {
+    return request<void>(
+      `/admin/leadership-profiles/${encodeURIComponent(profileKey)}`,
+      { method: "DELETE" },
+      true,
+    );
+  },
+
+  reorderProfiles(ids: string[]): Promise<LeadershipProfile[]> {
+    return request<LeadershipProfile[]>(
+      "/admin/leadership-profiles/reorder",
+      {
+        method: "POST",
+        body: JSON.stringify({ ids }),
       },
       true,
     );
