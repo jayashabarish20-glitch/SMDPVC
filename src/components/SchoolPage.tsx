@@ -230,6 +230,7 @@ function SectionWithContentItems({
             photos={(galleryData as any).photos}
             description={(galleryData as any).description}
             shouldReduceMotion={!!shouldReduceMotion}
+            fullScreen={(galleryData as any).fullScreen}
           />
         )}
     </motion.section>
@@ -242,12 +243,14 @@ interface GalleryDisplayProps {
   photos: PhotoMetadata[];
   description: string;
   shouldReduceMotion: boolean;
+  fullScreen?: boolean;
 }
 
 function GalleryDisplay({
   photos,
   description,
   shouldReduceMotion,
+  fullScreen = false,
 }: GalleryDisplayProps) {
   // Carousel state
   const [activeIndex, setActiveIndex] = useState(0);
@@ -393,14 +396,16 @@ function GalleryDisplay({
           )}
 
           {/* Fullscreen button */}
-          <button
-            type="button"
-            onClick={openLightbox}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-school-navy/15 bg-white px-3 py-1.5 text-xs font-semibold text-school-navy shadow-sm transition-colors hover:bg-school-cream"
-          >
-            <Icon name="image" className="h-3.5 w-3.5 text-school-gold" />
-            View Fullscreen
-          </button>
+          {fullScreen && (
+            <button
+              type="button"
+              onClick={openLightbox}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-school-navy/15 bg-white px-3 py-1.5 text-xs font-semibold text-school-navy shadow-sm transition-colors hover:bg-school-cream"
+            >
+              <Icon name="image" className="h-3.5 w-3.5 text-school-gold" />
+              View Fullscreen
+            </button>
+          )}
         </div>
       </div>
 

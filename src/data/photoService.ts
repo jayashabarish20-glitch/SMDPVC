@@ -60,6 +60,7 @@ export interface SchoolPageHeroConfig {
 export interface PrimaryClassesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface PrimaryAboutConfig {
@@ -75,31 +76,37 @@ export interface NurseryAboutConfig {
 export interface NurseryClassesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface NurseryLearningActivitiesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface NurseryExtracurricularGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface PrimaryLearningActivitiesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface PrimaryExtracurricularGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface GroupOfSchoolsInfrastructureConfig {
   photos: PhotoMetadata[];
   description: string;
+  fullScreen?: boolean;
 }
 
 export interface PhotoConfig {
@@ -170,32 +177,39 @@ const defaultPhotoConfig: PhotoConfig = {
   primaryClassesGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   primaryAbout: null,
   nurseryAbout: null,
   nurseryClassesGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   nurseryLearningActivitiesGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   nurseryExtracurricularGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   primaryLearningActivitiesGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   primaryExtracurricularGallery: {
     photos: [],
     description: '',
+    fullScreen: false,
   },
   groupOfSchoolsInfrastructure: {
     photos: [],
     description: '',
+    fullScreen: true,
   },
   lastUpdated: new Date().toISOString(),
 };
