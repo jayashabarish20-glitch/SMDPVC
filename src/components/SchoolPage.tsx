@@ -49,7 +49,9 @@ export function SchoolPage({ page }: SchoolPageProps) {
   };
 
   const isPrimaryPage = page.title === "Primary";
+  const isNurseryPage = page.title === "Nursery";
   const primaryAboutData = isPrimaryPage ? config.primaryAbout : null;
+  const nurseryAboutData = isNurseryPage ? config.nurseryAbout : null;
 
   return (
     <main
@@ -68,6 +70,7 @@ export function SchoolPage({ page }: SchoolPageProps) {
               index={index}
               page={page}
               primaryAboutData={primaryAboutData}
+              nurseryAboutData={nurseryAboutData}
               galleryData={galleryData}
               shouldReduceMotion={shouldReduceMotion}
               contentItemMapping={contentItemMapping}
@@ -86,6 +89,7 @@ interface SectionWithContentItemsProps {
   index: number;
   page: SchoolPageConfig;
   primaryAboutData: unknown;
+  nurseryAboutData: unknown;
   galleryData: unknown;
   shouldReduceMotion: boolean | null;
   contentItemMapping: { page_slug: string; section_key: string } | null;
@@ -103,6 +107,7 @@ function SectionWithContentItems({
   index,
   page,
   primaryAboutData,
+  nurseryAboutData,
   galleryData,
   shouldReduceMotion,
   contentItemMapping,
@@ -141,10 +146,10 @@ function SectionWithContentItems({
 
       {section.id === "primary-about" && primaryAboutData ? (
         <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
-          {(primaryAboutData as any).photo?.imageUrl && (
+          {(primaryAboutData as any).photo?.dataUrl && (
             <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
               <img
-                src={(primaryAboutData as any).photo.imageUrl}
+                src={(primaryAboutData as any).photo.dataUrl}
                 alt={(primaryAboutData as any).photo.alt || "Primary About"}
                 className="max-h-[28rem] w-full object-contain"
               />
@@ -153,6 +158,23 @@ function SectionWithContentItems({
           {(primaryAboutData as any).description && (
             <p className="whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
               {(primaryAboutData as any).description}
+            </p>
+          )}
+        </div>
+      ) : section.id === "nursery-about" && nurseryAboutData ? (
+        <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
+          {(nurseryAboutData as any).photo?.dataUrl && (
+            <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
+              <img
+                src={(nurseryAboutData as any).photo.dataUrl}
+                alt={(nurseryAboutData as any).photo.alt || "Nursery About"}
+                className="max-h-[28rem] w-full object-contain"
+              />
+            </div>
+          )}
+          {(nurseryAboutData as any).description && (
+            <p className="whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
+              {(nurseryAboutData as any).description}
             </p>
           )}
         </div>
@@ -208,7 +230,6 @@ function SectionWithContentItems({
             photos={(galleryData as any).photos}
             description={(galleryData as any).description}
             shouldReduceMotion={!!shouldReduceMotion}
-            galleryTitle={section.title}
           />
         )}
     </motion.section>
@@ -221,14 +242,12 @@ interface GalleryDisplayProps {
   photos: PhotoMetadata[];
   description: string;
   shouldReduceMotion: boolean;
-  galleryTitle?: string;
 }
 
 function GalleryDisplay({
   photos,
   description,
   shouldReduceMotion,
-  galleryTitle,
 }: GalleryDisplayProps) {
   // Carousel state
   const [activeIndex, setActiveIndex] = useState(0);
