@@ -38,11 +38,17 @@ export function SchoolPage({ page }: SchoolPageProps) {
   const photoConfig = usePhotoConfig();
   const { config } = photoConfig;
 
-  // Primary Classes Gallery data — read only when on the primary page
+  // Gallery data by section (keyed by section.id)
+  const galleryDataMap: Record<string, any> = {
+    "nursery-classes": config.nurseryClassesGallery ?? { photos: [], description: "" },
+    "nursery-learning": config.nurseryLearningActivitiesGallery ?? { photos: [], description: "" },
+    "nursery-extracurricular": config.nurseryExtracurricularGallery ?? { photos: [], description: "" },
+    "primary-classes": config.primaryClassesGallery ?? { photos: [], description: "" },
+    "primary-learning": config.primaryLearningActivitiesGallery ?? { photos: [], description: "" },
+    "primary-extracurricular": config.primaryExtracurricularGallery ?? { photos: [], description: "" },
+  };
+
   const isPrimaryPage = page.title === "Primary";
-  const galleryData = isPrimaryPage
-    ? (config.primaryClassesGallery ?? { photos: [], description: "" })
-    : null;
   const primaryAboutData = isPrimaryPage ? config.primaryAbout : null;
 
   return (
@@ -54,6 +60,7 @@ export function SchoolPage({ page }: SchoolPageProps) {
       <div className="mx-auto max-w-7xl space-y-8 px-6 py-12 lg:px-16 lg:py-16">
         {page.sections.map((section, index) => {
           const contentItemMapping = getContentItemMapping(section.id);
+          const galleryData = galleryDataMap[section.id] ?? null;
           return (
             <SectionWithContentItems
               key={section.id}
@@ -188,33 +195,41 @@ function SectionWithContentItems({
         </div>
       )}
 
-      {/* ── Primary Classes Gallery ── */}
-      {section.id === "primary-classes" &&
+      {/* ── Gallery Display (for all 6 gallery sections) ── */}
+      {(section.id === "nursery-classes" ||
+        section.id === "nursery-learning" ||
+        section.id === "nursery-extracurricular" ||
+        section.id === "primary-classes" ||
+        section.id === "primary-learning" ||
+        section.id === "primary-extracurricular") &&
         galleryData != null &&
         (galleryData as any).photos.length > 0 && (
-          <PrimaryClassesGallery
+          <GalleryDisplay
             photos={(galleryData as any).photos}
             description={(galleryData as any).description}
             shouldReduceMotion={!!shouldReduceMotion}
+            galleryTitle={section.title}
           />
         )}
     </motion.section>
   );
 }
 
-// ─── Primary Classes Gallery (public display) ─────────────────────────────────
+// ─── Gallery Display (reusable for all gallery sections) ────────────────────
 
-interface PrimaryClassesGalleryProps {
+interface GalleryDisplayProps {
   photos: PhotoMetadata[];
   description: string;
   shouldReduceMotion: boolean;
+  galleryTitle?: string;
 }
 
-function PrimaryClassesGallery({
+function GalleryDisplay({
   photos,
   description,
   shouldReduceMotion,
-}: PrimaryClassesGalleryProps) {
+  galleryTitle,
+}: GalleryDisplayProps) {
   // Carousel state
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1); // 1 = forward, -1 = backward
