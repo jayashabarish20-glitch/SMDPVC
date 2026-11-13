@@ -50,8 +50,12 @@ export function SchoolPage({ page }: SchoolPageProps) {
 
   const isPrimaryPage = page.title === "Primary";
   const isNurseryPage = page.title === "Nursery";
+  const isHigherSecondaryPage = page.title === "Higher Secondary";
   const primaryAboutData = isPrimaryPage ? config.primaryAbout : null;
   const nurseryAboutData = isNurseryPage ? config.nurseryAbout : null;
+  const primaryPrincipalData = isPrimaryPage ? config.primaryPrincipal : null;
+  const nurseryPrincipalData = isNurseryPage ? config.nurseryPrincipal : null;
+  const higherSecondaryPrincipalData = isHigherSecondaryPage ? config.higherSecondaryPrincipal : null;
   const primaryAcademicCalendarData = isPrimaryPage ? config.academicCalendarPrimary : null;
   const nurseryAcademicCalendarData = isNurseryPage ? config.academicCalendarNursery : null;
 
@@ -73,6 +77,9 @@ export function SchoolPage({ page }: SchoolPageProps) {
               page={page}
               primaryAboutData={primaryAboutData}
               nurseryAboutData={nurseryAboutData}
+              primaryPrincipalData={primaryPrincipalData}
+              nurseryPrincipalData={nurseryPrincipalData}
+              higherSecondaryPrincipalData={higherSecondaryPrincipalData}
               primaryAcademicCalendar={primaryAcademicCalendarData}
               nurseryAcademicCalendar={nurseryAcademicCalendarData}
               galleryData={galleryData}
@@ -94,6 +101,9 @@ interface SectionWithContentItemsProps {
   page: SchoolPageConfig;
   primaryAboutData: unknown;
   nurseryAboutData: unknown;
+  primaryPrincipalData: unknown;
+  nurseryPrincipalData: unknown;
+  higherSecondaryPrincipalData: unknown;
   primaryAcademicCalendar: unknown;
   nurseryAcademicCalendar: unknown;
   galleryData: unknown;
@@ -114,6 +124,9 @@ function SectionWithContentItems({
   page,
   primaryAboutData,
   nurseryAboutData,
+  primaryPrincipalData,
+  nurseryPrincipalData,
+  higherSecondaryPrincipalData,
   primaryAcademicCalendar,
   nurseryAcademicCalendar,
   galleryData,
@@ -186,7 +199,79 @@ function SectionWithContentItems({
             </p>
           )}
         </div>
-      ) : section.id === "primary-academic-calendar" ? (
+      ) : section.id === "primary-principal" && primaryPrincipalData ? (
+        <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
+          {(primaryPrincipalData as any).photo?.dataUrl && (
+            <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
+              <img
+                src={(primaryPrincipalData as any).photo.dataUrl}
+                alt={(primaryPrincipalData as any).photo.alt || "Primary Principal"}
+                className="max-h-[28rem] w-full object-contain"
+              />
+            </div>
+          )}
+          <div>
+            {(primaryPrincipalData as any).name && (
+              <h3 className="font-serif text-xl font-bold text-school-navy sm:text-2xl">
+                {(primaryPrincipalData as any).name}
+              </h3>
+            )}
+            {(primaryPrincipalData as any).message && (
+              <p className="mt-3 whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
+                {(primaryPrincipalData as any).message}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : section.id === "nursery-principal" && nurseryPrincipalData ? (
+        <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
+          {(nurseryPrincipalData as any).photo?.dataUrl && (
+            <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
+              <img
+                src={(nurseryPrincipalData as any).photo.dataUrl}
+                alt={(nurseryPrincipalData as any).photo.alt || "Nursery Principal"}
+                className="max-h-[28rem] w-full object-contain"
+              />
+            </div>
+          )}
+          <div>
+            {(nurseryPrincipalData as any).name && (
+              <h3 className="font-serif text-xl font-bold text-school-navy sm:text-2xl">
+                {(nurseryPrincipalData as any).name}
+              </h3>
+            )}
+            {(nurseryPrincipalData as any).message && (
+              <p className="mt-3 whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
+                {(nurseryPrincipalData as any).message}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : section.id === "higher-principal" && higherSecondaryPrincipalData ? (
+        <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
+          {(higherSecondaryPrincipalData as any).photo?.dataUrl && (
+            <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
+              <img
+                src={(higherSecondaryPrincipalData as any).photo.dataUrl}
+                alt={(higherSecondaryPrincipalData as any).photo.alt || "Higher Secondary Principal"}
+                className="max-h-[28rem] w-full object-contain"
+              />
+            </div>
+          )}
+          <div>
+            {(higherSecondaryPrincipalData as any).name && (
+              <h3 className="font-serif text-xl font-bold text-school-navy sm:text-2xl">
+                {(higherSecondaryPrincipalData as any).name}
+              </h3>
+            )}
+            {(higherSecondaryPrincipalData as any).message && (
+              <p className="mt-3 whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
+                {(higherSecondaryPrincipalData as any).message}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : section.id === "primary-calendar" ? (
         primaryAcademicCalendar ? (
           <div className="mt-6">
             <a
@@ -201,7 +286,7 @@ function SectionWithContentItems({
         ) : (
           <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
         )
-      ) : section.id === "nursery-academic-calendar" ? (
+      ) : section.id === "nursery-calendar" ? (
         nurseryAcademicCalendar ? (
           <div className="mt-6">
             <a

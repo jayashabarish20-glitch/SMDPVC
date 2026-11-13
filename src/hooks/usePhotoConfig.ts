@@ -8,6 +8,7 @@ import {
   type PrimaryClassesGalleryConfig,
   type PrimaryAboutConfig,
   type NurseryAboutConfig,
+  type PrincipalConfig,
   type NurseryClassesGalleryConfig,
   type NurseryLearningActivitiesGalleryConfig,
   type NurseryExtracurricularGalleryConfig,
@@ -243,6 +244,42 @@ export function usePhotoConfig() {
     []
   );
 
+  // Update Primary Principal
+  const updatePrimaryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.primaryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        primaryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryPrincipal]
+  );
+
+  // Update Nursery Principal
+  const updateNurseryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.nurseryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryPrincipal]
+  );
+
+  // Update Higher Secondary Principal
+  const updateHigherSecondaryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.higherSecondaryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryPrincipal]
+  );
+
   // Add photo to array (hero, alumni, toppers)
   const addPhoto = useCallback(
     (section: string, photo: PhotoMetadata) => {
@@ -314,6 +351,9 @@ export function usePhotoConfig() {
     updatePrimaryClassesGallery,
     updatePrimaryAbout,
     updateNurseryAbout,
+    updatePrimaryPrincipal,
+    updateNurseryPrincipal,
+    updateHigherSecondaryPrincipal,
     updateNurseryClassesGallery,
     updateNurseryLearningActivitiesGallery,
     updateNurseryExtracurricularGallery,

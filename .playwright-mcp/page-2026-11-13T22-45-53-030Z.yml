@@ -1,0 +1,37 @@
+- generic [ref=f14e33]:
+  - generic:
+    - button "Toggle menu" [active] [ref=f14e34] [cursor=pointer]
+    - generic [ref=f14e57]:
+      - heading "Admin" [level=1] [ref=f14e59]
+      - generic [ref=f14e60]:
+        - button "Home Page Hero Carousel" [ref=f14e61] [cursor=pointer]
+        - button "Leadership Profiles" [ref=f14e62] [cursor=pointer]
+        - button "School Sections Cards" [ref=f14e63] [cursor=pointer]
+        - button "Group of Schools – Infrastructure" [ref=f14e64] [cursor=pointer]
+        - button "Hero 3D Cards" [ref=f14e65] [cursor=pointer]
+        - button "Nursery Page Hero" [ref=f14e66] [cursor=pointer]
+        - button "Nursery – Classes Gallery" [ref=f14e67] [cursor=pointer]
+        - button "Nursery – Learning Activities Gallery" [ref=f14e68] [cursor=pointer]
+        - button "Nursery – Extracurricular Gallery" [ref=f14e69] [cursor=pointer]
+        - button "Nursery – About" [ref=f14e70] [cursor=pointer]
+        - button "Nursery – Academic Calendar" [ref=f14e71] [cursor=pointer]
+        - button "Primary Page Hero" [ref=f14e72] [cursor=pointer]
+        - button "Primary – Classes Gallery" [ref=f14e73] [cursor=pointer]
+        - button "Primary – Learning Activities Gallery" [ref=f14e74] [cursor=pointer]
+        - button "Primary – Extracurricular Gallery" [ref=f14e75] [cursor=pointer]
+        - button "Primary – About" [ref=f14e76] [cursor=pointer]
+        - button "Primary – Academic Calendar" [ref=f14e77] [cursor=pointer]
+        - button "Higher Secondary Hero" [ref=f14e78] [cursor=pointer]
+        - button "Excellence & Toppers" [ref=f14e79] [cursor=pointer]
+        - button "Campus Life & Alumni" [ref=f14e80] [cursor=pointer]
+  - main [ref=f14e37]:
+    - generic [ref=f14e39]:
+      - generic [ref=f14e40]:
+        - generic [ref=f14e41]: HOME PAGE
+        - heading "Hero Carousel Images" [level=2] [ref=f14e42]
+        - paragraph [ref=f14e43]: Manage the background images for the home page hero carousel. Add, remove, or reorder images that rotate in the hero section.
+      - generic [ref=f14e45]:
+        - generic [ref=f14e46]:
+          - heading "Hero Carousel Images" [level=3] [ref=f14e47]
+          - button "Add Photo" [ref=f14e48] [cursor=pointer]
+        - paragraph [ref=f14e55]: No hero images added yet. Upload images to create the carousel.

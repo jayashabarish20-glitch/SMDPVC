@@ -73,6 +73,12 @@ export interface NurseryAboutConfig {
   description: string;
 }
 
+export interface PrincipalConfig {
+  photo: PhotoMetadata | null;
+  name: string;
+  message: string;
+}
+
 export interface NurseryClassesGalleryConfig {
   photos: PhotoMetadata[];
   description: string;
@@ -122,13 +128,16 @@ export interface PhotoConfig {
   schoolPageHeroes: SchoolPageHeroConfig;
   primaryClassesGallery: PrimaryClassesGalleryConfig;
   primaryAbout: PrimaryAboutConfig | null;
+  primaryPrincipal: PrincipalConfig | null;
   nurseryAbout: NurseryAboutConfig | null;
+  nurseryPrincipal: PrincipalConfig | null;
   nurseryClassesGallery: NurseryClassesGalleryConfig;
   nurseryLearningActivitiesGallery: NurseryLearningActivitiesGalleryConfig;
   nurseryExtracurricularGallery: NurseryExtracurricularGalleryConfig;
   primaryLearningActivitiesGallery: PrimaryLearningActivitiesGalleryConfig;
   primaryExtracurricularGallery: PrimaryExtracurricularGalleryConfig;
   groupOfSchoolsInfrastructure: GroupOfSchoolsInfrastructureConfig;
+  higherSecondaryPrincipal: PrincipalConfig | null;
   academicCalendarPrimary: AcademicCalendarData | null;
   academicCalendarNursery: AcademicCalendarData | null;
   lastUpdated: string;
@@ -188,7 +197,9 @@ const defaultPhotoConfig: PhotoConfig = {
     fullScreen: false,
   },
   primaryAbout: null,
+  primaryPrincipal: null,
   nurseryAbout: null,
+  nurseryPrincipal: null,
   nurseryClassesGallery: {
     photos: [],
     description: '',
@@ -219,6 +230,7 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
     fullScreen: true,
   },
+  higherSecondaryPrincipal: null,
   academicCalendarPrimary: null,
   academicCalendarNursery: null,
   lastUpdated: new Date().toISOString(),
@@ -256,8 +268,11 @@ function loadFromStorage(): PhotoConfig {
         ...parsed,
         primaryClassesGallery: parsed.primaryClassesGallery ?? defaultPhotoConfig.primaryClassesGallery,
         primaryAbout: parsed.primaryAbout ?? defaultPhotoConfig.primaryAbout,
+        primaryPrincipal: parsed.primaryPrincipal ?? defaultPhotoConfig.primaryPrincipal,
         nurseryAbout: parsed.nurseryAbout ?? defaultPhotoConfig.nurseryAbout,
+        nurseryPrincipal: parsed.nurseryPrincipal ?? defaultPhotoConfig.nurseryPrincipal,
         groupOfSchoolsInfrastructure: parsed.groupOfSchoolsInfrastructure ?? defaultPhotoConfig.groupOfSchoolsInfrastructure,
+        higherSecondaryPrincipal: parsed.higherSecondaryPrincipal ?? defaultPhotoConfig.higherSecondaryPrincipal,
         academicCalendarPrimary: parsed.academicCalendarPrimary ?? defaultPhotoConfig.academicCalendarPrimary,
         academicCalendarNursery: parsed.academicCalendarNursery ?? defaultPhotoConfig.academicCalendarNursery,
       };

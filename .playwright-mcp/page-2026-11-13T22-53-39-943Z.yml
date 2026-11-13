@@ -1,0 +1,93 @@
+- generic [ref=f17e3]:
+  - link "Skip to main content" [ref=f17e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - generic [ref=f17e6]:
+      - link "SMDPVC Primary home" [ref=f17e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f17e8]: S
+        - generic [ref=f17e9]:
+          - generic [ref=f17e10]: SMDPVC
+          - generic "SMDPVC Primary" [ref=f17e11]: Primary
+      - generic [ref=f17e12]:
+        - link "Back to Home" [ref=f17e13] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=f17e14] [cursor=pointer]
+  - main [ref=f17e21]:
+    - region "Primary highlights" [ref=f17e22]:
+      - generic [ref=f17e26]:
+        - generic [ref=f17e27]:
+          - generic [ref=f17e28]: Primary
+          - generic [ref=f17e31]:
+            - heading "Building Strong Foundations" [level=1] [ref=f17e32]
+            - paragraph [ref=f17e33]: Explore the Primary section. Add the school's verified educational overview here.
+          - generic [ref=f17e34]:
+            - button "Explore Primary" [ref=f17e35] [cursor=pointer]
+            - button "About This Section" [ref=f17e38] [cursor=pointer]
+        - generic [ref=f17e39]:
+          - button "Slide 1" [ref=f17e40] [cursor=pointer]
+          - button "Slide 2" [ref=f17e41] [cursor=pointer]
+          - button "Slide 3" [ref=f17e42] [cursor=pointer]
+    - generic [ref=f17e43]:
+      - generic [ref=f17e44]:
+        - paragraph [ref=f17e45]: Primary
+        - heading "About Primary" [level=2] [ref=f17e46]
+        - paragraph [ref=f17e47]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f17e48]:
+        - paragraph [ref=f17e49]: Primary
+        - heading "Principal" [level=2] [ref=f17e50]
+        - paragraph [ref=f17e51]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f17e52]:
+        - paragraph [ref=f17e53]: Primary
+        - heading "Classes" [level=2] [ref=f17e54]
+        - paragraph [ref=f17e55]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f17e56]:
+        - paragraph [ref=f17e57]: Primary
+        - heading "Learning Activities" [level=2] [ref=f17e58]
+        - paragraph [ref=f17e59]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f17e60]:
+        - paragraph [ref=f17e61]: Primary
+        - heading "Academic Calendar" [level=2] [ref=f17e62]
+        - paragraph [ref=f17e63]: Academic Calendar is not available yet.
+      - generic [ref=f17e64]:
+        - paragraph [ref=f17e65]: Primary
+        - heading "Extracurricular Activities" [level=2] [ref=f17e66]
+        - paragraph [ref=f17e67]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+  - contentinfo [ref=f17e68]:
+    - generic [ref=f17e69]:
+      - generic [ref=f17e70]:
+        - generic [ref=f17e71]:
+          - generic [ref=f17e72]:
+            - generic [ref=f17e73]: S
+            - generic [ref=f17e74]:
+              - paragraph [ref=f17e75]: SMDPVC
+              - paragraph [ref=f17e76]: Higher Secondary School
+          - paragraph [ref=f17e77]: School information and contact details can be added here after confirmation by the school.
+        - generic [ref=f17e78]:
+          - heading "Home" [level=4] [ref=f17e79]
+          - generic [ref=f17e80]:
+            - link "Home" [ref=f17e81] [cursor=pointer]:
+              - /url: /
+            - link "Our Foundation" [ref=f17e82] [cursor=pointer]:
+              - /url: /#foundation
+            - link "Leadership" [ref=f17e83] [cursor=pointer]:
+              - /url: /#leadership
+            - link "School Sections" [ref=f17e84] [cursor=pointer]:
+              - /url: /#school-sections
+            - link "Infrastructure" [ref=f17e85] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=f17e86] [cursor=pointer]:
+              - /url: /#enquiry
+        - generic [ref=f17e87]:
+          - heading "School Sections" [level=4] [ref=f17e88]
+          - generic [ref=f17e89]:
+            - link "Nursery" [ref=f17e90] [cursor=pointer]:
+              - /url: /nursery
+            - link "Primary" [ref=f17e93] [cursor=pointer]:
+              - /url: /primary
+            - link "Higher Secondary" [ref=f17e96] [cursor=pointer]:
+              - /url: /higher-secondary
+      - generic [ref=f17e99]:
+        - paragraph [ref=f17e100]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=f17e101] [cursor=pointer]:
+          - /url: /

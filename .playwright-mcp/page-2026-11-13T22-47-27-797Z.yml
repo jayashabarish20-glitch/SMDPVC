@@ -1,0 +1,22 @@
+- generic [ref=f16e3]:
+  - link "Skip to website" [ref=f16e4] [cursor=pointer]:
+    - /url: /
+  - main [ref=f16e5]:
+    - generic [ref=f16e6]:
+      - generic [ref=f16e7]:
+        - heading "Admin Access" [level=1] [ref=f16e13]
+        - paragraph [ref=f16e14]: Sign in to manage school content and photos
+      - generic [ref=f16e15]:
+        - generic [ref=f16e16]:
+          - generic [ref=f16e17]:
+            - generic [ref=f16e18]: Email Address
+            - textbox "Email Address" [ref=f16e19]:
+              - /placeholder: you@example.com
+          - generic [ref=f16e20]:
+            - generic [ref=f16e21]: Password
+            - textbox "Password" [ref=f16e22]:
+              - /placeholder: Enter your password
+          - button "Sign In" [ref=f16e23] [cursor=pointer]
+        - paragraph [ref=f16e28]: Admin access only. Contact your administrator for credentials.
+      - link "Back to Website" [ref=f16e30] [cursor=pointer]:
+        - /url: /
