@@ -46,6 +46,9 @@ export function SchoolPage({ page }: SchoolPageProps) {
     "primary-classes": config.primaryClassesGallery ?? { photos: [], description: "" },
     "primary-learning": config.primaryLearningActivitiesGallery ?? { photos: [], description: "" },
     "primary-extracurricular": config.primaryExtracurricularGallery ?? { photos: [], description: "" },
+    "higher-classes": config.higherSecondaryClassesGallery ?? { photos: [], description: "" },
+    "higher-learning": config.higherSecondaryLearningActivitiesGallery ?? { photos: [], description: "" },
+    "higher-extracurricular": config.higherSecondaryExtracurricularGallery ?? { photos: [], description: "" },
   };
 
   const isPrimaryPage = page.title === "Primary";
@@ -53,11 +56,13 @@ export function SchoolPage({ page }: SchoolPageProps) {
   const isHigherSecondaryPage = page.title === "Higher Secondary";
   const primaryAboutData = isPrimaryPage ? config.primaryAbout : null;
   const nurseryAboutData = isNurseryPage ? config.nurseryAbout : null;
+  const higherSecondaryAboutData = isHigherSecondaryPage ? config.higherSecondaryAbout : null;
   const primaryPrincipalData = isPrimaryPage ? config.primaryPrincipal : null;
   const nurseryPrincipalData = isNurseryPage ? config.nurseryPrincipal : null;
   const higherSecondaryPrincipalData = isHigherSecondaryPage ? config.higherSecondaryPrincipal : null;
   const primaryAcademicCalendarData = isPrimaryPage ? config.academicCalendarPrimary : null;
   const nurseryAcademicCalendarData = isNurseryPage ? config.academicCalendarNursery : null;
+  const higherSecondaryAcademicCalendarData = isHigherSecondaryPage ? config.academicCalendarHigherSecondary : null;
 
   return (
     <main
@@ -77,11 +82,13 @@ export function SchoolPage({ page }: SchoolPageProps) {
               page={page}
               primaryAboutData={primaryAboutData}
               nurseryAboutData={nurseryAboutData}
+              higherSecondaryAboutData={higherSecondaryAboutData}
               primaryPrincipalData={primaryPrincipalData}
               nurseryPrincipalData={nurseryPrincipalData}
               higherSecondaryPrincipalData={higherSecondaryPrincipalData}
               primaryAcademicCalendar={primaryAcademicCalendarData}
               nurseryAcademicCalendar={nurseryAcademicCalendarData}
+              higherSecondaryAcademicCalendar={higherSecondaryAcademicCalendarData}
               galleryData={galleryData}
               shouldReduceMotion={shouldReduceMotion}
               contentItemMapping={contentItemMapping}
@@ -101,11 +108,13 @@ interface SectionWithContentItemsProps {
   page: SchoolPageConfig;
   primaryAboutData: unknown;
   nurseryAboutData: unknown;
+  higherSecondaryAboutData: unknown;
   primaryPrincipalData: unknown;
   nurseryPrincipalData: unknown;
   higherSecondaryPrincipalData: unknown;
   primaryAcademicCalendar: unknown;
   nurseryAcademicCalendar: unknown;
+  higherSecondaryAcademicCalendar: unknown;
   galleryData: unknown;
   shouldReduceMotion: boolean | null;
   contentItemMapping: { page_slug: string; section_key: string } | null;
@@ -124,11 +133,13 @@ function SectionWithContentItems({
   page,
   primaryAboutData,
   nurseryAboutData,
+  higherSecondaryAboutData,
   primaryPrincipalData,
   nurseryPrincipalData,
   higherSecondaryPrincipalData,
   primaryAcademicCalendar,
   nurseryAcademicCalendar,
+  higherSecondaryAcademicCalendar,
   galleryData,
   shouldReduceMotion,
   contentItemMapping,
@@ -271,6 +282,23 @@ function SectionWithContentItems({
             )}
           </div>
         </div>
+      ) : section.id === "higher-about" && higherSecondaryAboutData ? (
+        <div className="mt-6 grid items-center gap-6 lg:grid-cols-2">
+          {(higherSecondaryAboutData as any).photo?.dataUrl && (
+            <div className="flex max-h-[28rem] min-h-48 items-center justify-center overflow-hidden rounded-2xl border border-school-navy/8 bg-school-cream-alt">
+              <img
+                src={(higherSecondaryAboutData as any).photo.dataUrl}
+                alt={(higherSecondaryAboutData as any).photo.alt || "Higher Secondary About"}
+                className="max-h-[28rem] w-full object-contain"
+              />
+            </div>
+          )}
+          {(higherSecondaryAboutData as any).description && (
+            <p className="whitespace-pre-line text-sm font-bold leading-relaxed text-school-muted sm:text-base">
+              {(higherSecondaryAboutData as any).description}
+            </p>
+          )}
+        </div>
       ) : section.id === "primary-calendar" ? (
         primaryAcademicCalendar ? (
           <div className="mt-6">
@@ -292,6 +320,21 @@ function SectionWithContentItems({
             <a
               href={(nurseryAcademicCalendar as any).dataUrl}
               download={(nurseryAcademicCalendar as any).filename}
+              className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
+            >
+              <Icon name="arrow" className="h-4 w-4" />
+              Download Academic Calendar
+            </a>
+          </div>
+        ) : (
+          <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
+        )
+      ) : section.id === "higher-calendar" ? (
+        higherSecondaryAcademicCalendar ? (
+          <div className="mt-6">
+            <a
+              href={(higherSecondaryAcademicCalendar as any).dataUrl}
+              download={(higherSecondaryAcademicCalendar as any).filename}
               className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
             >
               <Icon name="arrow" className="h-4 w-4" />
@@ -340,13 +383,16 @@ function SectionWithContentItems({
         </div>
       )}
 
-      {/* ── Gallery Display (for all 6 gallery sections) ── */}
+      {/* ── Gallery Display (for all 9 gallery sections) ── */}
       {(section.id === "nursery-classes" ||
         section.id === "nursery-learning" ||
         section.id === "nursery-extracurricular" ||
         section.id === "primary-classes" ||
         section.id === "primary-learning" ||
-        section.id === "primary-extracurricular") &&
+        section.id === "primary-extracurricular" ||
+        section.id === "higher-classes" ||
+        section.id === "higher-learning" ||
+        section.id === "higher-extracurricular") &&
         galleryData != null &&
         (galleryData as any).photos.length > 0 && (
           <GalleryDisplay

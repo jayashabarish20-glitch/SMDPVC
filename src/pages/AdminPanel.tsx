@@ -21,6 +21,11 @@ import { PrimaryClassesGalleryManager } from '../components/admin/PrimaryClasses
 import { PrimaryLearningActivitiesGalleryManager } from '../components/admin/PrimaryLearningActivitiesGalleryManager';
 import { PrimaryExtracurricularGalleryManager } from '../components/admin/PrimaryExtracurricularGalleryManager';
 import { InfrastructureGalleryManager } from '../components/admin/InfrastructureGalleryManager';
+import { HigherSecondaryAboutManager } from '../components/admin/HigherSecondaryAboutManager';
+import { HigherSecondaryClassesGalleryManager } from '../components/admin/HigherSecondaryClassesGalleryManager';
+import { HigherSecondaryLearningActivitiesGalleryManager } from '../components/admin/HigherSecondaryLearningActivitiesGalleryManager';
+import { HigherSecondaryExtracurricularGalleryManager } from '../components/admin/HigherSecondaryExtracurricularGalleryManager';
+import { HigherSecondaryAcademicCalendarManager } from '../components/admin/HigherSecondaryAcademicCalendarManager';
 
 type AdminSection =
   | 'home-hero'
@@ -33,6 +38,9 @@ type AdminSection =
   | 'content-primary-classes'
   | 'content-primary-learning'
   | 'content-primary-extracurricular'
+  | 'content-hs-classes'
+  | 'content-hs-learning'
+  | 'content-hs-extracurricular'
   | 'hero-3d'
   | 'nursery-hero'
   | 'nursery-about'
@@ -43,7 +51,9 @@ type AdminSection =
   | 'primary-academic-calendar'
   | 'nursery-academic-calendar'
   | 'hs-hero'
+  | 'hs-about'
   | 'hs-principal'
+  | 'hs-academic-calendar'
   | 'excellence'
   | 'campus-life';
 
@@ -71,7 +81,12 @@ export function AdminPanel() {
     { id: '6e', label: 'Primary – Principal', section: 'primary-principal' as AdminSection },
     { id: '6f', label: 'Primary – Academic Calendar', section: 'primary-academic-calendar' as AdminSection },
     { id: '7', label: 'Higher Secondary Hero', section: 'hs-hero' as AdminSection },
-    { id: '7a', label: 'Higher Secondary – Principal', section: 'hs-principal' as AdminSection },
+    { id: '7a', label: 'Higher Secondary – Classes Gallery', section: 'content-hs-classes' as AdminSection },
+    { id: '7b', label: 'Higher Secondary – Learning Activities Gallery', section: 'content-hs-learning' as AdminSection },
+    { id: '7c', label: 'Higher Secondary – Extracurricular Gallery', section: 'content-hs-extracurricular' as AdminSection },
+    { id: '7d', label: 'Higher Secondary – About', section: 'hs-about' as AdminSection },
+    { id: '7e', label: 'Higher Secondary – Principal', section: 'hs-principal' as AdminSection },
+    { id: '7f', label: 'Higher Secondary – Academic Calendar', section: 'hs-academic-calendar' as AdminSection },
     { id: '8', label: 'Excellence & Toppers', section: 'excellence' as AdminSection },
     { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' as AdminSection },
   ];
@@ -111,7 +126,11 @@ export function AdminPanel() {
       {activeSection === 'content-primary-classes' && <PrimaryClassesGalleryManager />}
       {activeSection === 'content-primary-learning' && <PrimaryLearningActivitiesGalleryManager />}
       {activeSection === 'content-primary-extracurricular' && <PrimaryExtracurricularGalleryManager />}
+      {activeSection === 'content-hs-classes' && <HigherSecondaryClassesGalleryManager />}
+      {activeSection === 'content-hs-learning' && <HigherSecondaryLearningActivitiesGalleryManager />}
+      {activeSection === 'content-hs-extracurricular' && <HigherSecondaryExtracurricularGalleryManager />}
       {activeSection === 'primary-principal' && <PrimaryPrincipalManager />}
+      {activeSection === 'hs-about' && <HigherSecondaryAboutManager />}
       {activeSection === 'hs-hero' && (
         <SchoolPageHeroManager
           pageKey="higherSecondary"
@@ -125,6 +144,7 @@ export function AdminPanel() {
       {activeSection === 'primary-about' && <PrimaryAboutManager />}
       {activeSection === 'primary-academic-calendar' && <PrimaryAcademicCalendarManager />}
       {activeSection === 'nursery-academic-calendar' && <NurseryAcademicCalendarManager />}
+      {activeSection === 'hs-academic-calendar' && <HigherSecondaryAcademicCalendarManager />}
       {activeSection === 'hs-principal' && <HigherSecondaryPrincipalManager />}
     </AdminLayout>
   );

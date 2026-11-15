@@ -121,6 +121,29 @@ export interface AcademicCalendarData {
   uploadedAt: string;
 }
 
+export interface HigherSecondaryAboutConfig {
+  photo: PhotoMetadata | null;
+  description: string;
+}
+
+export interface HigherSecondaryClassesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+  fullScreen?: boolean;
+}
+
+export interface HigherSecondaryLearningActivitiesGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+  fullScreen?: boolean;
+}
+
+export interface HigherSecondaryExtracurricularGalleryConfig {
+  photos: PhotoMetadata[];
+  description: string;
+  fullScreen?: boolean;
+}
+
 export interface PhotoConfig {
   campusImages: CampusImagesConfig;
   leadershipPhotos: LeadershipPhotoConfig;
@@ -137,9 +160,14 @@ export interface PhotoConfig {
   primaryLearningActivitiesGallery: PrimaryLearningActivitiesGalleryConfig;
   primaryExtracurricularGallery: PrimaryExtracurricularGalleryConfig;
   groupOfSchoolsInfrastructure: GroupOfSchoolsInfrastructureConfig;
+  higherSecondaryAbout: HigherSecondaryAboutConfig | null;
   higherSecondaryPrincipal: PrincipalConfig | null;
+  higherSecondaryClassesGallery: HigherSecondaryClassesGalleryConfig;
+  higherSecondaryLearningActivitiesGallery: HigherSecondaryLearningActivitiesGalleryConfig;
+  higherSecondaryExtracurricularGallery: HigherSecondaryExtracurricularGalleryConfig;
   academicCalendarPrimary: AcademicCalendarData | null;
   academicCalendarNursery: AcademicCalendarData | null;
+  academicCalendarHigherSecondary: AcademicCalendarData | null;
   lastUpdated: string;
 }
 
@@ -230,9 +258,26 @@ const defaultPhotoConfig: PhotoConfig = {
     description: '',
     fullScreen: true,
   },
+  higherSecondaryAbout: null,
   higherSecondaryPrincipal: null,
+  higherSecondaryClassesGallery: {
+    photos: [],
+    description: '',
+    fullScreen: false,
+  },
+  higherSecondaryLearningActivitiesGallery: {
+    photos: [],
+    description: '',
+    fullScreen: false,
+  },
+  higherSecondaryExtracurricularGallery: {
+    photos: [],
+    description: '',
+    fullScreen: false,
+  },
   academicCalendarPrimary: null,
   academicCalendarNursery: null,
+  academicCalendarHigherSecondary: null,
   lastUpdated: new Date().toISOString(),
 };
 
@@ -272,9 +317,14 @@ function loadFromStorage(): PhotoConfig {
         nurseryAbout: parsed.nurseryAbout ?? defaultPhotoConfig.nurseryAbout,
         nurseryPrincipal: parsed.nurseryPrincipal ?? defaultPhotoConfig.nurseryPrincipal,
         groupOfSchoolsInfrastructure: parsed.groupOfSchoolsInfrastructure ?? defaultPhotoConfig.groupOfSchoolsInfrastructure,
+        higherSecondaryAbout: parsed.higherSecondaryAbout ?? defaultPhotoConfig.higherSecondaryAbout,
         higherSecondaryPrincipal: parsed.higherSecondaryPrincipal ?? defaultPhotoConfig.higherSecondaryPrincipal,
+        higherSecondaryClassesGallery: parsed.higherSecondaryClassesGallery ?? defaultPhotoConfig.higherSecondaryClassesGallery,
+        higherSecondaryLearningActivitiesGallery: parsed.higherSecondaryLearningActivitiesGallery ?? defaultPhotoConfig.higherSecondaryLearningActivitiesGallery,
+        higherSecondaryExtracurricularGallery: parsed.higherSecondaryExtracurricularGallery ?? defaultPhotoConfig.higherSecondaryExtracurricularGallery,
         academicCalendarPrimary: parsed.academicCalendarPrimary ?? defaultPhotoConfig.academicCalendarPrimary,
         academicCalendarNursery: parsed.academicCalendarNursery ?? defaultPhotoConfig.academicCalendarNursery,
+        academicCalendarHigherSecondary: parsed.academicCalendarHigherSecondary ?? defaultPhotoConfig.academicCalendarHigherSecondary,
       };
     }
   } catch (error) {

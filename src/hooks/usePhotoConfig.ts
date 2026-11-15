@@ -15,6 +15,10 @@ import {
   type PrimaryLearningActivitiesGalleryConfig,
   type PrimaryExtracurricularGalleryConfig,
   type GroupOfSchoolsInfrastructureConfig,
+  type HigherSecondaryAboutConfig,
+  type HigherSecondaryClassesGalleryConfig,
+  type HigherSecondaryLearningActivitiesGalleryConfig,
+  type HigherSecondaryExtracurricularGalleryConfig,
   type AcademicCalendarData,
 } from '../data/photoService';
 
@@ -280,6 +284,65 @@ export function usePhotoConfig() {
     [config.higherSecondaryPrincipal]
   );
 
+  // Update the Higher Secondary About section
+  const updateHigherSecondaryAbout = useCallback(
+    (updates: Partial<HigherSecondaryAboutConfig>) => {
+      const current = config.higherSecondaryAbout ?? { photo: null, description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryAbout: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryAbout]
+  );
+
+  // Update Higher Secondary Classes Gallery
+  const updateHigherSecondaryClassesGallery = useCallback(
+    (updates: Partial<HigherSecondaryClassesGalleryConfig>) => {
+      const current = config.higherSecondaryClassesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryClassesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryClassesGallery]
+  );
+
+  // Update Higher Secondary Learning Activities Gallery
+  const updateHigherSecondaryLearningActivitiesGallery = useCallback(
+    (updates: Partial<HigherSecondaryLearningActivitiesGalleryConfig>) => {
+      const current = config.higherSecondaryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryLearningActivitiesGallery]
+  );
+
+  // Update Higher Secondary Extracurricular Gallery
+  const updateHigherSecondaryExtracurricularGallery = useCallback(
+    (updates: Partial<HigherSecondaryExtracurricularGalleryConfig>) => {
+      const current = config.higherSecondaryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryExtracurricularGallery]
+  );
+
+  // Update Higher Secondary Academic Calendar
+  const updateHigherSecondaryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarHigherSecondary: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
   // Add photo to array (hero, alumni, toppers)
   const addPhoto = useCallback(
     (section: string, photo: PhotoMetadata) => {
@@ -360,8 +423,13 @@ export function usePhotoConfig() {
     updatePrimaryLearningActivitiesGallery,
     updatePrimaryExtracurricularGallery,
     updateGroupOfSchoolsInfrastructure,
+    updateHigherSecondaryAbout,
+    updateHigherSecondaryClassesGallery,
+    updateHigherSecondaryLearningActivitiesGallery,
+    updateHigherSecondaryExtracurricularGallery,
     updatePrimaryAcademicCalendar,
     updateNurseryAcademicCalendar,
+    updateHigherSecondaryAcademicCalendar,
     addPhoto,
     removePhoto,
     reorderPhotos,
