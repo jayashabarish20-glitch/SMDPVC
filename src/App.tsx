@@ -8,10 +8,13 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Icon, scrollToSection } from "./components/Icon";
+import { Infrastructure } from "./components/Infrastructure";
 import { Leadership } from "./components/Leadership";
 import { SchoolPage } from "./components/SchoolPage";
 import { SchoolSections } from "./components/SchoolSections";
 import { AdminPanel } from "./pages/AdminPanel";
+import { AdminLogin } from "./pages/AdminLogin";
+import { useAuth } from "./hooks/useAuth";
 
 function currentPath() {
   const path = window.location.pathname.replace(/\/+$/, "");
@@ -22,7 +25,11 @@ export function App() {
   const [path, setPath] = useState(currentPath);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { isAuthenticated, isLoading } = useAuth();
+
   const isAdminPath = path === "/admin/photos";
+  const isAdminLoginPath = path === "/admin/login";
+  const isAnyAdminPath = isAdminPath || isAdminLoginPath;
   const page = schoolPages[path.slice(1)];
 
   useEffect(() => {
@@ -50,9 +57,12 @@ export function App() {
 
       const destination = new URL(link.href);
       const destinationPath = destination.pathname.replace(/\/+$/, "") || "/";
+      const isAdminRoute = destinationPath.startsWith("/admin");
+      const isValidRoute = isAdminRoute || destinationPath in schoolBrandingByRoute;
+
       if (
         destination.origin !== window.location.origin ||
-        !(destinationPath in schoolBrandingByRoute) ||
+        !isValidRoute ||
         (destinationPath === currentPath() && destination.hash)
       ) {
         return;
@@ -79,9 +89,41 @@ export function App() {
     schoolBrandingByRoute[path as keyof typeof schoolBrandingByRoute] ??
     schoolBrandingByRoute["/"];
 
-  // Admin panel route
-  if (isAdminPath) {
-    return <AdminPanel />;
+  // Handle admin routes
+  if (isAnyAdminPath) {
+    // Show login page
+    if (isAdminLoginPath) {
+      return <AdminLogin />;
+    }
+
+    // Protect admin photos route
+    if (isAdminPath) {
+      // Still loading auth status
+      if (isLoading) {
+        return (
+          <div className="min-h-screen bg-school-cream flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-8 w-8 border-4 border-school-gold/30 border-t-school-gold rounded-full animate-spin" />
+              <p className="text-school-muted">Loading...</p>
+            </div>
+          </div>
+        );
+      }
+
+      // Not authenticated, redirect to login
+      if (!isAuthenticated) {
+        window.history.pushState({}, "", "/admin/login");
+        window.dispatchEvent(new PopStateEvent("popstate"));
+        return (
+          <div className="min-h-screen bg-school-cream flex items-center justify-center">
+            <p className="text-school-muted">Redirecting to login...</p>
+          </div>
+        );
+      }
+
+      // Authenticated, show admin panel
+      return <AdminPanel />;
+    }
   }
 
   return (
@@ -106,6 +148,7 @@ export function App() {
               <About />
               <Leadership />
               <SchoolSections />
+              <Infrastructure />
               <Contact />
             </main>
           )}

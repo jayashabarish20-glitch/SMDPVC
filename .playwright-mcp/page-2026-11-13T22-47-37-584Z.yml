@@ -1,0 +1,13 @@
+- generic [ref=f16e33]:
+  - button "Toggle menu" [ref=f16e34] [cursor=pointer]
+  - main [ref=f16e37]:
+    - generic [ref=f16e39]:
+      - generic [ref=f16e40]:
+        - generic [ref=f16e41]: HOME PAGE
+        - heading "Hero Carousel Images" [level=2] [ref=f16e42]
+        - paragraph [ref=f16e43]: Manage the background images for the home page hero carousel. Add, remove, or reorder images that rotate in the hero section.
+      - generic [ref=f16e45]:
+        - generic [ref=f16e46]:
+          - heading "Hero Carousel Images" [level=3] [ref=f16e47]
+          - button "Add Photo" [ref=f16e48] [cursor=pointer]
+        - paragraph [ref=f16e55]: No hero images added yet. Upload images to create the carousel.

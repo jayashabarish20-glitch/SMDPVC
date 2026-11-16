@@ -1,0 +1,86 @@
+- generic [ref=f6e3]:
+  - link "Skip to main content" [ref=f6e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - generic [ref=f6e6]:
+      - link "SMDPVC Nursery home" [ref=f6e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f6e8]: S
+        - generic [ref=f6e9]:
+          - generic [ref=f6e10]: SMDPVC
+          - generic "SMDPVC Nursery" [ref=f6e11]: Nursery
+      - generic [ref=f6e12]:
+        - link "Back to Home" [ref=f6e13] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=f6e14] [cursor=pointer]
+  - main [ref=f6e21]:
+    - region "Nursery highlights" [ref=f6e22]:
+      - generic [ref=f6e23]:
+        - generic [ref=f6e24]:
+          - generic [ref=f6e25]: Nursery
+          - generic [ref=f6e28]:
+            - heading "A Warm Start to Learning" [level=1] [ref=f6e29]
+            - paragraph [ref=f6e30]: Explore the Nursery section. Add a school-approved introduction and learning environment details here.
+          - generic [ref=f6e31]:
+            - button "Explore Nursery" [ref=f6e32] [cursor=pointer]
+            - button "About This Section" [ref=f6e35] [cursor=pointer]
+        - generic [ref=f6e36]:
+          - button "Slide 1" [ref=f6e37] [cursor=pointer]
+          - button "Slide 2" [ref=f6e38] [cursor=pointer]
+          - button "Slide 3" [ref=f6e39] [cursor=pointer]
+    - generic [ref=f6e40]:
+      - generic [ref=f6e41]:
+        - paragraph [ref=f6e42]: Nursery
+        - heading "About Nursery" [level=2] [ref=f6e43]
+        - paragraph [ref=f6e44]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f6e45]:
+        - paragraph [ref=f6e46]: Nursery
+        - heading "Classes" [level=2] [ref=f6e47]
+      - generic [ref=f6e53]:
+        - paragraph [ref=f6e54]: Nursery
+        - heading "Learning Activities" [level=2] [ref=f6e55]
+      - generic [ref=f6e61]:
+        - paragraph [ref=f6e62]: Nursery
+        - heading "Academic Calendar" [level=2] [ref=f6e63]
+        - paragraph [ref=f6e64]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=f6e65]:
+        - paragraph [ref=f6e66]: Nursery
+        - heading "Extracurricular Activities" [level=2] [ref=f6e67]
+  - contentinfo [ref=f6e73]:
+    - generic [ref=f6e74]:
+      - generic [ref=f6e75]:
+        - generic [ref=f6e76]:
+          - generic [ref=f6e77]:
+            - generic [ref=f6e78]: S
+            - generic [ref=f6e79]:
+              - paragraph [ref=f6e80]: SMDPVC
+              - paragraph [ref=f6e81]: Higher Secondary School
+          - paragraph [ref=f6e82]: School information and contact details can be added here after confirmation by the school.
+        - generic [ref=f6e83]:
+          - heading "Home" [level=4] [ref=f6e84]
+          - generic [ref=f6e85]:
+            - link "Home" [ref=f6e86] [cursor=pointer]:
+              - /url: /
+            - link "Our Foundation" [ref=f6e87] [cursor=pointer]:
+              - /url: /#foundation
+            - link "Leadership" [ref=f6e88] [cursor=pointer]:
+              - /url: /#leadership
+            - link "School Sections" [ref=f6e89] [cursor=pointer]:
+              - /url: /#school-sections
+            - link "Infrastructure" [ref=f6e90] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=f6e91] [cursor=pointer]:
+              - /url: /#enquiry
+        - generic [ref=f6e92]:
+          - heading "School Sections" [level=4] [ref=f6e93]
+          - generic [ref=f6e94]:
+            - link "Nursery" [ref=f6e95] [cursor=pointer]:
+              - /url: /nursery
+            - link "Primary" [ref=f6e98] [cursor=pointer]:
+              - /url: /primary
+            - link "Higher Secondary" [ref=f6e101] [cursor=pointer]:
+              - /url: /higher-secondary
+      - generic [ref=f6e104]:
+        - paragraph [ref=f6e105]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=f6e106] [cursor=pointer]:
+          - /url: /

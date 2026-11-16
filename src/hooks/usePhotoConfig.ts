@@ -7,6 +7,19 @@ import {
   type LeadershipProfileData,
   type PrimaryClassesGalleryConfig,
   type PrimaryAboutConfig,
+  type NurseryAboutConfig,
+  type PrincipalConfig,
+  type NurseryClassesGalleryConfig,
+  type NurseryLearningActivitiesGalleryConfig,
+  type NurseryExtracurricularGalleryConfig,
+  type PrimaryLearningActivitiesGalleryConfig,
+  type PrimaryExtracurricularGalleryConfig,
+  type GroupOfSchoolsInfrastructureConfig,
+  type HigherSecondaryAboutConfig,
+  type HigherSecondaryClassesGalleryConfig,
+  type HigherSecondaryLearningActivitiesGalleryConfig,
+  type HigherSecondaryExtracurricularGalleryConfig,
+  type AcademicCalendarData,
 } from '../data/photoService';
 
 /**
@@ -129,6 +142,207 @@ export function usePhotoConfig() {
     [config.primaryAbout]
   );
 
+  // Update the Nursery About section independently from the gallery and hero.
+  const updateNurseryAbout = useCallback(
+    (updates: Partial<NurseryAboutConfig>) => {
+      const current = config.nurseryAbout ?? { photo: null, description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryAbout: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryAbout]
+  );
+
+  // Update Nursery Classes Gallery (photos + description)
+  const updateNurseryClassesGallery = useCallback(
+    (updates: Partial<NurseryClassesGalleryConfig>) => {
+      const current = config.nurseryClassesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryClassesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryClassesGallery]
+  );
+
+  // Update Nursery Learning Activities Gallery (photos + description)
+  const updateNurseryLearningActivitiesGallery = useCallback(
+    (updates: Partial<NurseryLearningActivitiesGalleryConfig>) => {
+      const current = config.nurseryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryLearningActivitiesGallery]
+  );
+
+  // Update Nursery Extracurricular Gallery (photos + description)
+  const updateNurseryExtracurricularGallery = useCallback(
+    (updates: Partial<NurseryExtracurricularGalleryConfig>) => {
+      const current = config.nurseryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryExtracurricularGallery]
+  );
+
+  // Update Primary Learning Activities Gallery (photos + description)
+  const updatePrimaryLearningActivitiesGallery = useCallback(
+    (updates: Partial<PrimaryLearningActivitiesGalleryConfig>) => {
+      const current = config.primaryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryLearningActivitiesGallery]
+  );
+
+  // Update Primary Extracurricular Gallery (photos + description)
+  const updatePrimaryExtracurricularGallery = useCallback(
+    (updates: Partial<PrimaryExtracurricularGalleryConfig>) => {
+      const current = config.primaryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        primaryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryExtracurricularGallery]
+  );
+
+  // Update Group of Schools Infrastructure Gallery (photos + description)
+  const updateGroupOfSchoolsInfrastructure = useCallback(
+    (updates: Partial<GroupOfSchoolsInfrastructureConfig>) => {
+      const current = config.groupOfSchoolsInfrastructure ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        groupOfSchoolsInfrastructure: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.groupOfSchoolsInfrastructure]
+  );
+
+  // Update Primary Academic Calendar
+  const updatePrimaryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarPrimary: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
+  // Update Nursery Academic Calendar
+  const updateNurseryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarNursery: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
+  // Update Primary Principal
+  const updatePrimaryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.primaryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        primaryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.primaryPrincipal]
+  );
+
+  // Update Nursery Principal
+  const updateNurseryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.nurseryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        nurseryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.nurseryPrincipal]
+  );
+
+  // Update Higher Secondary Principal
+  const updateHigherSecondaryPrincipal = useCallback(
+    (updates: Partial<PrincipalConfig> | null) => {
+      const current = config.higherSecondaryPrincipal ?? { photo: null, name: '', message: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryPrincipal: updates === null ? null : { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryPrincipal]
+  );
+
+  // Update the Higher Secondary About section
+  const updateHigherSecondaryAbout = useCallback(
+    (updates: Partial<HigherSecondaryAboutConfig>) => {
+      const current = config.higherSecondaryAbout ?? { photo: null, description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryAbout: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryAbout]
+  );
+
+  // Update Higher Secondary Classes Gallery
+  const updateHigherSecondaryClassesGallery = useCallback(
+    (updates: Partial<HigherSecondaryClassesGalleryConfig>) => {
+      const current = config.higherSecondaryClassesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryClassesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryClassesGallery]
+  );
+
+  // Update Higher Secondary Learning Activities Gallery
+  const updateHigherSecondaryLearningActivitiesGallery = useCallback(
+    (updates: Partial<HigherSecondaryLearningActivitiesGalleryConfig>) => {
+      const current = config.higherSecondaryLearningActivitiesGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryLearningActivitiesGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryLearningActivitiesGallery]
+  );
+
+  // Update Higher Secondary Extracurricular Gallery
+  const updateHigherSecondaryExtracurricularGallery = useCallback(
+    (updates: Partial<HigherSecondaryExtracurricularGalleryConfig>) => {
+      const current = config.higherSecondaryExtracurricularGallery ?? { photos: [], description: '' };
+      const newConfig = updatePhotoConfig({
+        higherSecondaryExtracurricularGallery: { ...current, ...updates },
+      });
+      setConfig(newConfig);
+    },
+    [config.higherSecondaryExtracurricularGallery]
+  );
+
+  // Update Higher Secondary Academic Calendar
+  const updateHigherSecondaryAcademicCalendar = useCallback(
+    (calendar: AcademicCalendarData | null) => {
+      const newConfig = updatePhotoConfig({
+        academicCalendarHigherSecondary: calendar,
+      });
+      setConfig(newConfig);
+    },
+    []
+  );
+
   // Add photo to array (hero, alumni, toppers)
   const addPhoto = useCallback(
     (section: string, photo: PhotoMetadata) => {
@@ -199,6 +413,23 @@ export function usePhotoConfig() {
     updateSchoolPageHeroes,
     updatePrimaryClassesGallery,
     updatePrimaryAbout,
+    updateNurseryAbout,
+    updatePrimaryPrincipal,
+    updateNurseryPrincipal,
+    updateHigherSecondaryPrincipal,
+    updateNurseryClassesGallery,
+    updateNurseryLearningActivitiesGallery,
+    updateNurseryExtracurricularGallery,
+    updatePrimaryLearningActivitiesGallery,
+    updatePrimaryExtracurricularGallery,
+    updateGroupOfSchoolsInfrastructure,
+    updateHigherSecondaryAbout,
+    updateHigherSecondaryClassesGallery,
+    updateHigherSecondaryLearningActivitiesGallery,
+    updateHigherSecondaryExtracurricularGallery,
+    updatePrimaryAcademicCalendar,
+    updateNurseryAcademicCalendar,
+    updateHigherSecondaryAcademicCalendar,
     addPhoto,
     removePhoto,
     reorderPhotos,

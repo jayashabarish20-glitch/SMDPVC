@@ -1,48 +1,28 @@
 import { motion, useReducedMotion } from "motion/react";
 import { leadershipProfiles } from "../homepageContent";
+import { usePublicLeadershipProfiles } from "../hooks/usePublicLeadershipProfiles";
 import { Icon } from "./Icon";
-import { usePhotoConfig } from "../hooks/useAdminPhotos";
 
 export function Leadership() {
   const shouldReduceMotion = useReducedMotion();
-  const photoConfig = usePhotoConfig();
+  const { profiles: apiProfiles, error } = usePublicLeadershipProfiles();
 
-  // Map static profile order to their admin profile keys
-  const profileKeyMap: Array<'management' | 'trustee' | 'principal'> = [
-    'management',
-    'trustee',
-    'principal',
-  ];
-
-  const savedProfiles = photoConfig.leadershipPhotos.profiles;
-
-  const profiles = leadershipProfiles
-    .filter((profile) => profile.isActive)
-    .sort((a, b) => a.displayOrder - b.displayOrder)
-    .map((profile, index) => {
-      const profileKey = profileKeyMap[index];
-      const adminProfile = savedProfiles?.[profileKey];
-
-      // Overlay saved text fields — only if the admin has entered a non-empty value
-      const name = adminProfile?.name?.trim() ? adminProfile.name : profile.name;
-      const designation = adminProfile?.designation?.trim() ? adminProfile.designation : profile.designation;
-      const shortBio = adminProfile?.shortBio?.trim() ? adminProfile.shortBio : profile.shortBio;
-      const message = adminProfile?.message?.trim() ? adminProfile.message : profile.message;
-
-      // Resolve photo: prefer the profile-level photo, then legacy top-level photo fields
-      let photo = profile.photo;
-      if (adminProfile?.photo?.dataUrl) {
-        photo = adminProfile.photo.dataUrl;
-      } else if (index === 0 && photoConfig.leadershipPhotos.managementPhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.managementPhoto.dataUrl;
-      } else if (index === 1 && photoConfig.leadershipPhotos.trusteePhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.trusteePhoto.dataUrl;
-      } else if (index === 2 && photoConfig.leadershipPhotos.principalPhoto?.dataUrl) {
-        photo = photoConfig.leadershipPhotos.principalPhoto.dataUrl;
-      }
-
-      return { ...profile, photo, name, designation, shortBio, message };
-    });
+  // Use API profiles if available, otherwise fall back to static placeholders
+  const profiles = apiProfiles.length > 0
+    ? apiProfiles.map((profile) => ({
+        id: profile.id,
+        name: profile.name,
+        designation: profile.designation,
+        category: profile.category || "",
+        shortBio: profile.short_bio || "",
+        message: profile.message || "",
+        photo: profile.media?.image_url || null,
+        isActive: profile.is_active,
+        displayOrder: profile.display_order,
+      }))
+    : leadershipProfiles
+        .filter((profile) => profile.isActive)
+        .sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <section id="leadership" className="scroll-mt-20 bg-white py-24 lg:py-36">
@@ -68,6 +48,11 @@ export function Leadership() {
             Leadership profiles will be completed with school-approved names,
             photographs, and messages.
           </p>
+          {error && (
+            <p role="status" className="mt-3 text-sm text-school-muted">
+              Saved leadership profiles are temporarily unavailable.
+            </p>
+          )}
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

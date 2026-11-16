@@ -7,7 +7,7 @@ import schoolIntroImage1 from "../../assests/images/School intro image1.jpeg";
 import { campusImages, heroSlides } from "../data";
 import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
-import { useAdminPhotos } from "../hooks/useAdminPhotos";
+import { usePublicPhotos } from "../hooks/usePublicPhotos";
 
 type HeroProps = {
   pageHero?: SchoolPageConfig["hero"];
@@ -56,17 +56,23 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const shouldReduceMotion = useReducedMotion();
   const [galleryTilt, setGalleryTilt] = useState({ x: 0, y: 0 });
-  const adminPhotos = useAdminPhotos();
+  const { photos: publicPhotos } = usePublicPhotos();
   const slides = pageHero?.slides ?? heroSlides;
 
   const images = useMemo(
     () => {
-      const imageArray: string[] = pageHero?.images ?? adminPhotos.hero ?? homepageHeroImages;
+      const savedHeroImages = publicPhotos
+        .filter((photo) => photo.config_key === "campusImages.hero")
+        .map((photo) => photo.media?.image_url)
+        .filter((image): image is string => Boolean(image));
+      const imageArray: string[] =
+        pageHero?.images ??
+        (savedHeroImages.length > 0 ? savedHeroImages : homepageHeroImages);
       return imageArray.filter(
         (image): image is string => Boolean(image),
       );
     },
-    [pageHero?.images, adminPhotos.hero],
+    [pageHero?.images, publicPhotos],
   );
 
   useEffect(() => {

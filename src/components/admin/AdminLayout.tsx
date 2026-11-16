@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Icon } from '../Icon';
+import { AdminLogout } from './AdminLogout';
 
 interface NavItem {
   id: string;
@@ -27,10 +28,15 @@ export function AdminLayout({
       {/* Sidebar Navigation */}
       <nav className="hidden w-64 overflow-y-auto border-r border-school-navy/10 bg-white lg:flex lg:flex-col">
         <div className="sticky top-0 border-b border-school-navy/10 bg-white p-6">
-          <h1 className="font-serif text-2xl font-bold text-school-navy">
-            Admin Panel
-          </h1>
-          <p className="mt-1 text-xs text-school-muted">Photo Management</p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="font-serif text-2xl font-bold text-school-navy">
+                Admin Panel
+              </h1>
+              <p className="mt-1 text-xs text-school-muted">Photo Management</p>
+            </div>
+            <AdminLogout />
+          </div>
         </div>
 
         <div className="flex-1 space-y-1 p-4">

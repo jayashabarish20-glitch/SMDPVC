@@ -1,0 +1,145 @@
+
+name: SMDPVC CI/CD
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate frontend build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            if ! command -v docker >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y docker.io docker-compose-v2 git curl
+              sudo systemctl enable --now docker
+            fi
+
+            if ! docker compose version >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y docker-compose-v2 curl
+            fi
+
+            if ! command -v curl >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y curl
+            fi
+
+            mkdir -p ~/SMDPVC
+            cd ~/SMDPVC
+
+            if [ ! -d .git ]; then
+              git clone https://github.com/jayashabarish20-glitch/SMDPVC.git .
+            else
+              git fetch origin master
+              git reset --hard origin/master
+            fi
+
+            if [ ! -f .env ]; then
+              echo "ERROR: Production .env file is missing on EC2"
+              exit 1
+            fi
+
+            echo "========== COMPREHENSIVE DIAGNOSTICS =========="
+            echo ""
+            echo "--- Docker Engine ---"
+            sudo docker --version || echo "ERROR: Cannot access docker"
+            sudo docker version --format 'Client: {{.Client.Version}} | Server: {{.Server.Version}}' 2>/dev/null || true
+            echo ""
+
+            echo "--- Docker Compose ---"
+            sudo docker compose version 2>/dev/null || echo "ERROR: Docker Compose not available"
+            echo ""
+
+            echo "--- BuildKit Status ---"
+            sudo docker buildx version 2>/dev/null || echo "Buildx: NOT INSTALLED"
+            sudo docker buildx ls 2>/dev/null || echo "Buildx builders: UNABLE TO LIST"
+            sudo docker buildx inspect 2>/dev/null || echo "Buildx default builder: NOT AVAILABLE"
+            echo ""
+
+            echo "--- Docker Daemon Health ---"
+            sudo docker ps -q 2>/dev/null | wc -l | xargs -I {} echo "Running containers: {}" || echo "Daemon: UNRESPONSIVE"
+            sudo docker system df 2>/dev/null | head -5 || echo "System df: UNAVAILABLE"
+            echo ""
+
+            echo "--- System Resources ---"
+            echo "Disk:"
+            df -h / | tail -1
+            echo "Memory:"
+            free -h | grep Mem
+            echo "CPU:"
+            nproc --all
+            echo ""
+
+            echo "--- Build Backend Detection ---"
+            echo "DOCKER_BUILDKIT env: ${DOCKER_BUILDKIT:-unset}"
+            echo "COMPOSE_BUILDER env: ${COMPOSE_BUILDER:-unset}"
+            sudo docker info 2>/dev/null | grep -i buildkit || echo "BuildKit: not in docker info"
+            echo ""
+
+            echo "========== ATTEMPTING DOCKER COMPOSE BUILD =========="
+            echo ""
+
+            # Strategy 1: Try with DOCKER_BUILDKIT=0 (disable BuildKit)
+            echo "[Attempt 1] Building with DOCKER_BUILDKIT=0..."
+            if sudo env DOCKER_BUILDKIT=0 docker compose up -d --build --remove-orphans; then
+              echo "✓ Build succeeded with DOCKER_BUILDKIT=0"
+            else
+              BUILD_ERROR=$?
+              echo "✗ Build failed with DOCKER_BUILDKIT=0 (exit code: $BUILD_ERROR)"
+              echo ""
+              echo "Attempting fallback strategy..."
+
+              # Strategy 2: Try without BuildKit-related env vars
+              echo "[Attempt 2] Building with standard docker compose..."
+              if sudo docker compose up -d --build --remove-orphans; then
+                echo "✓ Build succeeded with standard docker compose"
+              else
+                BUILD_ERROR2=$?
+                echo "✗ Build failed with standard docker compose (exit code: $BUILD_ERROR2)"
+                echo ""
+                echo "=== DOCKER COMPOSE LOGS ==="
+                sudo docker compose logs --tail=50 || true
+                echo ""
+                echo "=== DOCKER DAEMON LOGS ==="
+                sudo journalctl -u docker.service -n 30 --no-pager 2>/dev/null || echo "(daemon logs unavailable)"
+                echo ""
+                exit 1
+              fi
+            fi
+
+            for i in $(seq 1 30); do
+              if curl -fsS http://localhost/api/health; then
+                echo "Deployment successful!"
+                exit 0
+              fi
+              sleep 5
+            done
+
+            echo "Health check failed. Container logs:"
+            sudo docker compose logs --tail=100
+            exit 1

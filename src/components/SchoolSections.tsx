@@ -1,24 +1,23 @@
 import { motion, useReducedMotion } from "motion/react";
 import { schoolSectionCards } from "../homepageContent";
 import { Icon } from "./Icon";
-import { usePhotoConfig } from "../hooks/useAdminPhotos";
+import { usePhotoConfig } from "../hooks/usePhotoConfig";
 
 export function SchoolSections() {
   const shouldReduceMotion = useReducedMotion();
-  const photoConfig = usePhotoConfig();
+  const { config } = usePhotoConfig();
 
   const cards = [...schoolSectionCards]
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((card) => {
       let image = card.image;
 
-      // Override with admin photo if available
-      if (card.href === '/nursery' && photoConfig.schoolSectionPhotos.nursery?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.nursery.dataUrl;
-      } else if (card.href === '/primary' && photoConfig.schoolSectionPhotos.primary?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.primary.dataUrl;
-      } else if (card.href === '/higher-secondary' && photoConfig.schoolSectionPhotos.higherSecondary?.dataUrl) {
-        image = photoConfig.schoolSectionPhotos.higherSecondary.dataUrl;
+      if (card.href === '/nursery' && config.schoolSectionPhotos.nursery?.imageUrl) {
+        image = config.schoolSectionPhotos.nursery.imageUrl;
+      } else if (card.href === '/primary' && config.schoolSectionPhotos.primary?.imageUrl) {
+        image = config.schoolSectionPhotos.primary.imageUrl;
+      } else if (card.href === '/higher-secondary' && config.schoolSectionPhotos.higherSecondary?.imageUrl) {
+        image = config.schoolSectionPhotos.higherSecondary.imageUrl;
       }
 
       return { ...card, image };

@@ -1,18 +1,10 @@
-import { useState, useRef } from 'react';
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
+import { useEffect, useRef, useState } from 'react';
+import { leadershipApi, type LeadershipProfile } from '../../services/leadershipApi';
+import { photoAdminApi } from '../../services/photoAdminApi';
 import { SectionHeader } from './SectionHeader';
 import { Icon } from '../Icon';
 import type { PhotoMetadata } from '../../data/photoService';
-import {
-  handleFileInput,
-  generateSemanticFilename,
-  type UploadedImage,
-  type ImageUploadError,
-} from '../../utils/imageUpload';
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-type ProfileKey = 'management' | 'trustee' | 'principal';
+import { validateImageFile } from '../../utils/imageUpload';
 
 interface ProfileFormState {
   name: string;
@@ -21,54 +13,39 @@ interface ProfileFormState {
   message: string;
 }
 
-// ─── Default placeholders ────────────────────────────────────────────────────
-
-const PLACEHOLDERS: Record<ProfileKey, ProfileFormState> = {
-  management: {
-    name: 'Name to be added',
-    designation: 'Designation to be confirmed',
-    shortBio: 'Add a school-approved introduction for this leader.',
-    message: 'Add an approved message from this leader here once the author and wording are confirmed.',
-  },
-  trustee: {
-    name: 'Name to be added',
-    designation: 'Designation to be confirmed',
-    shortBio: 'Add a school-approved introduction for this leader.',
-    message: 'Add an approved message from this leader here once the author and wording are confirmed.',
-  },
-  principal: {
-    name: 'Name to be added',
-    designation: 'Designation to be confirmed',
-    shortBio: 'Add a school-approved introduction for this leader.',
-    message: 'Add an approved message from this leader here once the author and wording are confirmed.',
-  },
+const PLACEHOLDERS: ProfileFormState = {
+  name: 'Name to be added',
+  designation: 'Designation to be confirmed',
+  shortBio: 'Add a school-approved introduction for this leader.',
+  message: 'Add an approved message from this leader here once the author and wording are confirmed.',
 };
 
-// ─── Single Profile Card ─────────────────────────────────────────────────────
-
 interface ProfileCardProps {
-  profileKey: ProfileKey;
+  profileKey: string;
   title: string;
   currentPhoto: PhotoMetadata | null;
   savedText: ProfileFormState;
-  onSave: (key: ProfileKey, text: ProfileFormState, photo?: PhotoMetadata | null) => void;
+  onSave: (key: string, text: ProfileFormState, photo?: File | null, displayOrder?: number) => Promise<void>;
+  onDelete?: (key: string) => Promise<void>;
+  displayOrder: number;
 }
 
-function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: ProfileCardProps) {
+function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave, onDelete, displayOrder }: ProfileCardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<ProfileFormState>(savedText);
-  const [pendingPhoto, setPendingPhoto] = useState<PhotoMetadata | null | undefined>(undefined);
-  // undefined = no change, null = remove, PhotoMetadata = replace
+  const [pendingPhoto, setPendingPhoto] = useState<File | null | undefined>(undefined);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const displayPhoto =
-    pendingPhoto === undefined
-      ? currentPhoto
-      : pendingPhoto;
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleField = (field: keyof ProfileFormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -77,32 +54,19 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploadError(null);
-    setIsUploading(true);
-    try {
-      const result = await handleFileInput(e);
-      if ('type' in result && (result as ImageUploadError).type) {
-        setUploadError((result as ImageUploadError).message);
-      } else {
-        const uploaded = result as UploadedImage;
-        const filename = generateSemanticFilename(uploaded.filename, `${profileKey}-profile`);
-        const meta: PhotoMetadata = {
-          id: filename.replace(/\.[^/.]+$/, ''),
-          filename,
-          alt: title,
-          updatedAt: new Date().toISOString(),
-          dataUrl: uploaded.dataUrl,
-        };
-        setPendingPhoto(meta);
-        setPreviewUrl(uploaded.dataUrl);
-        setDeleteConfirm(false);
-        setSaved(false);
-      }
-    } catch {
-      setUploadError('Failed to upload image. Please try again.');
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      setUploadError(validationError.message);
+    } else {
+      setPendingPhoto(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      setDeleteConfirm(false);
+      setSaved(false);
     }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleRemovePhoto = () => {
@@ -116,15 +80,45 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
     setSaved(false);
   };
 
-  const handleSave = () => {
-    onSave(profileKey, form, pendingPhoto);
-    setSaved(true);
-    // Reset pending photo state (photo is now committed)
-    setPendingPhoto(undefined);
-    setPreviewUrl(null);
+  const handleSave = async () => {
+    setIsUploading(true);
+    setUploadError(null);
+    try {
+      await onSave(profileKey, form, pendingPhoto, displayOrder);
+      setSaved(true);
+      setPendingPhoto(undefined);
+      setPreviewUrl(null);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : 'Failed to save profile.',
+      );
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const photoToShow = previewUrl ?? displayPhoto?.dataUrl ?? null;
+  const handleDelete = async () => {
+    if (!deleteConfirm || !onDelete) return;
+    setIsDeleting(true);
+    setUploadError(null);
+    try {
+      await onDelete(profileKey);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : 'Failed to delete profile.',
+      );
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirm(false);
+    }
+  };
+
+  const photoToShow =
+    pendingPhoto === undefined
+      ? currentPhoto?.imageUrl ?? null
+      : pendingPhoto instanceof File
+        ? previewUrl
+        : null;
   const hasUnsavedChanges =
     form.name !== savedText.name ||
     form.designation !== savedText.designation ||
@@ -221,7 +215,7 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
               {isUploading ? 'Uploading…' : photoToShow ? 'Replace Photo' : 'Choose Photo'}
             </button>
 
-            {displayPhoto && (
+            {photoToShow !== null && (
               <button
                 type="button"
                 onClick={handleRemovePhoto}
@@ -263,7 +257,7 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
               type="text"
               value={form.name}
               onChange={(e) => handleField('name', e.target.value)}
-              placeholder={PLACEHOLDERS[profileKey].name}
+              placeholder={PLACEHOLDERS.name}
               className="w-full rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors"
             />
           </div>
@@ -277,7 +271,7 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
               type="text"
               value={form.designation}
               onChange={(e) => handleField('designation', e.target.value)}
-              placeholder={PLACEHOLDERS[profileKey].designation}
+              placeholder={PLACEHOLDERS.designation}
               className="w-full rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors"
             />
           </div>
@@ -291,7 +285,7 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
             <textarea
               value={form.shortBio}
               onChange={(e) => handleField('shortBio', e.target.value)}
-              placeholder={PLACEHOLDERS[profileKey].shortBio}
+              placeholder={PLACEHOLDERS.shortBio}
               rows={3}
               className="w-full rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors resize-y"
             />
@@ -306,7 +300,7 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
             <textarea
               value={form.message}
               onChange={(e) => handleField('message', e.target.value)}
-              placeholder={PLACEHOLDERS[profileKey].message}
+              placeholder={PLACEHOLDERS.message}
               rows={3}
               className="w-full rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors resize-y"
             />
@@ -314,49 +308,180 @@ function ProfileCard({ profileKey, title, currentPhoto, savedText, onSave }: Pro
         </div>
       </div>
 
-      {/* Save Button */}
-      <div className="flex items-center justify-end gap-4 border-t border-school-navy/8 pt-4">
-        {saved && !hasUnsavedChanges && (
-          <p className="text-xs text-green-600">
-            ✓ Changes saved and visible on the homepage.
-          </p>
-        )}
-        <button
-          type="button"
-          onClick={handleSave}
-          className="inline-flex items-center gap-2 rounded-lg bg-school-navy px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-school-navy-light disabled:opacity-50"
-        >
-          <Icon name="save" className="h-4 w-4" />
-          Save Changes
-        </button>
+      {/* Save/Delete Buttons */}
+      <div className="flex items-center justify-between gap-4 border-t border-school-navy/8 pt-4">
+        <div className="flex items-center gap-4">
+          {saved && !hasUnsavedChanges && (
+            <p className="text-xs text-green-600">
+              ✓ Changes saved and visible on the homepage.
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {onDelete && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeleting || !deleteConfirm}
+              className={`inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors ${
+                deleteConfirm
+                  ? 'bg-red-500 text-white hover:bg-red-600 disabled:opacity-50'
+                  : 'border border-red-400/30 text-red-600 hover:bg-red-50'
+              }`}
+            >
+              <Icon name="trash" className="h-4 w-4" />
+              {isDeleting ? 'Deleting…' : deleteConfirm ? 'Confirm Delete' : 'Delete Profile'}
+            </button>
+          )}
+          {deleteConfirm && onDelete && (
+            <button
+              type="button"
+              onClick={() => setDeleteConfirm(false)}
+              disabled={isDeleting}
+              className="inline-flex items-center gap-2 rounded-lg border border-school-navy/20 bg-school-cream px-5 py-2.5 text-sm font-semibold text-school-navy transition-colors hover:bg-school-cream-light disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isUploading || isDeleting}
+            className="inline-flex items-center gap-2 rounded-lg bg-school-navy px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-school-navy-light disabled:opacity-50"
+          >
+            <Icon name="save" className="h-4 w-4" />
+            {isUploading ? 'Saving…' : 'Save Changes'}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-// ─── Main Manager ─────────────────────────────────────────────────────────────
-
 export function LeadershipPhotosManager() {
-  const { config, updateLeadershipProfile } = usePhotoConfig();
-  const profiles = config.leadershipPhotos.profiles ?? {
-    management: { photo: null, name: '', designation: '', shortBio: '', message: '' },
-    trustee: { photo: null, name: '', designation: '', shortBio: '', message: '' },
-    principal: { photo: null, name: '', designation: '', shortBio: '', message: '' },
+  const [profiles, setProfiles] = useState<LeadershipProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [newProfileName, setNewProfileName] = useState('');
+  const [newProfileDesignation, setNewProfileDesignation] = useState('');
+
+  const loadProfiles = async () => {
+    try {
+      setLoading(true);
+      const result = await leadershipApi.getAdminProfiles();
+      setProfiles(result.sort((a, b) => a.display_order - b.display_order));
+      setError(null);
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Failed to load leadership profiles.';
+      console.error('Failed to load admin leadership profiles:', cause);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const leaders: { key: ProfileKey; title: string; photoField: 'managementPhoto' | 'trusteePhoto' | 'principalPhoto' }[] = [
-    { key: 'management', title: 'Management Profile', photoField: 'managementPhoto' },
-    { key: 'trustee', title: 'Trustee Profile', photoField: 'trusteePhoto' },
-    { key: 'principal', title: 'School Head / Principal Profile', photoField: 'principalPhoto' },
-  ];
+  useEffect(() => {
+    loadProfiles();
+  }, []);
 
-  const handleSave = (
-    key: ProfileKey,
+  const handleSave = async (
+    key: string,
     text: ProfileFormState,
-    photo: PhotoMetadata | null | undefined
+    photo: File | null | undefined,
+    displayOrder: number,
   ) => {
-    const photoUpdate = photo !== undefined ? { photo } : {};
-    updateLeadershipProfile(key, { ...text, ...photoUpdate });
+    setError(null);
+    const previous = profiles.find((p) => p.profile_key === key);
+    let mediaId = previous?.media_id ?? null;
+    let uploadedMediaId: string | null = null;
+
+    try {
+      if (photo instanceof File) {
+        const media = await photoAdminApi.uploadPhoto(photo, `${text.name} profile`);
+        mediaId = media.id;
+        uploadedMediaId = media.id;
+      } else if (photo === null) {
+        mediaId = null;
+      }
+
+      const saved = await leadershipApi.saveProfile({
+        profile_key: key,
+        name: text.name.trim() || 'Name to be added',
+        designation: text.designation.trim(),
+        category: text.designation.trim() || 'Leader',
+        short_bio: text.shortBio.trim(),
+        message: text.message.trim(),
+        display_order: displayOrder,
+        is_active: true,
+        media_id: mediaId,
+      });
+
+      setProfiles((current) => {
+        const updated = current.map((p) => (p.profile_key === key ? saved : p));
+        return updated.sort((a, b) => a.display_order - b.display_order);
+      });
+
+      if (previous?.media_id && previous.media_id !== saved.media_id) {
+        try {
+          await photoAdminApi.deletePhoto(previous.media_id);
+        } catch (cleanupError) {
+          console.error('Profile saved, but old photo cleanup failed:', cleanupError);
+          setError('Profile saved, but the previous photo could not be removed from media storage.');
+        }
+      }
+    } catch (saveError) {
+      if (uploadedMediaId) {
+        try {
+          await photoAdminApi.deletePhoto(uploadedMediaId);
+        } catch (cleanupError) {
+          console.error('Failed to clean up an unassigned leadership photo:', cleanupError);
+        }
+      }
+      throw saveError;
+    }
+  };
+
+  const handleDelete = async (key: string) => {
+    setError(null);
+    try {
+      await leadershipApi.deleteProfile(key);
+      setProfiles((current) => current.filter((p) => p.profile_key !== key));
+    } catch (deleteError) {
+      throw deleteError;
+    }
+  };
+
+  const handleCreateProfile = async () => {
+    if (!newProfileName.trim()) {
+      setError('Profile name is required');
+      return;
+    }
+
+    setCreating(true);
+    setError(null);
+    try {
+      const nextOrder = Math.max(...profiles.map((p) => p.display_order), 0) + 1;
+      const newProfile = await leadershipApi.createProfile({
+        name: newProfileName.trim(),
+        designation: newProfileDesignation.trim() || 'Leader',
+        category: newProfileDesignation.trim() || 'Leader',
+        short_bio: '',
+        message: '',
+        display_order: nextOrder,
+        is_active: true,
+        media_id: null,
+      });
+      setProfiles((current) => [...current, newProfile].sort((a, b) => a.display_order - b.display_order));
+      setNewProfileName('');
+      setNewProfileDesignation('');
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Failed to create profile.';
+      setError(message);
+      console.error('Failed to create leadership profile:', cause);
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
@@ -364,37 +489,95 @@ export function LeadershipPhotosManager() {
       <SectionHeader
         badge="HOME PAGE"
         title="Leadership Profiles"
-        description="Manage photographs and profile information for the three leadership cards displayed on the home page. Each profile is saved independently."
+        description="Manage unlimited leadership profiles. Add, edit, delete, and reorder profiles displayed on the home page."
       />
 
-      <div className="space-y-6">
-        {leaders.map(({ key, title, photoField }) => {
-          const saved = profiles[key];
-          const currentPhoto = saved.photo ?? config.leadershipPhotos[photoField] ?? null;
-          const savedText: ProfileFormState = {
-            name: saved.name ?? '',
-            designation: saved.designation ?? '',
-            shortBio: saved.shortBio ?? '',
-            message: saved.message ?? '',
-          };
-          return (
-            <ProfileCard
-              key={key}
-              profileKey={key}
-              title={title}
-              currentPhoto={currentPhoto}
-              savedText={savedText}
-              onSave={handleSave}
-            />
-          );
-        })}
+      {error && (
+        <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
+      {/* Create New Profile Section */}
+      <div className="mb-6 rounded-2xl border border-school-navy/10 bg-white p-8">
+        <h3 className="mb-4 text-lg font-semibold text-school-navy">Add New Profile</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input
+            type="text"
+            value={newProfileName}
+            onChange={(e) => setNewProfileName(e.target.value)}
+            placeholder="Leader name"
+            disabled={creating}
+            className="rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors disabled:opacity-50"
+          />
+          <input
+            type="text"
+            value={newProfileDesignation}
+            onChange={(e) => setNewProfileDesignation(e.target.value)}
+            placeholder="Designation (e.g., Principal)"
+            disabled={creating}
+            className="rounded-lg border border-school-navy/15 bg-school-cream px-3 py-2.5 text-sm text-school-navy placeholder:text-school-muted/60 focus:border-school-gold focus:outline-none focus:ring-2 focus:ring-school-gold/20 transition-colors disabled:opacity-50"
+          />
+        </div>
+        <button
+          onClick={handleCreateProfile}
+          disabled={creating || !newProfileName.trim()}
+          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-school-gold px-4 py-2 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-light disabled:opacity-50"
+        >
+          <Icon name="plus" className="h-4 w-4" />
+          {creating ? 'Creating…' : 'Create Profile'}
+        </button>
       </div>
+
+      {/* Profiles List */}
+      {loading ? (
+        <p className="py-8 text-center text-sm text-school-muted">Loading leadership profiles…</p>
+      ) : (
+        <div className="space-y-6">
+          {profiles.length === 0 ? (
+            <p className="rounded-lg bg-school-cream/50 p-4 text-center text-sm text-school-muted">
+              No profiles yet. Create one above to get started.
+            </p>
+          ) : (
+            profiles.map((profile) => {
+              const currentPhoto: PhotoMetadata | null = profile.media
+                ? {
+                    id: profile.media_id ?? profile.media.id,
+                    filename: profile.media.original_filename,
+                    alt: profile.media.alt_text,
+                    updatedAt: '',
+                    imageUrl: profile.media.image_url,
+                  }
+                : null;
+              const savedText: ProfileFormState = {
+                name: profile.name,
+                designation: profile.designation,
+                shortBio: profile.short_bio,
+                message: profile.message,
+              };
+              return (
+                <ProfileCard
+                  key={profile.profile_key}
+                  profileKey={profile.profile_key}
+                  title={profile.name || 'Unnamed Profile'}
+                  currentPhoto={currentPhoto}
+                  savedText={savedText}
+                  displayOrder={profile.display_order}
+                  onSave={(key, text, photo, order) =>
+                    handleSave(key, text, photo, order ?? profile.display_order)
+                  }
+                  onDelete={handleDelete}
+                />
+              );
+            })
+          )}
+        </div>
+      )}
 
       <div className="mt-6 rounded-2xl border border-school-navy/10 bg-school-cream/60 p-5">
         <p className="text-sm text-school-muted">
-          💡 <strong className="text-school-navy">Storage note:</strong> Profile data is saved to
-          your browser's local storage and will persist across page refreshes on this device. Data
-          is immediately reflected on the public homepage.
+          <strong className="text-school-navy">Storage note:</strong> Profile details and photos
+          are saved to the school database and shared with public visitors.
         </p>
       </div>
     </div>

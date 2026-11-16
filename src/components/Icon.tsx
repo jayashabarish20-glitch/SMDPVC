@@ -31,7 +31,9 @@ export type IconName =
   | "trash"
   | "upload"
   | "image"
-  | "x";
+  | "x"
+  | "lock"
+  | "save";
 
 export function Icon({
   name,
@@ -217,6 +219,19 @@ export function Icon({
       </>
     ),
     x: <path d="m6 6 12 12M18 6 6 18" />,
+    lock: (
+      <>
+        <rect width="18" height="11" x="3" y="11" rx="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </>
+    ),
+    save: (
+      <>
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </>
+    ),
   };
 
   return (
