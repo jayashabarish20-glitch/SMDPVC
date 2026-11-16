@@ -20,6 +20,7 @@ import {
   type HigherSecondaryLearningActivitiesGalleryConfig,
   type HigherSecondaryExtracurricularGalleryConfig,
   type AcademicCalendarData,
+  type CourseGroup,
 } from '../data/photoService';
 
 /**
@@ -404,6 +405,15 @@ export function usePhotoConfig() {
     [config]
   );
 
+  // Update Class XI Course Groups
+  const updateCourseGroups = useCallback(
+    (groups: CourseGroup[]) => {
+      const newConfig = updatePhotoConfig({ courseGroups: groups });
+      setConfig(newConfig);
+    },
+    []
+  );
+
   return {
     config,
     updateCampusImages,
@@ -430,6 +440,7 @@ export function usePhotoConfig() {
     updatePrimaryAcademicCalendar,
     updateNurseryAcademicCalendar,
     updateHigherSecondaryAcademicCalendar,
+    updateCourseGroups,
     addPhoto,
     removePhoto,
     reorderPhotos,

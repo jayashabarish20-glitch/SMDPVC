@@ -121,6 +121,13 @@ export interface AcademicCalendarData {
   uploadedAt: string;
 }
 
+export interface CourseGroup {
+  id: string;
+  name: string;
+  order: number;
+  subjects: string[];
+}
+
 export interface HigherSecondaryAboutConfig {
   photo: PhotoMetadata | null;
   description: string;
@@ -168,6 +175,7 @@ export interface PhotoConfig {
   academicCalendarPrimary: AcademicCalendarData | null;
   academicCalendarNursery: AcademicCalendarData | null;
   academicCalendarHigherSecondary: AcademicCalendarData | null;
+  courseGroups: CourseGroup[];
   lastUpdated: string;
 }
 
@@ -278,6 +286,13 @@ const defaultPhotoConfig: PhotoConfig = {
   academicCalendarPrimary: null,
   academicCalendarNursery: null,
   academicCalendarHigherSecondary: null,
+  courseGroups: [
+    { id: 'group-1', name: 'GROUP 1', order: 1, subjects: ['Tamil', 'English', 'Physics', 'Chemistry', 'Mathematics', 'Biology'] },
+    { id: 'group-2', name: 'GROUP 2', order: 2, subjects: ['Tamil', 'English', 'Physics', 'Chemistry', 'Mathematics', 'C.S.'] },
+    { id: 'group-3-em', name: 'GROUP 3 (EM)', order: 3, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'C.Application'] },
+    { id: 'group-4-tm', name: 'GROUP 4 (TM)', order: 4, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'C.Application'] },
+    { id: 'group-5', name: 'GROUP 5', order: 5, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'B.Maths'] },
+  ],
   lastUpdated: new Date().toISOString(),
 };
 
@@ -325,6 +340,7 @@ function loadFromStorage(): PhotoConfig {
         academicCalendarPrimary: parsed.academicCalendarPrimary ?? defaultPhotoConfig.academicCalendarPrimary,
         academicCalendarNursery: parsed.academicCalendarNursery ?? defaultPhotoConfig.academicCalendarNursery,
         academicCalendarHigherSecondary: parsed.academicCalendarHigherSecondary ?? defaultPhotoConfig.academicCalendarHigherSecondary,
+        courseGroups: parsed.courseGroups ?? defaultPhotoConfig.courseGroups,
       };
     }
   } catch (error) {

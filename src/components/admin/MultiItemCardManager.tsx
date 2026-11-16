@@ -168,7 +168,7 @@ export function MultiItemCardManager({
                         className="rounded-lg bg-school-navy/10 p-2 text-school-navy transition-colors hover:bg-school-navy/20"
                         aria-label="Edit"
                       >
-                        <Icon name="edit" className="h-4 w-4" />
+                        <Icon name="save" className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}

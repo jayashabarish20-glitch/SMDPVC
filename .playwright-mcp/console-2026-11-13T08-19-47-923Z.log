@@ -1,0 +1,10 @@
+[    4123ms] [ERROR] Executing inline event handler violates the following Content Security Policy directive 'script-src 'nonce-vmZRdE1zUe5xNXgxZcrxQQ' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:'. Note that 'unsafe-inline' is ignored if either a hash or nonce value is present in the source list. The action has been blocked. @ https://www.google.com/search?q=whatsapp+web&oq=wha&gs_lcrp=EgZjaHJvbWUqDQgCEAAYgwEYsQMYgAQyBggAEEUYOTITCAEQLhiDARjHARixAxjRAxiABDINCAIQABiDARixAxiABDINCAMQABiDARixAxiABDINCAQQABiDARixAxiABDINCAUQABiDARixAxiABDIHCAYQABiABDIGCAcQBRhA0gEIMzE1MWowajeoAgCwAgA&sourceid=chrome&source=chrome.ob&ie=UTF-8:0
+[    5986ms] [WARNING] Error with Permissions-Policy header: Unrecognized feature: 'attribution-reporting'. @ :0
+[    5986ms] [WARNING] Error with Permissions-Policy header: Unrecognized feature: 'shared-storage'. @ :0
+[    5986ms] [WARNING] Error with Permissions-Policy header: Unrecognized feature: 'shared-storage-select-url'. @ :0
+[    5988ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://web.whatsapp.com/:0
+[    7264ms] [ERROR] ErrorUtils caught an error:
+
+[storage] storage bucket persistence denied (aquire-persistent-storage-denied)
+
+Subsequent non-fatal errors won't be logged; see https://fburl.com/debugjs. {column: 17844, clientTime: 1794557995, extra: Object, guardList: Array(0), hash: ap1sni} @ https://static.whatsapp.net/rsrc.php/v4/y-/r/iRC-8d4nu2n.js:84

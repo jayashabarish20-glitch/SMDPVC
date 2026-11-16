@@ -7,6 +7,8 @@ import { usePhotoConfig } from "../hooks/usePhotoConfig";
 import { usePublicContentItems } from "../hooks/usePublicContentItems";
 import { ContentItemCards } from "./ContentItemCards";
 import { Icon } from "./Icon";
+import { NurseryCalendarDownloadBlock } from "./NurseryCalendarDownloadBlock";
+import { CoursesOfferedSection } from "./CoursesOfferedSection";
 
 type SchoolPageProps = {
   page: SchoolPageConfig;
@@ -63,6 +65,7 @@ export function SchoolPage({ page }: SchoolPageProps) {
   const primaryAcademicCalendarData = isPrimaryPage ? config.academicCalendarPrimary : null;
   const nurseryAcademicCalendarData = isNurseryPage ? config.academicCalendarNursery : null;
   const higherSecondaryAcademicCalendarData = isHigherSecondaryPage ? config.academicCalendarHigherSecondary : null;
+  const courseGroupsData = isHigherSecondaryPage ? (config.courseGroups ?? []) : null;
 
   return (
     <main
@@ -89,6 +92,7 @@ export function SchoolPage({ page }: SchoolPageProps) {
               primaryAcademicCalendar={primaryAcademicCalendarData}
               nurseryAcademicCalendar={nurseryAcademicCalendarData}
               higherSecondaryAcademicCalendar={higherSecondaryAcademicCalendarData}
+              courseGroups={courseGroupsData}
               galleryData={galleryData}
               shouldReduceMotion={shouldReduceMotion}
               contentItemMapping={contentItemMapping}
@@ -115,6 +119,7 @@ interface SectionWithContentItemsProps {
   primaryAcademicCalendar: unknown;
   nurseryAcademicCalendar: unknown;
   higherSecondaryAcademicCalendar: unknown;
+  courseGroups: import('../data/photoService').CourseGroup[] | null;
   galleryData: unknown;
   shouldReduceMotion: boolean | null;
   contentItemMapping: { page_slug: string; section_key: string } | null;
@@ -140,6 +145,7 @@ function SectionWithContentItems({
   primaryAcademicCalendar,
   nurseryAcademicCalendar,
   higherSecondaryAcademicCalendar,
+  courseGroups,
   galleryData,
   shouldReduceMotion,
   contentItemMapping,
@@ -316,16 +322,7 @@ function SectionWithContentItems({
         )
       ) : section.id === "nursery-calendar" ? (
         nurseryAcademicCalendar ? (
-          <div className="mt-6">
-            <a
-              href={(nurseryAcademicCalendar as any).dataUrl}
-              download={(nurseryAcademicCalendar as any).filename}
-              className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
-            >
-              <Icon name="arrow" className="h-4 w-4" />
-              Download Academic Calendar
-            </a>
-          </div>
+          <NurseryCalendarDownloadBlock calendar={nurseryAcademicCalendar as any} />
         ) : (
           <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
         )
@@ -344,6 +341,8 @@ function SectionWithContentItems({
         ) : (
           <p className="mt-4 text-sm leading-relaxed text-school-muted">Academic Calendar is not available yet.</p>
         )
+      ) : section.id === "higher-courses" ? (
+        <CoursesOfferedSection groups={courseGroups ?? []} />
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
           <ContentItemCards items={items} loading={loading} />

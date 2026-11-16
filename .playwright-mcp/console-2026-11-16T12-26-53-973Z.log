@@ -1,0 +1,75 @@
+[    7953ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:22162
+[ 1322691ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ SchoolPage 1. useState                   useState
+2. useState                   useState
+3. useCallback                useCallback
+4. useCallback                useCallback
+5. useCallback                useCallback
+6. useCallback                useCallback
+7. useCallback                useCallback
+8. useCallback                useCallback
+9. useCallback                useCallback
+10. useCallback               useCallback
+11. useCallback               useCallback
+12. useCallback               useCallback
+13. useCallback               useCallback
+14. useCallback               useCallback
+15. useCallback               useCallback
+16. useCallback               useCallback
+17. useCallback               useCallback
+18. useCallback               useCallback
+19. useCallback               useCallback
+20. useCallback               useCallback
+21. useCallback               useCallback
+22. useCallback               useCallback
+23. useCallback               useCallback
+24. useCallback               useCallback
+25. useCallback               useCallback
+26. useCallback               useCallback
+27. useCallback               useCallback
+28. useCallback               useCallback
+29. useCallback               useCallback
+30. undefined                 useCallback
+ @ http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:5855
+[ 1322742ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:6056:19)
+    at updateCallback (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:6788:20)
+    at Object.useCallback (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:20683:18)
+    at exports.useCallback (http://127.0.0.1:5173/node_modules/.vite/deps/chunk-RTDQCKL7.js?v=4ad7c3db:959:36)
+    at usePhotoConfig (http://127.0.0.1:5173/src/hooks/usePhotoConfig.ts?t=1794833335289:309:30)
+    at SchoolPage (http://127.0.0.1:5173/src/components/SchoolPage.tsx?t=1794833335289:30:23)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:20257:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:5916:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:7761:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:8841:20)
+[ 1322739ms] [WARNING] %s
+
+%s
+ An error occurred in the <SchoolPage> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=4ad7c3db:7238
+[ 1384149ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1384150ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1391491ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1391492ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1400262ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1400263ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1418526ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1418526ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1424516ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1424516ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1451996ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx:0
+[ 1451997ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1474154ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx?t=1794833485112:0
+[ 1474155ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1484963ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx?t=1794833485112:0
+[ 1484964ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1485373ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx?t=1794833485112:0
+[ 1485374ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1485913ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx?t=1794833485112:0
+[ 1485914ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808
+[ 1486180ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5173/src/components/NurseryCalendarDownloadBlock.tsx?t=1794833485112:0
+[ 1486181ms] [ERROR] [vite] Failed to reload /src/components/SchoolPage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5173/@vite/client:808

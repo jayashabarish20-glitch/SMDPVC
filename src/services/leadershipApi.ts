@@ -76,6 +76,7 @@ export interface LeadershipProfileCreateNew {
   category?: string;
   short_bio?: string;
   message?: string;
+  display_order?: number;
   is_active?: boolean;
   media_id?: string | null;
 }

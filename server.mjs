@@ -1,5 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
+import http from "node:http";
+import https from "node:https";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
@@ -20,6 +22,9 @@ const storageDirectory = path.resolve(
 );
 const metadataPath = path.join(storageDirectory, "current.json");
 const credentialsPath = path.join(storageDirectory, "admin-credentials.json");
+const apiTarget = new URL(
+  process.env.SMDPVC_API_PROXY_TARGET || "http://127.0.0.1:8000"
+);
 const sessions = new Map();
 const loginAttempts = new Map();
 const app = express();
@@ -43,6 +48,54 @@ app.use(express.json({ limit: "16kb" }));
 
 function sendError(response, status, message) {
   response.status(status).json({ error: message });
+}
+
+function proxyApiRequest(request, response) {
+  const target = new URL(request.originalUrl, apiTarget);
+  const transport = target.protocol === "https:" ? https : http;
+  const headers = { ...request.headers, host: target.host };
+  let body;
+
+  if (request.body !== undefined) {
+    body = Buffer.from(JSON.stringify(request.body));
+    headers["content-length"] = String(body.length);
+    delete headers["content-encoding"];
+    delete headers["transfer-encoding"];
+  }
+
+  const proxyRequest = transport.request(
+    target,
+    { method: request.method, headers },
+    (proxyResponse) => {
+      response.status(proxyResponse.statusCode || 502);
+      for (const [name, value] of Object.entries(proxyResponse.headers)) {
+        if (
+          value !== undefined &&
+          name !== "connection" &&
+          name !== "transfer-encoding"
+        ) {
+          response.setHeader(name, value);
+        }
+      }
+      proxyResponse.pipe(response);
+    }
+  );
+
+  proxyRequest.on("error", (error) => {
+    console.error("Admin API proxy request failed:", error);
+    if (response.headersSent) {
+      response.destroy(error);
+      return;
+    }
+    sendError(response, 502, "The admin API is unavailable.");
+  });
+  request.on("aborted", () => proxyRequest.destroy());
+
+  if (body !== undefined) {
+    proxyRequest.end(body);
+  } else {
+    request.pipe(proxyRequest);
+  }
 }
 
 function toCalendarView(calendar) {
@@ -524,9 +577,7 @@ app.delete(
   }
 );
 
-app.use("/api", (_request, response) => {
-  sendError(response, 404, "Nursery calendar endpoint not found.");
-});
+app.use("/api", proxyApiRequest);
 
 if (production) {
   const distDirectory = path.join(root, "dist");

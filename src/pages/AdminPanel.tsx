@@ -25,6 +25,7 @@ import { HigherSecondaryClassesGalleryManager } from '../components/admin/Higher
 import { HigherSecondaryLearningActivitiesGalleryManager } from '../components/admin/HigherSecondaryLearningActivitiesGalleryManager';
 import { HigherSecondaryExtracurricularGalleryManager } from '../components/admin/HigherSecondaryExtracurricularGalleryManager';
 import { HigherSecondaryAcademicCalendarManager } from '../components/admin/HigherSecondaryAcademicCalendarManager';
+import { CoursesOfferedManager } from '../components/admin/CoursesOfferedManager';
 
 const NurseryAcademicCalendarManager = lazy(() =>
   import('../components/admin/NurseryAcademicCalendarManager').then((module) => ({
@@ -59,6 +60,7 @@ type AdminSection =
   | 'hs-about'
   | 'hs-principal'
   | 'hs-academic-calendar'
+  | 'hs-courses'
   | 'excellence'
   | 'campus-life';
 
@@ -92,6 +94,7 @@ export function AdminPanel() {
     { id: '7d', label: 'Higher Secondary – About', section: 'hs-about' as AdminSection },
     { id: '7e', label: 'Higher Secondary – Principal', section: 'hs-principal' as AdminSection },
     { id: '7f', label: 'Higher Secondary – Academic Calendar', section: 'hs-academic-calendar' as AdminSection },
+    { id: '7g', label: 'Higher Secondary – Courses Offered (Class XI)', section: 'hs-courses' as AdminSection },
     { id: '8', label: 'Excellence & Toppers', section: 'excellence' as AdminSection },
     { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' as AdminSection },
   ];
@@ -160,6 +163,7 @@ export function AdminPanel() {
       {activeSection === 'primary-about' && <PrimaryAboutManager />}
       {activeSection === 'primary-academic-calendar' && <PrimaryAcademicCalendarManager />}
       {activeSection === 'hs-academic-calendar' && <HigherSecondaryAcademicCalendarManager />}
+      {activeSection === 'hs-courses' && <CoursesOfferedManager />}
       {activeSection === 'hs-principal' && <HigherSecondaryPrincipalManager />}
     </AdminLayout>
   );
