@@ -7,7 +7,7 @@ interface AcademicCalendarManagerProps {
   badge: string;
   title: string;
   description: string;
-  calendarKey: 'primary' | 'nursery';
+  calendarKey: 'primary' | 'nursery' | 'higherSecondary';
 }
 
 export function AcademicCalendarManager({
@@ -16,9 +16,9 @@ export function AcademicCalendarManager({
   description,
   calendarKey,
 }: AcademicCalendarManagerProps) {
-  const { config, updatePrimaryAcademicCalendar, updateNurseryAcademicCalendar } = usePhotoConfig();
-  const calendar = calendarKey === 'primary' ? config.academicCalendarPrimary : config.academicCalendarNursery;
-  const updateCalendar = calendarKey === 'primary' ? updatePrimaryAcademicCalendar : updateNurseryAcademicCalendar;
+  const { config, updatePrimaryAcademicCalendar, updateNurseryAcademicCalendar, updateHigherSecondaryAcademicCalendar } = usePhotoConfig();
+  const calendar = calendarKey === 'primary' ? config.academicCalendarPrimary : calendarKey === 'nursery' ? config.academicCalendarNursery : config.academicCalendarHigherSecondary;
+  const updateCalendar = calendarKey === 'primary' ? updatePrimaryAcademicCalendar : calendarKey === 'nursery' ? updateNurseryAcademicCalendar : updateHigherSecondaryAcademicCalendar;
 
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);

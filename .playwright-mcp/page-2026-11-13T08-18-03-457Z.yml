@@ -1,0 +1,35 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - heading "Admin Panel" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Photo Management
+    - generic [ref=e8]:
+      - button "Home Page Hero Carousel" [ref=e9] [cursor=pointer]
+      - button "Leadership Profiles" [ref=e10] [cursor=pointer]
+      - button "School Sections Cards" [ref=e11] [cursor=pointer]
+      - button "Hero 3D Cards" [ref=e12] [cursor=pointer]
+      - button "Nursery Page Hero" [ref=e13] [cursor=pointer]
+      - button "Nursery – Academic Calendar" [active] [ref=e14] [cursor=pointer]
+      - button "Primary Page Hero" [ref=e15] [cursor=pointer]
+      - button "Primary – Classes Gallery" [ref=e16] [cursor=pointer]
+      - button "Primary – About" [ref=e17] [cursor=pointer]
+      - button "Higher Secondary Hero" [ref=e18] [cursor=pointer]
+      - button "Excellence & Toppers" [ref=e19] [cursor=pointer]
+      - button "Campus Life & Alumni" [ref=e20] [cursor=pointer]
+    - link "Back to Website" [ref=e22] [cursor=pointer]:
+      - /url: /
+  - main [ref=e25]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]: NURSERY PAGE
+        - heading "Nursery Academic Calendar" [level=2] [ref=e56]
+        - paragraph [ref=e57]: Upload and publish the PDF displayed in the Nursery section of the public website.
+      - generic [ref=e59]:
+        - heading "Authorized staff sign in" [level=3] [ref=e60]
+        - generic [ref=e61]:
+          - text: Email
+          - textbox "Email" [ref=e62]
+        - generic [ref=e63]:
+          - text: Password
+          - textbox "Password" [ref=e64]
+        - button "Sign in" [ref=e65] [cursor=pointer]
