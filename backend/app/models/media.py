@@ -63,6 +63,7 @@ class Media(UUIDPrimaryKey, TimestampMixin, Base):
         back_populates="card_media",
     )
     toppers: Mapped[list["Topper"]] = relationship(back_populates="media")
+    alumni: Mapped[list["Alumni"]] = relationship(back_populates="media")
     content_items: Mapped[list["ContentItem"]] = relationship(
         back_populates="media",
     )

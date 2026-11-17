@@ -169,10 +169,6 @@ export const schoolPageContent = {
         title: "Achievements",
         achievements: [
           {
-            title: "Academic Achievements",
-            fields: ["Academic year", "Achievement", "Supporting details"],
-          },
-          {
             title: "School Toppers",
             fields: [
               "Academic year",
@@ -189,24 +185,6 @@ export const schoolPageContent = {
               "Student name",
               "Subject",
               "Marks or percentage",
-            ],
-          },
-          {
-            title: "10th Standard Results",
-            fields: [
-              "Academic year",
-              "Student name",
-              "Marks or percentage",
-              "Achievement",
-            ],
-          },
-          {
-            title: "12th Standard Results",
-            fields: [
-              "Academic year",
-              "Student name",
-              "Marks or percentage",
-              "Achievement",
             ],
           },
         ],

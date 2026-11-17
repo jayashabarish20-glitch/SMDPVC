@@ -105,11 +105,8 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
         description:
           "Add verified school achievements only. Do not publish sample student names, marks, or ranks.",
         subsections: [
-          "Academic Achievements",
           "School Toppers",
           "Subject-wise Toppers",
-          "10th Standard Results",
-          "12th Standard Results",
         ],
       },
       { id: "higher-alumni", title: "Alumni Details", description: editablePlaceholder },

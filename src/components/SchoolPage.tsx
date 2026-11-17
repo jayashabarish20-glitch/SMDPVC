@@ -9,6 +9,7 @@ import { ContentItemCards } from "./ContentItemCards";
 import { Icon } from "./Icon";
 import { NurseryCalendarDownloadBlock } from "./NurseryCalendarDownloadBlock";
 import { CoursesOfferedSection } from "./CoursesOfferedSection";
+import { AlumniSection } from "./AlumniSection";
 
 type SchoolPageProps = {
   page: SchoolPageConfig;
@@ -343,6 +344,8 @@ function SectionWithContentItems({
         )
       ) : section.id === "higher-courses" ? (
         <CoursesOfferedSection groups={courseGroups ?? []} />
+      ) : section.id === "higher-alumni" ? (
+        <AlumniSection />
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
           <ContentItemCards items={items} loading={loading} />

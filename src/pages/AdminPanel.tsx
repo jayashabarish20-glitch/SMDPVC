@@ -26,6 +26,8 @@ import { HigherSecondaryLearningActivitiesGalleryManager } from '../components/a
 import { HigherSecondaryExtracurricularGalleryManager } from '../components/admin/HigherSecondaryExtracurricularGalleryManager';
 import { HigherSecondaryAcademicCalendarManager } from '../components/admin/HigherSecondaryAcademicCalendarManager';
 import { CoursesOfferedManager } from '../components/admin/CoursesOfferedManager';
+import { ToppersManager } from '../components/admin/ToppersManager';
+import { AlumniManager } from '../components/admin/AlumniManager';
 
 const NurseryAcademicCalendarManager = lazy(() =>
   import('../components/admin/NurseryAcademicCalendarManager').then((module) => ({
@@ -61,6 +63,8 @@ type AdminSection =
   | 'hs-principal'
   | 'hs-academic-calendar'
   | 'hs-courses'
+  | 'hs-toppers'
+  | 'hs-alumni'
   | 'excellence'
   | 'campus-life';
 
@@ -95,6 +99,8 @@ export function AdminPanel() {
     { id: '7e', label: 'Higher Secondary – Principal', section: 'hs-principal' as AdminSection },
     { id: '7f', label: 'Higher Secondary – Academic Calendar', section: 'hs-academic-calendar' as AdminSection },
     { id: '7g', label: 'Higher Secondary – Courses Offered (Class XI)', section: 'hs-courses' as AdminSection },
+    { id: '7h', label: 'Higher Secondary – School Toppers', section: 'hs-toppers' as AdminSection },
+    { id: '7i', label: 'Higher Secondary – Alumni', section: 'hs-alumni' as AdminSection },
     { id: '8', label: 'Excellence & Toppers', section: 'excellence' as AdminSection },
     { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' as AdminSection },
   ];
@@ -158,6 +164,8 @@ export function AdminPanel() {
           description="Manage the background images for the Higher Secondary page hero carousel."
         />
       )}
+      {activeSection === 'hs-toppers' && <ToppersManager />}
+      {activeSection === 'hs-alumni' && <AlumniManager />}
       {activeSection === 'excellence' && <ExcellenceManager />}
       {activeSection === 'campus-life' && <CampusLifeManager />}
       {activeSection === 'primary-about' && <PrimaryAboutManager />}

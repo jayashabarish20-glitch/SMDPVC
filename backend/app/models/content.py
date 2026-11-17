@@ -238,8 +238,9 @@ class Achievement(UUIDPrimaryKey, TimestampMixin, Base):
 class Topper(UUIDPrimaryKey, TimestampMixin, Base):
     __tablename__ = "toppers"
     __table_args__ = (
-        CheckConstraint("rank IS NULL OR rank > 0", name="positive_rank"),
-        CheckConstraint("display_order >= 0", name="nonnegative_display_order"),
+        CheckConstraint("rank IS NULL OR rank > 0", name="ck_toppers_positive_rank"),
+        CheckConstraint("centums_scored >= 0", name="ck_toppers_nonnegative_centums"),
+        CheckConstraint("display_order >= 0", name="ck_toppers_nonnegative_display_order"),
         Index(
             "ix_toppers_published_grade_order",
             "is_published",
@@ -256,6 +257,18 @@ class Topper(UUIDPrimaryKey, TimestampMixin, Base):
     subject: Mapped[str | None] = mapped_column(String(120))
     rank: Mapped[int | None] = mapped_column(Integer)
     achievement: Mapped[str | None] = mapped_column(Text)
+    centums_scored: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    centum_subjects: Mapped[list[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+        server_default="[]",
+    )
     display_order: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
@@ -307,3 +320,36 @@ class WebsiteSetting(UUIDPrimaryKey, TimestampMixin, Base):
         default=True,
         server_default="true",
     )
+
+
+class Alumni(UUIDPrimaryKey, TimestampMixin, Base):
+    """Higher Secondary alumni profiles with photo and biographical info."""
+    __tablename__ = "alumni"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_alumni_display_order"),
+        Index(
+            "ix_alumni_published_order",
+            "is_published",
+            "display_order",
+        ),
+    )
+
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    batch_year: Mapped[str] = mapped_column(String(20), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_published: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="alumni")

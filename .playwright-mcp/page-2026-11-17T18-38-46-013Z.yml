@@ -1,0 +1,196 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - generic [ref=e6]:
+      - link "SMDPVC Group Of Schools home" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: S
+        - generic [ref=e9]:
+          - generic [ref=e10]: SMDPVC
+          - generic "SMDPVC Group Of Schools" [ref=e11]: Group Of Schools
+      - navigation "Main navigation" [ref=e12]:
+        - link "Home" [ref=e13] [cursor=pointer]:
+          - /url: /
+        - link "Our Foundation" [ref=e14] [cursor=pointer]:
+          - /url: "#foundation"
+        - link "Leadership" [ref=e15] [cursor=pointer]:
+          - /url: "#leadership"
+        - link "School Sections" [ref=e16] [cursor=pointer]:
+          - /url: "#school-sections"
+        - link "Infrastructure" [ref=e17] [cursor=pointer]:
+          - /url: "#infrastructure"
+        - link "Enquiry" [ref=e18] [cursor=pointer]:
+          - /url: "#enquiry"
+      - link "Enquiry" [ref=e20] [cursor=pointer]:
+        - /url: "#enquiry"
+  - main [ref=e24]:
+    - region "School highlights" [ref=e25]:
+      - group "Representative school imagery" [ref=e29]:
+        - generic [ref=e31]:
+          - generic [ref=e33]:
+            - img "Students taking part in school sports; school-approved image to be added" [ref=e34]:
+              - generic [ref=e39]: School-approved image to be added
+            - generic [ref=e40]: Campus Activities
+          - generic [ref=e42]:
+            - img "School leadership; school-approved image to be added" [ref=e43]:
+              - generic [ref=e48]: School-approved image to be added
+            - generic [ref=e49]: School Community
+          - generic [ref=e51]:
+            - img "Students learning together in modern classroom; school-approved image to be added" [ref=e52]:
+              - generic [ref=e57]: School-approved image to be added
+            - generic [ref=e58]: Learning at SMDPVC
+          - generic [ref=e59]: Campus Life
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: Welcome
+          - generic [ref=e65]:
+            - heading "A Place to Learn, Grow & Discover" [level=1] [ref=e66]
+            - paragraph [ref=e67]: Explore the learning journey at SMDPVC. Add a verified school introduction here.
+          - generic [ref=e68]:
+            - button "Make an Enquiry" [ref=e69] [cursor=pointer]
+            - button "Our Foundation" [ref=e72] [cursor=pointer]
+        - generic [ref=e73]:
+          - button "Slide 1" [ref=e74] [cursor=pointer]
+          - button "Slide 2" [ref=e75] [cursor=pointer]
+          - button "Slide 3" [ref=e76] [cursor=pointer]
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: Our Foundation
+        - heading "A Foundation for Learning" [level=2] [ref=e81]
+      - generic [ref=e82]:
+        - article [ref=e83]:
+          - heading "Our Vision" [level=3] [ref=e89]
+          - paragraph [ref=e90]: To create a learning environment that encourages curiosity, knowledge, confidence, and responsible citizenship.
+          - paragraph [ref=e91]: Editable demo copy — replace with the school-approved statement
+        - article [ref=e92]:
+          - heading "Our Mission" [level=3] [ref=e97]
+          - paragraph [ref=e98]: To support every learner through quality education, meaningful learning experiences, and opportunities for personal growth.
+          - paragraph [ref=e99]: Editable demo copy — replace with the school-approved statement
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: Leadership
+        - heading "Meet Our School Leaders" [level=2] [ref=e104]
+        - paragraph [ref=e105]: Leadership profiles will be completed with school-approved names, photographs, and messages.
+      - generic [ref=e106]:
+        - article [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Leader photograph to be added
+            - generic [ref=e115]: Management
+          - generic [ref=e116]:
+            - heading "Name to be added" [level=3] [ref=e117]
+            - paragraph [ref=e118]: Designation to be confirmed
+            - paragraph [ref=e119]: Add a school-approved introduction for this leader.
+            - blockquote [ref=e120]: Add an approved message from this leader here once the author and wording are confirmed.
+        - article [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: Leader photograph to be added
+            - generic [ref=e129]: Trustee
+          - generic [ref=e130]:
+            - heading "Name to be added" [level=3] [ref=e131]
+            - paragraph [ref=e132]: Designation to be confirmed
+            - paragraph [ref=e133]: Add a school-approved introduction for this leader.
+            - blockquote [ref=e134]: Add an approved message from this leader here once the author and wording are confirmed.
+        - article [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]: Leader photograph to be added
+            - generic [ref=e143]: School Head / Principal
+          - generic [ref=e144]:
+            - heading "Name to be added" [level=3] [ref=e145]
+            - paragraph [ref=e146]: Designation to be confirmed
+            - paragraph [ref=e147]: Add a school-approved introduction for this leader.
+            - blockquote [ref=e148]: Add an approved message from this leader here once the author and wording are confirmed.
+    - generic [ref=e150]:
+      - generic [ref=e151]:
+        - paragraph [ref=e152]: School Sections
+        - heading "Find Your Learning Stage" [level=2] [ref=e153]
+      - generic [ref=e154]:
+        - link "Early learning Nursery Discover the Nursery section and its learning environment. Explore Section" [ref=e155] [cursor=pointer]:
+          - /url: /nursery
+          - generic [ref=e156]:
+            - generic [ref=e160]: School imagery
+            - generic [ref=e162]: Early learning
+          - generic [ref=e163]:
+            - heading "Nursery" [level=3] [ref=e164]
+            - paragraph [ref=e165]: Discover the Nursery section and its learning environment.
+            - generic [ref=e166]: Explore Section
+        - link "School section Primary Explore the Primary section and its learning journey. Explore Section" [ref=e169] [cursor=pointer]:
+          - /url: /primary
+          - generic [ref=e170]:
+            - generic [ref=e174]: School imagery
+            - generic [ref=e176]: School section
+          - generic [ref=e177]:
+            - heading "Primary" [level=3] [ref=e178]
+            - paragraph [ref=e179]: Explore the Primary section and its learning journey.
+            - generic [ref=e180]: Explore Section
+        - link "School section Higher Secondary Learn more about the Higher Secondary section. Explore Section" [ref=e183] [cursor=pointer]:
+          - /url: /higher-secondary
+          - generic [ref=e184]:
+            - generic [ref=e188]: School imagery
+            - generic [ref=e190]: School section
+          - generic [ref=e191]:
+            - heading "Higher Secondary" [level=3] [ref=e192]
+            - paragraph [ref=e193]: Learn more about the Higher Secondary section.
+            - generic [ref=e194]: Explore Section
+    - generic [ref=e198]:
+      - generic [ref=e199]:
+        - paragraph [ref=e200]: Contact Information & Location
+        - heading "Visit Our School" [level=2] [ref=e201]
+        - paragraph [ref=e202]: Connect with SMDPVC for school information, admissions enquiries, and assistance.
+      - generic [ref=e203]:
+        - generic [ref=e204]:
+          - paragraph [ref=e205]: School Contact Information
+          - heading "SMDPVC" [level=3] [ref=e206]
+          - paragraph [ref=e207]: Contact details will be added after they are confirmed by the school.
+          - generic [ref=e208]:
+            - generic [ref=e214]:
+              - heading "Postal address" [level=4] [ref=e215]
+              - paragraph [ref=e216]: Address to be confirmed
+            - generic [ref=e221]:
+              - heading "Phone" [level=4] [ref=e222]
+              - paragraph [ref=e223]: Phone number to be confirmed
+            - generic [ref=e229]:
+              - heading "Email" [level=4] [ref=e230]
+              - paragraph [ref=e231]: Email address to be confirmed
+        - generic [ref=e233]:
+          - heading "School Location" [level=3] [ref=e238]
+          - paragraph [ref=e239]: A map preview and directions will appear here when the school's address and map location are verified.
+      - paragraph [ref=e240]: Contact fields are editable in the homepage content data and are intentionally unfilled until verified.
+  - contentinfo [ref=e241]:
+    - generic [ref=e242]:
+      - generic [ref=e243]:
+        - generic [ref=e244]:
+          - generic [ref=e245]:
+            - generic [ref=e246]: S
+            - generic [ref=e247]:
+              - paragraph [ref=e248]: SMDPVC
+              - paragraph [ref=e249]: Higher Secondary School
+          - paragraph [ref=e250]: School information and contact details can be added here after confirmation by the school.
+        - generic [ref=e251]:
+          - heading "Home" [level=4] [ref=e252]
+          - generic [ref=e253]:
+            - link "Home" [ref=e254] [cursor=pointer]:
+              - /url: /
+            - link "Our Foundation" [ref=e255] [cursor=pointer]:
+              - /url: /#foundation
+            - link "Leadership" [ref=e256] [cursor=pointer]:
+              - /url: /#leadership
+            - link "School Sections" [ref=e257] [cursor=pointer]:
+              - /url: /#school-sections
+            - link "Infrastructure" [ref=e258] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=e259] [cursor=pointer]:
+              - /url: /#enquiry
+        - generic [ref=e260]:
+          - heading "School Sections" [level=4] [ref=e261]
+          - generic [ref=e262]:
+            - link "Nursery" [ref=e263] [cursor=pointer]:
+              - /url: /nursery
+            - link "Primary" [ref=e266] [cursor=pointer]:
+              - /url: /primary
+            - link "Higher Secondary" [ref=e269] [cursor=pointer]:
+              - /url: /higher-secondary
+      - generic [ref=e272]:
+        - paragraph [ref=e273]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=e274] [cursor=pointer]:
+          - /url: /

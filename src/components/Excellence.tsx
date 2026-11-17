@@ -2,7 +2,9 @@ import { useState } from "react";
 import { campusImages, centumScores, sportsAchievements } from "../data";
 import { useInView } from "../hooks/useInView";
 import { useToppers } from "../hooks/useToppers";
+import { useAchievements } from "../hooks/useAchievements";
 import { Icon } from "./Icon";
+import { ImageZoomViewer } from "./ImageZoomViewer";
 
 type AchievementsTab = "academic" | "sports";
 type ClassTab = "12" | "10";
@@ -12,11 +14,17 @@ export function Excellence() {
   const [tab, setTab] = useState<AchievementsTab>("academic");
   const [classTab, setClassTab] = useState<ClassTab>("12");
   const [showSchoolToppers, setShowSchoolToppers] = useState(false);
+  const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
 
   const { toppers: toppers12, loading: loading12 } = useToppers("12");
   const { toppers: toppers10, loading: loading10 } = useToppers("10");
   const toppers = classTab === "12" ? toppers12 : toppers10;
   const loading = classTab === "12" ? loading12 : loading10;
+
+  // Fetch sports achievements from API
+  const { achievements: apiSportsAchievements } = useAchievements("sports");
+  // Use API data if available, otherwise fall back to hardcoded data
+  const displaySportsAchievements = apiSportsAchievements.length > 0 ? apiSportsAchievements : sportsAchievements;
 
   return (
     <section id="excellence" className="relative scroll-mt-20 bg-school-cream py-24 lg:py-36 overflow-hidden">
@@ -364,7 +372,7 @@ export function Excellence() {
           /* Sports & Athletics Content */
           <div className="grid items-stretch gap-8 lg:grid-cols-[1.3fr_0.7fr]">
             <div className="grid gap-4 sm:grid-cols-2">
-              {sportsAchievements.map((item) => (
+              {displaySportsAchievements.map((item: any) => (
                 <div
                   key={item.title}
                   className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-sm border border-school-navy/6 transition-all duration-200 hover:shadow-md"
@@ -389,13 +397,24 @@ export function Excellence() {
             </div>
 
             {/* Sports Showcase Card */}
-            <div className="relative min-h-[320px] overflow-hidden rounded-3xl bg-school-navy shadow-lg">
+            <div className="relative min-h-[320px] overflow-hidden rounded-3xl bg-school-navy shadow-lg group cursor-pointer"
+              onClick={() => setZoomImageUrl(campusImages.sports)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setZoomImageUrl(campusImages.sports);
+                }
+              }}
+              aria-label="Click to zoom sports image"
+            >
               <img
                 src={campusImages.sports}
                 alt="Athletics champions"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
               <div className="absolute inset-0 bg-gradient-to-t from-school-navy via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white">
                 <span className="rounded-full bg-school-gold px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-school-navy">
@@ -411,6 +430,14 @@ export function Excellence() {
             </div>
           </div>
         )}
+
+        {/* Image Zoom Viewer */}
+        <ImageZoomViewer
+          imageUrl={zoomImageUrl || ""}
+          alt="Zoomed achievement image"
+          isOpen={zoomImageUrl !== null}
+          onClose={() => setZoomImageUrl(null)}
+        />
       </div>
     </section>
   );
