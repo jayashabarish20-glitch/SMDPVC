@@ -59,12 +59,15 @@ export function AlumniSection() {
     });
 
     result.sort((a, b) => {
-      let aVal: string | number = a[sortBy];
-      let bVal: string | number = b[sortBy];
+      let aVal: string | number;
+      let bVal: string | number;
 
       if (sortBy === 'batch_year') {
-        aVal = parseInt(aVal) || 0;
-        bVal = parseInt(bVal) || 0;
+        aVal = parseInt(a.batch_year) || 0;
+        bVal = parseInt(b.batch_year) || 0;
+      } else {
+        aVal = a.name;
+        bVal = b.name;
       }
 
       if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
@@ -139,27 +142,61 @@ export function AlumniSection() {
       )}
 
       {/* Alumni Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {paginatedAlumni.map((alum) => (
           <div
             key={alum.id}
-            className="rounded-2xl border border-school-navy/8 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+            className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
-            {alum.media && (
-              <div className="mb-4 aspect-square overflow-hidden rounded-xl bg-school-cream-alt">
+            {/* Photo Container */}
+            {alum.media ? (
+              <div className="relative h-72 overflow-hidden bg-gradient-to-br from-school-navy/5 to-school-gold/5">
                 <img
                   src={alum.media.image_url}
                   alt={alum.name}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </div>
+            ) : (
+              <div className="flex h-72 items-center justify-center bg-gradient-to-br from-school-navy/10 to-school-gold/10">
+                <div className="text-center">
+                  <svg
+                    className="mx-auto h-16 w-16 text-school-navy/20"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <p className="mt-2 text-xs text-school-navy/30">No photo</p>
+                </div>
               </div>
             )}
-            <h3 className="font-serif text-lg font-bold text-school-navy">{alum.name}</h3>
-            <p className="mt-1 text-sm text-school-muted">Batch {alum.batch_year}</p>
-            {alum.description && (
-              <p className="mt-3 text-sm leading-relaxed text-school-navy line-clamp-3">{alum.description}</p>
-            )}
+
+            {/* Content */}
+            <div className="p-6">
+              <div className="mb-3">
+                <h3 className="font-serif text-xl font-bold text-school-navy leading-tight">
+                  {alum.name}
+                </h3>
+                <div className="mt-2 inline-block rounded-full bg-school-gold/15 px-3 py-1">
+                  <p className="text-xs font-semibold text-school-gold">Class {alum.batch_year}</p>
+                </div>
+              </div>
+
+              {alum.description && (
+                <p className="text-sm leading-relaxed text-school-navy/75 line-clamp-3">
+                  {alum.description}
+                </p>
+              )}
+            </div>
           </div>
         ))}
       </div>
