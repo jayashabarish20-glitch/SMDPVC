@@ -35,6 +35,11 @@ class ImageStorage(Protocol):
     async def delete(self, public_id: str) -> None: ...
 
 
+# Cloudinary resource types. Images use "image"; PDFs and videos are stored
+# as "raw" and "video" respectively so Cloudinary serves them correctly.
+ALLOWED_RESOURCE_TYPES = frozenset({"image", "raw", "video"})
+
+
 class CloudinaryStorage:
     def __init__(self, settings: Settings | None = None) -> None:
         self._settings = settings or get_settings()
@@ -58,13 +63,20 @@ class CloudinaryStorage:
             secure=True,
         )
 
-    async def upload(self, data: bytes, filename: str) -> CloudinaryAsset:
+    async def upload(
+        self,
+        data: bytes,
+        filename: str,
+        resource_type: str = "image",
+    ) -> CloudinaryAsset:
+        if resource_type not in ALLOWED_RESOURCE_TYPES:
+            raise CloudinaryStorageError("Unsupported Cloudinary resource type")
         self._configure()
         try:
             response = await run_in_threadpool(
                 uploader.upload,
                 BytesIO(data),
-                resource_type="image",
+                resource_type=resource_type,
                 filename_override=filename,
                 use_filename=False,
                 unique_filename=True,
@@ -77,13 +89,15 @@ class CloudinaryStorage:
             logger.exception("Cloudinary image upload failed")
             raise CloudinaryStorageError("Cloudinary image upload failed") from exc
 
-    async def delete(self, public_id: str) -> None:
+    async def delete(self, public_id: str, resource_type: str = "image") -> None:
+        if resource_type not in ALLOWED_RESOURCE_TYPES:
+            raise CloudinaryStorageError("Unsupported Cloudinary resource type")
         self._configure()
         try:
             response: Any = await run_in_threadpool(
                 uploader.destroy,
                 public_id,
-                resource_type="image",
+                resource_type=resource_type,
                 invalidate=True,
             )
         except Exception as exc:

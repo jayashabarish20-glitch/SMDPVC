@@ -181,20 +181,33 @@ async def reorder_photos_in_key(
                 "Some photo configurations do not exist in this config_key"
             )
 
-        # Update display order based on position
-        updated_configs = []
-        for position, photo_id in enumerate(photo_ids):
-            photo_id_str = str(photo_id)
-            if photo_id_str in existing_configs:
-                photo_config = existing_configs[photo_id_str]
-                photo_config.display_order = position
-                updated_configs.append(photo_config)
-
+        # Two-phase update: (config_key, display_order) is unique, so swapping
+        # positions in a single flush would collide. First move the affected
+        # rows above the current maximum, then write the final positions.
+        ordered_pairs = [
+            (existing_configs[str(photo_id)], position)
+            for position, photo_id in enumerate(photo_ids)
+            if str(photo_id) in existing_configs
+        ]
+        base = max(
+            (pc.display_order for pc in existing_configs.values()),
+            default=0,
+        ) + 1
+        for offset, (photo_config, _) in enumerate(ordered_pairs):
+            photo_config.display_order = base + offset
         await session.flush()
-        # Refresh all configs with media relationship
-        for config in updated_configs:
-            await session.refresh(config, ["media"])
+
+        updated_configs = []
+        for photo_config, position in ordered_pairs:
+            photo_config.display_order = position
+            updated_configs.append(photo_config)
+
         await session.commit()
+        # Refresh after commit: commit expires attributes, and lazy loading in
+        # async code fails, so reload each config with its media explicitly.
+        for config in updated_configs:
+            await session.refresh(config)
+            await session.refresh(config, ["media"])
 
         return updated_configs
     except IntegrityError as exc:

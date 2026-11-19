@@ -18,6 +18,12 @@ class CloudinaryCleanup(UUIDPrimaryKey, TimestampMixin, Base):
     __tablename__ = "cloudinary_cleanup"
 
     public_id: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    resource_type: Mapped[str] = mapped_column(
+        String(16),
+        nullable=False,
+        default="image",
+        server_default="image",
+    )
 
 
 class Media(UUIDPrimaryKey, TimestampMixin, Base):
@@ -41,6 +47,12 @@ class Media(UUIDPrimaryKey, TimestampMixin, Base):
     width: Mapped[int | None] = mapped_column(Integer)
     height: Mapped[int | None] = mapped_column(Integer)
     alt_text: Mapped[str] = mapped_column(String(500), nullable=False, default="")
+    resource_type: Mapped[str] = mapped_column(
+        String(16),
+        nullable=False,
+        default="image",
+        server_default="image",
+    )
     deletion_pending: Mapped[bool] = mapped_column(
         nullable=False,
         default=False,

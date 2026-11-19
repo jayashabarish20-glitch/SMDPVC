@@ -23,6 +23,7 @@ from app.routers.admin_achievements import router as admin_achievements_router
 from app.routers.admin_alumni import router as admin_alumni_router
 from app.routers.health import router as health_router
 from app.routers.media import router as media_router
+from app.routers.admin_content_records import router as admin_content_records_router
 from app.routers.public import router as public_router
 from app.services.admin_bootstrap import bootstrap_admin_user
 
@@ -86,6 +87,7 @@ app.include_router(admin_about_sections_router, prefix="/api/admin")
 app.include_router(admin_toppers_router, prefix="/api/admin")
 app.include_router(admin_achievements_router, prefix="/api/admin")
 app.include_router(admin_alumni_router, prefix="/api/admin")
+app.include_router(admin_content_records_router, prefix="/api/admin")
 app.include_router(admin_photos_router, prefix="/api/admin")
 app.include_router(media_router, prefix="/api/media")
 app.include_router(public_router, prefix="/api")

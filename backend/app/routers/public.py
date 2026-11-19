@@ -7,10 +7,12 @@ from sqlalchemy.orm import joinedload
 
 from app.database import get_db
 from app.models.content import ContentItem, LeadershipProfile, AboutSection, Topper, Achievement, Alumni
+from app.models.content_record import ContentRecord
 from app.models.media import Media, PhotoConfiguration
 from app.schemas.content import ContentItemRead, LeadershipProfileRead, AboutSectionRead, TopperRead, AchievementRead, AlumniRead
+from app.schemas.content_record import ContentRecordRead
 from app.schemas.media import PhotoConfigurationRead
-from app.services import content_item_service
+from app.services import content_item_service, content_record_service
 
 router = APIRouter(prefix="/public", tags=["public"])
 DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
@@ -86,6 +88,17 @@ async def get_public_about_section(
         .options(joinedload(AboutSection.media))
     )
     return result
+
+
+@router.get(
+    "/content-records/{record_key}",
+    response_model=ContentRecordRead | None,
+)
+async def get_public_content_record(
+    record_key: str,
+    session: DatabaseSession,
+) -> ContentRecord | None:
+    return await content_record_service.get_record(session, record_key, public=True)
 
 
 @router.get("/toppers", response_model=list[TopperRead])
