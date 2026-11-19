@@ -222,13 +222,13 @@ class PhotoAdminApiClient {
    */
   async reorderPhotosInKey(
     configKey: string,
-    mediaIds: string[]
+    photoConfigIds: string[]
   ): Promise<{ success: boolean }> {
     return this.request<{ success: boolean }>('/admin/photos/reorder-batch', {
       method: 'POST',
       body: JSON.stringify({
         config_key: configKey,
-        media_ids: mediaIds,
+        photo_ids: photoConfigIds,
       }),
     });
   }

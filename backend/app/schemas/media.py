@@ -37,6 +37,7 @@ class MediaRead(EntityRead):
     width: int | None
     height: int | None
     alt_text: str
+    resource_type: str = "image"
 
 
 class PhotoConfigurationCreate(Schema):

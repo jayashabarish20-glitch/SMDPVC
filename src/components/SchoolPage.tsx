@@ -73,7 +73,17 @@ export function SchoolPage({ page }: SchoolPageProps) {
       id="main-content"
       className="min-h-screen bg-school-cream text-school-navy"
     >
-      <Hero pageHero={page.hero} pageTitle={page.title} />
+      <Hero
+        pageHero={page.hero}
+        pageTitle={page.title}
+        heroPhotoKey={
+          isNurseryPage
+            ? "schoolPageHeroes.nursery"
+            : isPrimaryPage
+              ? "schoolPageHeroes.primary"
+              : "schoolPageHeroes.higherSecondary"
+        }
+      />
       <div className="mx-auto max-w-7xl space-y-8 px-6 py-12 lg:px-16 lg:py-16">
         {page.sections.map((section, index) => {
           const contentItemMapping = getContentItemMapping(section.id);

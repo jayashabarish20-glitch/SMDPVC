@@ -1,9 +1,14 @@
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
+import { useSingleSlot } from '../../hooks/useSingleSlot';
 import { SectionHeader } from './SectionHeader';
 import { SinglePhotoManager } from './SinglePhotoManager';
+import { LegacyImportNotice } from './LegacyImportNotice';
+
+const SPORTS_KEY = 'campusImages.sports';
+const PRINCIPAL_KEY = 'campusImages.principal';
 
 export function Hero3DCardsManager() {
-  const { config, updateCampusImages } = usePhotoConfig();
+  const sports = useSingleSlot(SPORTS_KEY);
+  const principal = useSingleSlot(PRINCIPAL_KEY);
 
   return (
     <div>
@@ -13,18 +18,26 @@ export function Hero3DCardsManager() {
         description="Manage images displayed in the 3D floating card effect on the home page hero section."
       />
 
+      <LegacyImportNotice
+        configKeys={[SPORTS_KEY, PRINCIPAL_KEY]}
+        onImported={() => {
+          void sports.reload();
+          void principal.reload();
+        }}
+      />
+
       <div className="space-y-6">
         {/* Sports Card */}
         <div className="rounded-2xl border border-school-navy/10 bg-white p-8">
           <SinglePhotoManager
             title="Sports & Campus Activities"
             description="Bottom-left floating card showing campus activities"
-            currentPhoto={config.campusImages.sports}
+            currentPhoto={sports.current}
             onUpdate={(photo) => {
-              updateCampusImages({ sports: photo });
+              void sports.update(photo);
             }}
             onRemove={() => {
-              updateCampusImages({ sports: null });
+              void sports.remove();
             }}
           />
         </div>
@@ -34,12 +47,12 @@ export function Hero3DCardsManager() {
           <SinglePhotoManager
             title="Leadership & Community"
             description="Top-right floating card showing school leadership"
-            currentPhoto={config.campusImages.principal}
+            currentPhoto={principal.current}
             onUpdate={(photo) => {
-              updateCampusImages({ principal: photo });
+              void principal.update(photo);
             }}
             onRemove={() => {
-              updateCampusImages({ principal: null });
+              void principal.remove();
             }}
           />
         </div>
