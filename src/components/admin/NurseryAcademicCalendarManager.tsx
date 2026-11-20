@@ -1,4 +1,5 @@
 import { AcademicCalendarManager } from './AcademicCalendarManager';
+import { CALENDAR_KEYS } from '../../hooks/useKeyedGallery';
 
 export function NurseryAcademicCalendarManager() {
   return (
@@ -6,7 +7,7 @@ export function NurseryAcademicCalendarManager() {
       badge="NURSERY PAGE"
       title="Nursery – Academic Calendar"
       description="Upload and manage the academic calendar PDF for the Nursery page."
-      calendarKey="nursery"
+      configKey={CALENDAR_KEYS.nursery}
     />
   );
 }

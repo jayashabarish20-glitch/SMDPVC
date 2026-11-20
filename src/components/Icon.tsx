@@ -33,7 +33,9 @@ export type IconName =
   | "image"
   | "x"
   | "lock"
-  | "save";
+  | "save"
+  | "pencil"
+  | "user";
 
 export function Icon({
   name,
@@ -230,6 +232,17 @@ export function Icon({
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
         <polyline points="17 21 17 13 7 13 7 21" />
         <polyline points="7 3 7 8 15 8" />
+      </>
+    ),
+    pencil: (
+      <>
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+      </>
+    ),
+    user: (
+      <>
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
       </>
     ),
   };

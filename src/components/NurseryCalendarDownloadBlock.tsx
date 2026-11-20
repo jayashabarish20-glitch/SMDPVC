@@ -17,16 +17,14 @@ export function NurseryCalendarDownloadBlock({ calendar }: NurseryCalendarDownlo
 
   const handleDismiss = useCallback(() => setToastStatus(null), []);
 
+  // The PDF is hosted on Cloudinary (cross-origin), so the browser ignores a
+  // download attribute. Open it in a new tab instead; the viewer offers the save.
   const handleDownload = useCallback(() => {
-    try {
-      const link = document.createElement('a');
-      link.href = calendar.dataUrl;
-      link.download = 'SMDPVC_Nursery_Academic_Calendar.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    const opened = window.open(calendar.dataUrl, '_blank');
+    if (opened) {
+      opened.opener = null;
       setToastStatus('success');
-    } catch {
+    } else {
       setToastStatus('error');
     }
   }, [calendar.dataUrl]);

@@ -149,6 +149,48 @@ class SchoolSectionRead(EntityRead):
     card_media: MediaRead | None = None
 
 
+class TopperCreate(Schema):
+    student_name: str = Field(min_length=1, max_length=160)
+    grade_level: str = Field(min_length=1, max_length=32)
+    academic_year: str | None = Field(default=None, max_length=20)
+    score: str = Field(min_length=1, max_length=40)
+    stream: str = Field(default="", max_length=120)
+    centums_scored: int = Field(default=0, ge=0)
+    display_order: int = Field(default=0, ge=0)
+    is_published: bool = True
+    media_id: UUID | None = None
+
+
+class TopperUpdate(Schema):
+    student_name: str | None = Field(default=None, min_length=1, max_length=160)
+    grade_level: str | None = Field(default=None, min_length=1, max_length=32)
+    academic_year: str | None = None
+    score: str | None = Field(default=None, min_length=1, max_length=40)
+    stream: str | None = Field(default=None, max_length=120)
+    centums_scored: int | None = Field(default=None, ge=0)
+    display_order: int | None = Field(default=None, ge=0)
+    is_published: bool | None = None
+    media_id: UUID | None = None
+
+
+class TopperRead(EntityRead):
+    student_name: str
+    grade_level: str
+    academic_year: str | None
+    score: str
+    stream: str
+    centums_scored: int
+    display_order: int
+    is_published: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
+class TopperReorder(Schema):
+    grade_level: str = Field(min_length=1, max_length=32)
+    ids: list[UUID] = Field(min_length=1, max_length=500)
+
+
 class GalleryCollectionCreate(Schema):
     collection_key: str = Field(min_length=1, max_length=120)
     title: str = Field(min_length=1, max_length=160)
@@ -239,6 +281,8 @@ class TopperCreate(Schema):
     subject: str | None = Field(default=None, max_length=120)
     rank: int | None = Field(default=None, gt=0)
     achievement: str | None = None
+    centums_scored: int = Field(default=0, ge=0)
+    centum_subjects: list[str] = Field(default_factory=list, max_length=20)
     display_order: int = Field(default=0, ge=0)
     is_published: bool = False
     media_id: UUID | None = None
@@ -253,6 +297,8 @@ class TopperUpdate(Schema):
     subject: str | None = Field(default=None, max_length=120)
     rank: int | None = Field(default=None, gt=0)
     achievement: str | None = None
+    centums_scored: int | None = Field(default=None, ge=0)
+    centum_subjects: list[str] | None = Field(default=None, max_length=20)
     display_order: int | None = Field(default=None, ge=0)
     is_published: bool | None = None
     media_id: UUID | None = None
@@ -267,6 +313,8 @@ class TopperRead(EntityRead):
     subject: str | None
     rank: int | None
     achievement: str | None
+    centums_scored: int
+    centum_subjects: list[str]
     display_order: int
     is_published: bool
     media_id: UUID | None
@@ -314,7 +362,38 @@ class WebsiteSettingRead(EntityRead):
     is_public: bool
 
 
+class AlumniCreate(Schema):
+    name: str = Field(min_length=1, max_length=200)
+    batch_year: str = Field(min_length=1, max_length=20)
+    description: str = ""
+    display_order: int = Field(default=0, ge=0)
+    is_published: bool = False
+    media_id: UUID | None = None
+
+
+class AlumniUpdate(Schema):
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    batch_year: str | None = Field(default=None, min_length=1, max_length=20)
+    description: str | None = None
+    display_order: int | None = Field(default=None, ge=0)
+    is_published: bool | None = None
+    media_id: UUID | None = None
+
+
+class AlumniRead(EntityRead):
+    name: str
+    batch_year: str
+    description: str
+    display_order: int
+    is_published: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
 __all__ = [
+    "AlumniCreate",
+    "AlumniRead",
+    "AlumniUpdate",
     "AchievementCreate",
     "AchievementRead",
     "AchievementUpdate",

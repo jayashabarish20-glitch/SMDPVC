@@ -243,8 +243,11 @@ export function useAdminPhotos() {
         });
         setPhotos(reordered);
 
-        // Update backend
-        await photoAdminApi.reorderPhotosInKey(configKey, mediaIds);
+        // Update backend. The API takes PhotoConfiguration ids, not media ids.
+        const photoConfigIds = mediaIds
+          .map((mediaId) => photos.find((p) => p.media_id === mediaId)?.id)
+          .filter((id): id is string => !!id);
+        await photoAdminApi.reorderPhotosInKey(configKey, photoConfigIds);
 
         previousPhotosRef.current = reordered;
       } catch (err) {

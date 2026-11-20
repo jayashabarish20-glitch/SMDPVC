@@ -43,6 +43,29 @@ async def test_cloudinary_upload_is_mapped_to_secure_asset(
 
 
 @pytest.mark.asyncio
+async def test_cloudinary_pdf_upload_as_image_with_filename(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # PDFs are now uploaded as image type with filename override for proper delivery.
+    def fake_upload(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        assert kwargs["resource_type"] == "image"
+        assert kwargs["filename_override"] == "calendar.pdf"
+        return {
+            "public_id": "school/calendar-pdf",
+            "secure_url": "https://res.cloudinary.com/test/image/upload/calendar.pdf",
+            "format": "pdf",
+        }
+
+    monkeypatch.setattr(cloudinary_service.uploader, "upload", fake_upload)
+    asset = await CloudinaryStorage(configured_settings()).upload(
+        b"%PDF-bytes", "calendar.pdf"
+    )
+
+    assert asset.public_id == "school/calendar-pdf"
+    assert asset.format == "pdf"
+
+
+@pytest.mark.asyncio
 async def test_cloudinary_delete_accepts_idempotent_not_found(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

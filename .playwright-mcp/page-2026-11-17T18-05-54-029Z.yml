@@ -1,0 +1,184 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - generic [ref=e6]:
+      - link "SMDPVC Higher Secondary School home" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: S
+        - generic [ref=e9]:
+          - generic [ref=e10]: SMDPVC
+          - generic "SMDPVC Higher Secondary School" [ref=e11]: Higher Secondary School
+      - generic [ref=e12]:
+        - link "Back to Home" [ref=e13] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=e14] [cursor=pointer]
+  - main [ref=e21]:
+    - region "Higher Secondary highlights" [ref=e22]:
+      - group "Representative school imagery" [ref=e26]:
+        - generic [ref=e28]:
+          - generic [ref=e30]:
+            - img "Students taking part in school sports; school-approved image to be added" [ref=e31]:
+              - generic [ref=e36]: School-approved image to be added
+            - generic [ref=e37]: Campus Activities
+          - generic [ref=e39]:
+            - img "School leadership; school-approved image to be added" [ref=e40]:
+              - generic [ref=e45]: School-approved image to be added
+            - generic [ref=e46]: School Community
+          - generic [ref=e48]:
+            - img "Students learning together in modern classroom; school-approved image to be added" [ref=e49]:
+              - generic [ref=e54]: School-approved image to be added
+            - generic [ref=e55]: Learning at SMDPVC
+          - generic [ref=e56]: Campus Life
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Higher Secondary
+          - generic [ref=e62]:
+            - heading "Preparing for What Comes Next" [level=1] [ref=e63]
+            - paragraph [ref=e64]: Explore the Higher Secondary section. Add a school-approved introduction here.
+          - generic [ref=e65]:
+            - button "Explore Higher Secondary" [ref=e66] [cursor=pointer]
+            - button "About This Section" [ref=e69] [cursor=pointer]
+        - generic [ref=e70]:
+          - button "Slide 1" [ref=e71] [cursor=pointer]
+          - button "Slide 2" [ref=e72] [cursor=pointer]
+          - button "Slide 3" [ref=e73] [cursor=pointer]
+    - generic [ref=e74]:
+      - generic [ref=e75]:
+        - paragraph [ref=e76]: Higher Secondary
+        - heading "About Higher Secondary" [level=2] [ref=e77]
+        - paragraph [ref=e78]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: Higher Secondary
+        - heading "Principal" [level=2] [ref=e81]
+        - paragraph [ref=e82]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e83]:
+        - paragraph [ref=e84]: Higher Secondary
+        - heading "Courses Offered" [level=2] [ref=e85]
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e88]: GROUP 1
+            - list [ref=e89]:
+              - listitem [ref=e90]: Tamil
+              - listitem [ref=e92]: English
+              - listitem [ref=e94]: Physics
+              - listitem [ref=e96]: Chemistry
+              - listitem [ref=e98]: Mathematics
+              - listitem [ref=e100]: Biology
+          - generic [ref=e102]:
+            - generic [ref=e103]: GROUP 2
+            - list [ref=e104]:
+              - listitem [ref=e105]: Tamil
+              - listitem [ref=e107]: English
+              - listitem [ref=e109]: Physics
+              - listitem [ref=e111]: Chemistry
+              - listitem [ref=e113]: Mathematics
+              - listitem [ref=e115]: C.S.
+          - generic [ref=e117]:
+            - generic [ref=e118]: GROUP 3 (EM)
+            - list [ref=e119]:
+              - listitem [ref=e120]: Tamil
+              - listitem [ref=e122]: English
+              - listitem [ref=e124]: Commerce
+              - listitem [ref=e126]: Accountancy
+              - listitem [ref=e128]: Economics
+              - listitem [ref=e130]: C.Application
+          - generic [ref=e132]:
+            - generic [ref=e133]: GROUP 4 (TM)
+            - list [ref=e134]:
+              - listitem [ref=e135]: Tamil
+              - listitem [ref=e137]: English
+              - listitem [ref=e139]: Commerce
+              - listitem [ref=e141]: Accountancy
+              - listitem [ref=e143]: Economics
+              - listitem [ref=e145]: C.Application
+          - generic [ref=e147]:
+            - generic [ref=e148]: GROUP 5
+            - list [ref=e149]:
+              - listitem [ref=e150]: Tamil
+              - listitem [ref=e152]: English
+              - listitem [ref=e154]: Commerce
+              - listitem [ref=e156]: Accountancy
+              - listitem [ref=e158]: Economics
+              - listitem [ref=e160]: B.Maths
+      - generic [ref=e162]:
+        - paragraph [ref=e163]: Higher Secondary
+        - heading "Classes" [level=2] [ref=e164]
+        - paragraph [ref=e165]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e166]:
+        - paragraph [ref=e167]: Higher Secondary
+        - heading "Academic Information" [level=2] [ref=e168]
+        - paragraph [ref=e169]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e170]:
+        - paragraph [ref=e171]: Higher Secondary
+        - heading "Learning Activities" [level=2] [ref=e172]
+        - paragraph [ref=e173]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e174]:
+        - paragraph [ref=e175]: Higher Secondary
+        - heading "Achievements" [level=2] [ref=e176]
+        - paragraph [ref=e177]: Add verified school achievements only. Do not publish sample student names, marks, or ranks.
+        - generic [ref=e178]:
+          - article [ref=e179]:
+            - heading "School Toppers" [level=3] [ref=e180]
+            - paragraph [ref=e181]: Add verified school data here.
+          - article [ref=e182]:
+            - heading "Subject-wise Toppers" [level=3] [ref=e183]
+            - paragraph [ref=e184]: Add verified school data here.
+      - generic [ref=e185]:
+        - paragraph [ref=e186]: Higher Secondary
+        - heading "Alumni Details" [level=2] [ref=e187]
+        - paragraph [ref=e188]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e189]:
+        - paragraph [ref=e190]: Higher Secondary
+        - heading "Clubs" [level=2] [ref=e191]
+        - paragraph [ref=e192]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e193]:
+        - paragraph [ref=e194]: Higher Secondary
+        - heading "Academic Calendar" [level=2] [ref=e195]
+        - paragraph [ref=e196]: Academic Calendar is not available yet.
+      - generic [ref=e197]:
+        - paragraph [ref=e198]: Higher Secondary
+        - heading "Extracurricular Activities" [level=2] [ref=e199]
+        - paragraph [ref=e200]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+      - generic [ref=e201]:
+        - paragraph [ref=e202]: Higher Secondary
+        - heading "Sports" [level=2] [ref=e203]
+        - paragraph [ref=e204]: School-verified information to be added. Replace this editable placeholder with confirmed details.
+  - contentinfo [ref=e205]:
+    - generic [ref=e206]:
+      - generic [ref=e207]:
+        - generic [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: S
+            - generic [ref=e211]:
+              - paragraph [ref=e212]: SMDPVC
+              - paragraph [ref=e213]: Higher Secondary School
+          - paragraph [ref=e214]: School information and contact details can be added here after confirmation by the school.
+        - generic [ref=e215]:
+          - heading "Home" [level=4] [ref=e216]
+          - generic [ref=e217]:
+            - link "Home" [ref=e218] [cursor=pointer]:
+              - /url: /
+            - link "Our Foundation" [ref=e219] [cursor=pointer]:
+              - /url: /#foundation
+            - link "Leadership" [ref=e220] [cursor=pointer]:
+              - /url: /#leadership
+            - link "School Sections" [ref=e221] [cursor=pointer]:
+              - /url: /#school-sections
+            - link "Infrastructure" [ref=e222] [cursor=pointer]:
+              - /url: /#infrastructure
+            - link "Enquiry" [ref=e223] [cursor=pointer]:
+              - /url: /#enquiry
+        - generic [ref=e224]:
+          - heading "School Sections" [level=4] [ref=e225]
+          - generic [ref=e226]:
+            - link "Nursery" [ref=e227] [cursor=pointer]:
+              - /url: /nursery
+            - link "Primary" [ref=e230] [cursor=pointer]:
+              - /url: /primary
+            - link "Higher Secondary" [ref=e233] [cursor=pointer]:
+              - /url: /higher-secondary
+      - generic [ref=e236]:
+        - paragraph [ref=e237]: © 2026 SMDPVC.
+        - link "Back to Home" [ref=e238] [cursor=pointer]:
+          - /url: /

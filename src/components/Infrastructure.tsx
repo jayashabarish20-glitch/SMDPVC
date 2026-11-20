@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
-import { usePhotoConfig } from "../hooks/usePhotoConfig";
+import { useInfrastructureGallery } from "../hooks/useInfrastructureGallery";
 import { Icon } from "./Icon";
-import type { PhotoMetadata } from "../data/photoService";
+import type { InfrastructurePhoto } from "../services/infrastructureContentApi";
 
 export function Infrastructure() {
   const shouldReduceMotion = useReducedMotion();
-  const { config } = usePhotoConfig();
-  const infrastructure = config.groupOfSchoolsInfrastructure ?? { photos: [], description: '' };
-  const photos: PhotoMetadata[] = infrastructure.photos ?? [];
+  const { photos, description, isLoading } = useInfrastructureGallery("public");
 
-  if (photos.length === 0) {
+  if (isLoading || photos.length === 0) {
     return null;
   }
 
@@ -41,9 +39,9 @@ export function Infrastructure() {
 
         <GalleryDisplay
           photos={photos}
-          description={infrastructure.description ?? ''}
+          description={description}
           shouldReduceMotion={!!shouldReduceMotion}
-          fullScreen={infrastructure.fullScreen ?? true}
+          fullScreen={true}
         />
       </div>
     </section>
@@ -53,7 +51,7 @@ export function Infrastructure() {
 // ─── Gallery Display (reusable carousel with fullscreen) ────────────────────
 
 interface GalleryDisplayProps {
-  photos: PhotoMetadata[];
+  photos: InfrastructurePhoto[];
   description: string;
   shouldReduceMotion: boolean;
   fullScreen?: boolean;
@@ -124,9 +122,9 @@ function GalleryDisplay({
               transition={{ duration: 0.38, ease: [0.32, 0, 0.67, 0] }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              {currentPhoto?.dataUrl ? (
+              {currentPhoto?.imageUrl ? (
                 <img
-                  src={currentPhoto.dataUrl}
+                  src={currentPhoto.imageUrl}
                   alt={currentPhoto.alt || `Infrastructure photo ${activeIndex + 1}`}
                   className="h-full w-full object-contain"
                   draggable={false}
@@ -247,7 +245,7 @@ function GalleryDisplay({
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
                 <motion.img
                   key={activeIndex}
-                  src={photos[activeIndex].dataUrl}
+                  src={photos[activeIndex].imageUrl}
                   alt={photos[activeIndex].alt || "Fullscreen"}
                   custom={direction}
                   variants={shouldReduceMotion ? undefined : slideVariants}

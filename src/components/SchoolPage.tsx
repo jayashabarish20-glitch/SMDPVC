@@ -4,11 +4,13 @@ import type { SchoolPageConfig } from "../schoolPageData";
 import type { PhotoMetadata } from "../data/photoService";
 import { Hero } from "./Hero";
 import { usePhotoConfig } from "../hooks/usePhotoConfig";
+import { useKeyedGallery, GALLERY_KEYS, CALENDAR_KEYS } from "../hooks/useKeyedGallery";
 import { usePublicContentItems } from "../hooks/usePublicContentItems";
 import { ContentItemCards } from "./ContentItemCards";
 import { Icon } from "./Icon";
 import { NurseryCalendarDownloadBlock } from "./NurseryCalendarDownloadBlock";
 import { CoursesOfferedSection } from "./CoursesOfferedSection";
+import { AlumniSection } from "./AlumniSection";
 
 type SchoolPageProps = {
   page: SchoolPageConfig;
@@ -35,22 +37,64 @@ function getContentItemMapping(
   return mapping[sectionId] || null;
 }
 
+/** One school-page gallery from SQLite, in the shape GalleryDisplay expects. */
+function useSchoolGallery(configKey: string, enabled: boolean) {
+  const gallery = useKeyedGallery(configKey, { mode: "public", enabled });
+  return {
+    photos: gallery.photos.map((photo) => ({
+      id: photo.configId,
+      filename: photo.filename,
+      alt: photo.alt,
+      updatedAt: photo.updatedAt,
+      imageUrl: photo.imageUrl,
+    })),
+    description: gallery.description,
+  };
+}
+
+/** Latest academic calendar PDF for one school, from SQLite (newest upload wins). */
+function useSchoolCalendar(configKey: string, enabled: boolean) {
+  const { photos } = useKeyedGallery(configKey, { mode: "public", enabled });
+  const latest = photos.length > 0 ? photos[photos.length - 1] : null;
+  if (!latest) return null;
+  // Same fields the download blocks already read; dataUrl holds the Cloudinary URL.
+  return {
+    filename: latest.filename,
+    dataUrl: latest.imageUrl,
+    uploadedAt: latest.updatedAt,
+  };
+}
+
 export function SchoolPage({ page }: SchoolPageProps) {
   const shouldReduceMotion = useReducedMotion();
   const photoConfig = usePhotoConfig();
   const { config } = photoConfig;
 
+  // School-page galleries are served from SQLite via the public API (not browser storage).
+  const isNursery = page.title === "Nursery";
+  const isPrimary = page.title === "Primary";
+  const isHigher = page.title === "Higher Secondary";
+  const nurseryClasses = useSchoolGallery(GALLERY_KEYS.nurseryClasses, isNursery);
+  const nurseryLearning = useSchoolGallery(GALLERY_KEYS.nurseryLearning, isNursery);
+  const nurseryExtracurricular = useSchoolGallery(GALLERY_KEYS.nurseryExtracurricular, isNursery);
+  const primaryClasses = useSchoolGallery(GALLERY_KEYS.primaryClasses, isPrimary);
+  const primaryLearning = useSchoolGallery(GALLERY_KEYS.primaryLearning, isPrimary);
+  const primaryExtracurricular = useSchoolGallery(GALLERY_KEYS.primaryExtracurricular, isPrimary);
+  const higherClasses = useSchoolGallery(GALLERY_KEYS.higherSecondaryClasses, isHigher);
+  const higherLearning = useSchoolGallery(GALLERY_KEYS.higherSecondaryLearning, isHigher);
+  const higherExtracurricular = useSchoolGallery(GALLERY_KEYS.higherSecondaryExtracurricular, isHigher);
+
   // Gallery data by section (keyed by section.id)
   const galleryDataMap: Record<string, any> = {
-    "nursery-classes": config.nurseryClassesGallery ?? { photos: [], description: "" },
-    "nursery-learning": config.nurseryLearningActivitiesGallery ?? { photos: [], description: "" },
-    "nursery-extracurricular": config.nurseryExtracurricularGallery ?? { photos: [], description: "" },
-    "primary-classes": config.primaryClassesGallery ?? { photos: [], description: "" },
-    "primary-learning": config.primaryLearningActivitiesGallery ?? { photos: [], description: "" },
-    "primary-extracurricular": config.primaryExtracurricularGallery ?? { photos: [], description: "" },
-    "higher-classes": config.higherSecondaryClassesGallery ?? { photos: [], description: "" },
-    "higher-learning": config.higherSecondaryLearningActivitiesGallery ?? { photos: [], description: "" },
-    "higher-extracurricular": config.higherSecondaryExtracurricularGallery ?? { photos: [], description: "" },
+    "nursery-classes": nurseryClasses,
+    "nursery-learning": nurseryLearning,
+    "nursery-extracurricular": nurseryExtracurricular,
+    "primary-classes": primaryClasses,
+    "primary-learning": primaryLearning,
+    "primary-extracurricular": primaryExtracurricular,
+    "higher-classes": higherClasses,
+    "higher-learning": higherLearning,
+    "higher-extracurricular": higherExtracurricular,
   };
 
   const isPrimaryPage = page.title === "Primary";
@@ -62,9 +106,9 @@ export function SchoolPage({ page }: SchoolPageProps) {
   const primaryPrincipalData = isPrimaryPage ? config.primaryPrincipal : null;
   const nurseryPrincipalData = isNurseryPage ? config.nurseryPrincipal : null;
   const higherSecondaryPrincipalData = isHigherSecondaryPage ? config.higherSecondaryPrincipal : null;
-  const primaryAcademicCalendarData = isPrimaryPage ? config.academicCalendarPrimary : null;
-  const nurseryAcademicCalendarData = isNurseryPage ? config.academicCalendarNursery : null;
-  const higherSecondaryAcademicCalendarData = isHigherSecondaryPage ? config.academicCalendarHigherSecondary : null;
+  const primaryAcademicCalendarData = useSchoolCalendar(CALENDAR_KEYS.primary, isPrimaryPage);
+  const nurseryAcademicCalendarData = useSchoolCalendar(CALENDAR_KEYS.nursery, isNurseryPage);
+  const higherSecondaryAcademicCalendarData = useSchoolCalendar(CALENDAR_KEYS.higherSecondary, isHigherSecondaryPage);
   const courseGroupsData = isHigherSecondaryPage ? (config.courseGroups ?? []) : null;
 
   return (
@@ -72,7 +116,17 @@ export function SchoolPage({ page }: SchoolPageProps) {
       id="main-content"
       className="min-h-screen bg-school-cream text-school-navy"
     >
-      <Hero pageHero={page.hero} pageTitle={page.title} />
+      <Hero
+        pageHero={page.hero}
+        pageTitle={page.title}
+        heroPhotoKey={
+          isNurseryPage
+            ? "schoolPageHeroes.nursery"
+            : isPrimaryPage
+              ? "schoolPageHeroes.primary"
+              : "schoolPageHeroes.higherSecondary"
+        }
+      />
       <div className="mx-auto max-w-7xl space-y-8 px-6 py-12 lg:px-16 lg:py-16">
         {page.sections.map((section, index) => {
           const contentItemMapping = getContentItemMapping(section.id);
@@ -310,7 +364,8 @@ function SectionWithContentItems({
           <div className="mt-6">
             <a
               href={(primaryAcademicCalendar as any).dataUrl}
-              download={(primaryAcademicCalendar as any).filename}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
             >
               <Icon name="arrow" className="h-4 w-4" />
@@ -331,7 +386,8 @@ function SectionWithContentItems({
           <div className="mt-6">
             <a
               href={(higherSecondaryAcademicCalendar as any).dataUrl}
-              download={(higherSecondaryAcademicCalendar as any).filename}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-6 py-3 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover"
             >
               <Icon name="arrow" className="h-4 w-4" />
@@ -343,6 +399,8 @@ function SectionWithContentItems({
         )
       ) : section.id === "higher-courses" ? (
         <CoursesOfferedSection groups={courseGroups ?? []} />
+      ) : section.id === "higher-alumni" ? (
+        <AlumniSection />
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
           <ContentItemCards items={items} loading={loading} />

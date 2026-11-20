@@ -7,6 +7,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 from app.config import get_settings
 from app.database import engine
@@ -16,8 +18,12 @@ from app.routers.admin_about_sections import router as admin_about_sections_rout
 from app.routers.admin_content_items import router as admin_content_items_router
 from app.routers.admin_leadership import router as admin_leadership_router
 from app.routers.admin_photos import router as admin_photos_router
+from app.routers.admin_toppers import router as admin_toppers_router
+from app.routers.admin_achievements import router as admin_achievements_router
+from app.routers.admin_alumni import router as admin_alumni_router
 from app.routers.health import router as health_router
 from app.routers.media import router as media_router
+from app.routers.admin_content_records import router as admin_content_records_router
 from app.routers.public import router as public_router
 from app.services.admin_bootstrap import bootstrap_admin_user
 
@@ -78,6 +84,16 @@ app.include_router(admin_auth_router, prefix="/api")
 app.include_router(admin_leadership_router, prefix="/api/admin")
 app.include_router(admin_content_items_router, prefix="/api/admin")
 app.include_router(admin_about_sections_router, prefix="/api/admin")
+app.include_router(admin_toppers_router, prefix="/api/admin")
+app.include_router(admin_achievements_router, prefix="/api/admin")
+app.include_router(admin_alumni_router, prefix="/api/admin")
+app.include_router(admin_content_records_router, prefix="/api/admin")
 app.include_router(admin_photos_router, prefix="/api/admin")
 app.include_router(media_router, prefix="/api/media")
 app.include_router(public_router, prefix="/api")
+
+# Temporary: Mount local uploads directory for topper images
+# This will be removed when switching back to Cloudinary
+uploads_dir = Path(__file__).resolve().parents[1] / "uploads"
+if uploads_dir.exists():
+    app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")

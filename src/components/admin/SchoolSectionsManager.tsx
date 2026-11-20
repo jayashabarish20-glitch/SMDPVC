@@ -1,28 +1,57 @@
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
+import { useEffect } from 'react';
+import { useSingleSlot } from '../../hooks/useSingleSlot';
 import { SectionHeader } from './SectionHeader';
 import { SinglePhotoManager } from './SinglePhotoManager';
+import { LegacyImportNotice } from './LegacyImportNotice';
+
+const sections = [
+  {
+    id: 'nursery',
+    title: 'Nursery Section Card',
+    description: 'Home page card image for Nursery section (16:10 aspect ratio)',
+  },
+  {
+    id: 'primary',
+    title: 'Primary Section Card',
+    description: 'Home page card image for Primary section (16:10 aspect ratio)',
+  },
+  {
+    id: 'higherSecondary',
+    title: 'Higher Secondary Section Card',
+    description: 'Home page card image for Higher Secondary section (16:10 aspect ratio)',
+  },
+];
+
+const configKeyFor = (id: string) => `schoolSectionPhotos.${id}`;
+
+function SectionCard({ id, title, description }: { id: string; title: string; description: string }) {
+  const slot = useSingleSlot(configKeyFor(id));
+  const { reload } = slot;
+
+  useEffect(() => {
+    const onImported = () => void reload();
+    window.addEventListener('school-sections-imported', onImported);
+    return () => window.removeEventListener('school-sections-imported', onImported);
+  }, [reload]);
+
+  return (
+    <div className="rounded-2xl border border-school-navy/10 bg-white p-8">
+      <SinglePhotoManager
+        title={title}
+        description={description}
+        currentPhoto={slot.current}
+        onUpdate={(photo) => {
+          void slot.update(photo);
+        }}
+        onRemove={() => {
+          void slot.remove();
+        }}
+      />
+    </div>
+  );
+}
 
 export function SchoolSectionsManager() {
-  const { config, updateSchoolSectionPhotos } = usePhotoConfig();
-
-  const sections = [
-    {
-      id: 'nursery',
-      title: 'Nursery Section Card',
-      description: 'Home page card image for Nursery section (16:10 aspect ratio)',
-    },
-    {
-      id: 'primary',
-      title: 'Primary Section Card',
-      description: 'Home page card image for Primary section (16:10 aspect ratio)',
-    },
-    {
-      id: 'higherSecondary',
-      title: 'Higher Secondary Section Card',
-      description: 'Home page card image for Higher Secondary section (16:10 aspect ratio)',
-    },
-  ];
-
   return (
     <div>
       <SectionHeader
@@ -31,32 +60,19 @@ export function SchoolSectionsManager() {
         description="Manage images for the 'Find Your Learning Stage' cards on the home page. Each card links to a school section page."
       />
 
+      <LegacyImportNotice
+        configKeys={sections.map((section) => configKeyFor(section.id))}
+        onImported={() => window.dispatchEvent(new Event('school-sections-imported'))}
+      />
+
       <div className="space-y-6">
         {sections.map((section) => (
-          <div
+          <SectionCard
             key={section.id}
-            className="rounded-2xl border border-school-navy/10 bg-white p-8"
-          >
-            <SinglePhotoManager
-              title={section.title}
-              description={section.description}
-              currentPhoto={
-                config.schoolSectionPhotos[
-                  section.id as keyof typeof config.schoolSectionPhotos
-                ]
-              }
-              onUpdate={(photo) => {
-                updateSchoolSectionPhotos({
-                  [section.id]: photo,
-                });
-              }}
-              onRemove={() => {
-                updateSchoolSectionPhotos({
-                  [section.id]: null,
-                });
-              }}
-            />
-          </div>
+            id={section.id}
+            title={section.title}
+            description={section.description}
+          />
         ))}
       </div>
 
