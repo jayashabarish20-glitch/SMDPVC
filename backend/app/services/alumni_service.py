@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from app.models.content import Alumni
 from uuid import UUID
 
@@ -9,20 +10,20 @@ async def list_alumni(
     is_published_only: bool = False,
 ) -> list[Alumni]:
     """List alumni records, optionally filtered by publish status."""
-    query = select(Alumni)
-    
+    query = select(Alumni).options(selectinload(Alumni.media))
+
     if is_published_only:
         query = query.where(Alumni.is_published == True)
-    
+
     query = query.order_by(Alumni.display_order.asc(), Alumni.created_at.desc())
-    
+
     result = await session.execute(query)
     return result.scalars().all()
 
 
 async def get_alumni(session: AsyncSession, alumni_id: UUID) -> Alumni | None:
     """Get a single alumni record by ID."""
-    query = select(Alumni).where(Alumni.id == alumni_id)
+    query = select(Alumni).options(selectinload(Alumni.media)).where(Alumni.id == alumni_id)
     result = await session.execute(query)
     return result.scalar_one_or_none()
 
@@ -47,7 +48,7 @@ async def create_alumni(
     )
     session.add(alumni)
     await session.flush()
-    await session.refresh(alumni)
+    await session.refresh(alumni, attribute_names=["created_at", "updated_at", "media"])
     return alumni
 
 
@@ -60,13 +61,13 @@ async def update_alumni(
     alumni = await get_alumni(session, alumni_id)
     if not alumni:
         return None
-    
+
     for key, value in updates.items():
         if value is not None and hasattr(alumni, key):
             setattr(alumni, key, value)
-    
+
     await session.flush()
-    await session.refresh(alumni)
+    await session.refresh(alumni, attribute_names=["created_at", "updated_at", "media"])
     return alumni
 
 
@@ -90,8 +91,8 @@ async def reorder_alumni(
         alumni = await get_alumni(session, alumni_id)
         if alumni:
             alumni.display_order = order
-    
+
     await session.flush()
-    
-    # Return reordered list
+
+    # Return reordered list with media loaded
     return await list_alumni(session)

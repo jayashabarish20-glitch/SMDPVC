@@ -40,7 +40,7 @@ EXTENSION_FORMATS = {
 }
 # Non-image uploads: extension -> (Cloudinary resource type, stored format)
 DOCUMENT_VIDEO_TYPES = {
-    "pdf": ("raw", "pdf"),
+    "pdf": ("image", "pdf"),
     "mp4": ("video", "mp4"),
     "mov": ("video", "mov"),
     "webm": ("video", "webm"),

@@ -72,7 +72,7 @@ async def save_leadership_profile(
             setattr(profile, field, value)
 
     await session.commit()
-    await session.refresh(profile, attribute_names=["media"])
+    await session.refresh(profile)
     return profile
 
 
@@ -97,7 +97,7 @@ async def create_leadership_profile(
         )
         session.add(profile)
         await session.commit()
-        await session.refresh(profile, attribute_names=["media"])
+        await session.refresh(profile)
     except SQLAlchemyError as exc:
         await session.rollback()
         raise HTTPException(

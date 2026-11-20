@@ -1,27 +1,99 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '../Icon';
 import { AdminLogout } from './AdminLogout';
+import { AdminSidebarGroup } from './AdminSidebarGroup';
 
-interface NavItem {
+export interface NavItem {
   id: string;
   label: string;
   section: string;
+}
+
+export interface NavGroup {
+  id: string;
+  title: string;
+  items: NavItem[];
 }
 
 interface AdminLayoutProps {
   children: React.ReactNode;
   activeSection: string;
   onSectionChange: (section: string) => void;
-  navItems: NavItem[];
+  navGroups: NavGroup[];
 }
 
 export function AdminLayout({
   children,
   activeSection,
   onSectionChange,
-  navItems,
+  navGroups,
 }: AdminLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const activeGroupId = navGroups.find((group) =>
+    group.items.some((item) => item.section === activeSection)
+  )?.id;
+
+  const [openGroups, setOpenGroups] = useState<Set<string>>(
+    () => new Set(activeGroupId ? [activeGroupId] : [])
+  );
+
+  // Ensure the group holding the active section is expanded whenever it changes.
+  useEffect(() => {
+    if (!activeGroupId) return;
+    setOpenGroups((prev) => (prev.has(activeGroupId) ? prev : new Set(prev).add(activeGroupId)));
+  }, [activeGroupId]);
+
+  const toggleGroup = (groupId: string) => {
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
+  };
+
+  const renderGroups = (
+    idPrefix: string,
+    onSelect: (section: string) => void,
+    variant: 'desktop' | 'mobile'
+  ) =>
+    navGroups.map((group) => (
+      <AdminSidebarGroup
+        key={group.id}
+        groupId={group.id}
+        title={group.title}
+        idPrefix={idPrefix}
+        isOpen={openGroups.has(group.id)}
+        containsActive={group.id === activeGroupId}
+        onToggle={() => toggleGroup(group.id)}
+      >
+        {group.items.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onSelect(item.section)}
+            className={
+              variant === 'desktop'
+                ? `w-full rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors ${
+                    activeSection === item.section
+                      ? 'bg-school-gold/15 text-school-navy shadow-sm'
+                      : 'text-school-muted hover:bg-school-cream hover:text-school-navy'
+                  }`
+                : `w-full rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors ${
+                    activeSection === item.section
+                      ? 'bg-school-gold/15 text-school-navy'
+                      : 'text-school-muted hover:bg-school-cream'
+                  }`
+            }
+          >
+            {item.label}
+          </button>
+        ))}
+      </AdminSidebarGroup>
+    ));
 
   return (
     <div className="flex h-screen bg-school-cream">
@@ -39,20 +111,8 @@ export function AdminLayout({
           </div>
         </div>
 
-        <div className="flex-1 space-y-1 p-4">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onSectionChange(item.section)}
-              className={`w-full rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors ${
-                activeSection === item.section
-                  ? 'bg-school-gold/15 text-school-navy shadow-sm'
-                  : 'text-school-muted hover:bg-school-cream hover:text-school-navy'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="flex-1 space-y-3 p-4">
+          {renderGroups('desktop', onSectionChange, 'desktop')}
         </div>
 
         <div className="border-t border-school-navy/10 p-4">
@@ -84,23 +144,15 @@ export function AdminLayout({
                   Admin
                 </h1>
               </div>
-              <div className="space-y-1">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      onSectionChange(item.section);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`w-full rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors ${
-                      activeSection === item.section
-                        ? 'bg-school-gold/15 text-school-navy'
-                        : 'text-school-muted hover:bg-school-cream'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+              <div className="space-y-3">
+                {renderGroups(
+                  'mobile',
+                  (section) => {
+                    onSectionChange(section);
+                    setMobileMenuOpen(false);
+                  },
+                  'mobile'
+                )}
               </div>
             </div>
           </div>

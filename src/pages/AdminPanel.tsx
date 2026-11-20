@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { AdminLayout } from '../components/admin/AdminLayout';
+import { AdminLayout, type NavGroup } from '../components/admin/AdminLayout';
 import { HomeHeroManager } from '../components/admin/HomeHeroManager';
 import { LeadershipPhotosManager } from '../components/admin/LeadershipPhotosManager';
 import { SchoolSectionsManager } from '../components/admin/SchoolSectionsManager';
@@ -71,45 +71,75 @@ type AdminSection =
 export function AdminPanel() {
   const [activeSection, setActiveSection] = useState<AdminSection>('home-hero');
 
-  const navItems = [
-    { id: '1', label: 'Home Page Hero Carousel', section: 'home-hero' as AdminSection },
-    { id: '2', label: 'Leadership Profiles', section: 'leadership' as AdminSection },
-    { id: '3', label: 'School Sections Cards', section: 'school-sections' as AdminSection },
-    { id: '3a', label: 'Group of Schools – Infrastructure', section: 'content-infrastructure' as AdminSection },
-    { id: '4', label: 'Hero 3D Cards', section: 'hero-3d' as AdminSection },
-    { id: '5', label: 'Nursery Page Hero', section: 'nursery-hero' as AdminSection },
-    { id: '5a', label: 'Nursery – Classes Gallery', section: 'content-nursery-classes' as AdminSection },
-    { id: '5b', label: 'Nursery – Learning Activities Gallery', section: 'content-nursery-learning' as AdminSection },
-    { id: '5c', label: 'Nursery – Extracurricular Gallery', section: 'content-nursery-extracurricular' as AdminSection },
-    { id: '5d', label: 'Nursery – About', section: 'nursery-about' as AdminSection },
-    { id: '5e', label: 'Nursery – Principal', section: 'nursery-principal' as AdminSection },
-    { id: '5f', label: 'Nursery – Academic Calendar', section: 'nursery-academic-calendar' as AdminSection },
-    { id: '6', label: 'Primary Page Hero', section: 'primary-hero' as AdminSection },
-    { id: '6a', label: 'Primary – Classes Gallery', section: 'content-primary-classes' as AdminSection },
-    { id: '6b', label: 'Primary – Learning Activities Gallery', section: 'content-primary-learning' as AdminSection },
-    { id: '6c', label: 'Primary – Extracurricular Gallery', section: 'content-primary-extracurricular' as AdminSection },
-    { id: '6d', label: 'Primary – About', section: 'primary-about' as AdminSection },
-    { id: '6e', label: 'Primary – Principal', section: 'primary-principal' as AdminSection },
-    { id: '6f', label: 'Primary – Academic Calendar', section: 'primary-academic-calendar' as AdminSection },
-    { id: '7', label: 'Higher Secondary Hero', section: 'hs-hero' as AdminSection },
-    { id: '7a', label: 'Higher Secondary – Classes Gallery', section: 'content-hs-classes' as AdminSection },
-    { id: '7b', label: 'Higher Secondary – Learning Activities Gallery', section: 'content-hs-learning' as AdminSection },
-    { id: '7c', label: 'Higher Secondary – Extracurricular Gallery', section: 'content-hs-extracurricular' as AdminSection },
-    { id: '7d', label: 'Higher Secondary – About', section: 'hs-about' as AdminSection },
-    { id: '7e', label: 'Higher Secondary – Principal', section: 'hs-principal' as AdminSection },
-    { id: '7f', label: 'Higher Secondary – Academic Calendar', section: 'hs-academic-calendar' as AdminSection },
-    { id: '7g', label: 'Higher Secondary – Courses Offered (Class XI)', section: 'hs-courses' as AdminSection },
-    { id: '7h', label: 'Higher Secondary – School Toppers', section: 'hs-toppers' as AdminSection },
-    { id: '7i', label: 'Higher Secondary – Alumni', section: 'hs-alumni' as AdminSection },
-    { id: '8', label: 'Excellence & Toppers', section: 'excellence' as AdminSection },
-    { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' as AdminSection },
+  const navGroups: NavGroup[] = [
+    {
+      id: 'home',
+      title: 'Home Page',
+      items: [
+        { id: '1', label: 'Home Page Hero Carousel', section: 'home-hero' },
+        { id: '3', label: 'School Sections Cards', section: 'school-sections' },
+        { id: '4', label: 'Hero 3D Cards', section: 'hero-3d' },
+      ],
+    },
+    {
+      id: 'nursery',
+      title: 'Nursery',
+      items: [
+        { id: '5', label: 'Nursery Page Hero', section: 'nursery-hero' },
+        { id: '5a', label: 'Classes Gallery', section: 'content-nursery-classes' },
+        { id: '5b', label: 'Learning Activities Gallery', section: 'content-nursery-learning' },
+        { id: '5c', label: 'Extracurricular Gallery', section: 'content-nursery-extracurricular' },
+        { id: '5d', label: 'About', section: 'nursery-about' },
+        { id: '5e', label: 'Principal', section: 'nursery-principal' },
+        { id: '5f', label: 'Academic Calendar', section: 'nursery-academic-calendar' },
+      ],
+    },
+    {
+      id: 'primary',
+      title: 'Primary',
+      items: [
+        { id: '6', label: 'Primary Page Hero', section: 'primary-hero' },
+        { id: '6a', label: 'Classes Gallery', section: 'content-primary-classes' },
+        { id: '6b', label: 'Learning Activities Gallery', section: 'content-primary-learning' },
+        { id: '6c', label: 'Extracurricular Gallery', section: 'content-primary-extracurricular' },
+        { id: '6d', label: 'About', section: 'primary-about' },
+        { id: '6e', label: 'Principal', section: 'primary-principal' },
+        { id: '6f', label: 'Academic Calendar', section: 'primary-academic-calendar' },
+      ],
+    },
+    {
+      id: 'higher-secondary',
+      title: 'Higher Secondary',
+      items: [
+        { id: '7', label: 'Higher Secondary Hero', section: 'hs-hero' },
+        { id: '7a', label: 'Classes Gallery', section: 'content-hs-classes' },
+        { id: '7b', label: 'Learning Activities Gallery', section: 'content-hs-learning' },
+        { id: '7c', label: 'Extracurricular Gallery', section: 'content-hs-extracurricular' },
+        { id: '7d', label: 'About', section: 'hs-about' },
+        { id: '7e', label: 'Principal', section: 'hs-principal' },
+        { id: '7f', label: 'Academic Calendar', section: 'hs-academic-calendar' },
+        { id: '7g', label: 'Courses Offered (Class XI)', section: 'hs-courses' },
+        { id: '7h', label: 'School Toppers', section: 'hs-toppers' },
+        { id: '7i', label: 'Alumni', section: 'hs-alumni' },
+      ],
+    },
+    {
+      id: 'common',
+      title: 'Common Sections',
+      items: [
+        { id: '2', label: 'Leadership Profiles', section: 'leadership' },
+        { id: '3a', label: 'Group of Schools – Infrastructure', section: 'content-infrastructure' },
+        { id: '8', label: 'Excellence & Toppers', section: 'excellence' },
+        { id: '9', label: 'Campus Life & Alumni', section: 'campus-life' },
+      ],
+    },
   ];
 
   return (
     <AdminLayout
       activeSection={activeSection}
       onSectionChange={(section) => setActiveSection(section as AdminSection)}
-      navItems={navItems}
+      navGroups={navGroups}
     >
       {activeSection === 'home-hero' && <HomeHeroManager />}
       {activeSection === 'leadership' && <LeadershipPhotosManager />}

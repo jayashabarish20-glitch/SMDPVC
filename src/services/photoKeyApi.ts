@@ -105,7 +105,11 @@ export function nextOrder(photos: KeyedPhoto[]): number {
   return photos.reduce((max, p) => Math.max(max, p.displayOrder + 1), 0);
 }
 
-/** Upload to Cloudinary via FastAPI, then link to the key. */
+/**
+ * Upload to Cloudinary via FastAPI, then link to the key.
+ * Resolves only after both the Cloudinary upload and the SQLite link succeed.
+ * If the link fails, the just-uploaded asset is deleted so no orphan remains.
+ */
 export async function addKeyedPhoto(
   file: File,
   configKey: string,
@@ -120,15 +124,56 @@ export async function addKeyedPhoto(
     { method: "POST", body: form },
     true,
   );
+  try {
+    await request(
+      "/admin/photos/assign",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          media_id: media.id,
+          config_key: configKey,
+          display_order: displayOrder,
+        }),
+      },
+      true,
+    );
+  } catch (linkError) {
+    try {
+      await request(`/media/${media.id}`, { method: "DELETE" }, true);
+    } catch {
+      // Cleanup failed: the asset stays in Cloudinary and is not linked anywhere.
+    }
+    throw linkError;
+  }
+}
+
+/** Load the saved gallery description (SQLite content record) for the public page. */
+export async function fetchPublicKeyedDescription(recordKey: string): Promise<string> {
+  const record = await request<{ payload: Record<string, unknown> } | null>(
+    `/public/content-records/${recordKey}`,
+  );
+  const value = record?.payload?.description;
+  return typeof value === "string" ? value : "";
+}
+
+/** Load the saved gallery description for the admin panel. */
+export async function fetchAdminKeyedDescription(recordKey: string): Promise<string> {
+  const record = await request<{ payload: Record<string, unknown> } | null>(
+    `/admin/content-records/${recordKey}`,
+    {},
+    true,
+  );
+  const value = record?.payload?.description;
+  return typeof value === "string" ? value : "";
+}
+
+/** Save the gallery description as a SQLite content record. */
+export async function saveKeyedDescription(recordKey: string, description: string): Promise<void> {
   await request(
-    "/admin/photos/assign",
+    `/admin/content-records/${recordKey}`,
     {
-      method: "POST",
-      body: JSON.stringify({
-        media_id: media.id,
-        config_key: configKey,
-        display_order: displayOrder,
-      }),
+      method: "PUT",
+      body: JSON.stringify({ payload: { description }, media: [] }),
     },
     true,
   );
