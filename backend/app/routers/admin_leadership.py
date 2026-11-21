@@ -7,7 +7,7 @@ from fastapi.responses import Response
 from sqlalchemy import func, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 from app.database import get_db
 from app.dependencies import require_admin
@@ -72,7 +72,11 @@ async def save_leadership_profile(
             setattr(profile, field, value)
 
     await session.commit()
-    await session.refresh(profile)
+    profile = await session.scalar(
+        select(LeadershipProfile)
+        .where(LeadershipProfile.profile_key == profile_key)
+        .options(selectinload(LeadershipProfile.media))
+    )
     return profile
 
 
@@ -90,14 +94,19 @@ async def create_leadership_profile(
         next_order = await session.scalar(
             select(func.coalesce(func.max(LeadershipProfile.display_order), 0) + 1)
         )
+        profile_key = f"leader-{secrets.token_hex(6)}"
         profile = LeadershipProfile(
-            profile_key=f"leader-{secrets.token_hex(6)}",
+            profile_key=profile_key,
             display_order=next_order or 1,
             **profile_data.model_dump(),
         )
         session.add(profile)
         await session.commit()
-        await session.refresh(profile)
+        profile = await session.scalar(
+            select(LeadershipProfile)
+            .where(LeadershipProfile.profile_key == profile_key)
+            .options(selectinload(LeadershipProfile.media))
+        )
     except SQLAlchemyError as exc:
         await session.rollback()
         raise HTTPException(

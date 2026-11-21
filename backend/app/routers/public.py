@@ -6,10 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.database import get_db
-from app.models.content import ContentItem, LeadershipProfile, AboutSection, Topper, Achievement, Alumni
+from app.models.content import ContentItem, LeadershipProfile, AboutSection, Topper, Achievement, Alumni, Sport, SportsAchievementPhoto, AcademicInformation, Club
 from app.models.content_record import ContentRecord
 from app.models.media import Media, PhotoConfiguration
-from app.schemas.content import ContentItemRead, LeadershipProfileRead, AboutSectionRead, TopperRead, AchievementRead, AlumniRead
+from app.schemas.content import ContentItemRead, LeadershipProfileRead, AboutSectionRead, TopperRead, AchievementRead, AlumniRead, SportRead, SportsAchievementPhotoRead, AcademicInformationRead, ClubRead
 from app.schemas.content_record import ContentRecordRead
 from app.schemas.media import PhotoConfigurationRead
 from app.services import content_item_service, content_record_service
@@ -160,3 +160,75 @@ async def list_public_alumni(
             alum.media_id = None
     session.expunge_all()
     return alumni_list
+
+
+@router.get("/sports", response_model=list[SportRead])
+async def list_public_sports(
+    session: DatabaseSession,
+) -> list[Sport]:
+    """List active sports."""
+    query = select(Sport).options(joinedload(Sport.media)).where(Sport.is_active.is_(True))
+    query = query.order_by(Sport.display_order, Sport.created_at.desc())
+    result = await session.scalars(query)
+    sports_list = list(result.unique().all())
+    # Clean up deletion pending media
+    for sport in sports_list:
+        if sport.media is not None and sport.media.deletion_pending:
+            sport.media = None
+            sport.media_id = None
+    session.expunge_all()
+    return sports_list
+
+
+@router.get("/sports-achievements", response_model=list[SportsAchievementPhotoRead])
+async def list_public_sports_achievements(
+    session: DatabaseSession,
+) -> list[SportsAchievementPhoto]:
+    """List active sports achievement photos."""
+    query = select(SportsAchievementPhoto).options(joinedload(SportsAchievementPhoto.media)).where(SportsAchievementPhoto.is_active.is_(True))
+    query = query.order_by(SportsAchievementPhoto.display_order, SportsAchievementPhoto.created_at.desc())
+    result = await session.scalars(query)
+    achievements_list = list(result.unique().all())
+    # Clean up deletion pending media
+    for achievement in achievements_list:
+        if achievement.media is not None and achievement.media.deletion_pending:
+            achievement.media = None
+            achievement.media_id = None
+    session.expunge_all()
+    return achievements_list
+
+
+@router.get("/academic-information", response_model=list[AcademicInformationRead])
+async def list_public_academic_information(
+    session: DatabaseSession,
+) -> list[AcademicInformation]:
+    """List active academic information records."""
+    query = select(AcademicInformation).options(joinedload(AcademicInformation.media)).where(AcademicInformation.is_active.is_(True))
+    query = query.order_by(AcademicInformation.display_order, AcademicInformation.created_at.desc())
+    result = await session.scalars(query)
+    info_list = list(result.unique().all())
+    # Clean up deletion pending media
+    for info in info_list:
+        if info.media is not None and info.media.deletion_pending:
+            info.media = None
+            info.media_id = None
+    session.expunge_all()
+    return info_list
+
+
+@router.get("/clubs", response_model=list[ClubRead])
+async def list_public_clubs(
+    session: DatabaseSession,
+) -> list[Club]:
+    """List active clubs."""
+    query = select(Club).options(joinedload(Club.media)).where(Club.is_active.is_(True))
+    query = query.order_by(Club.display_order, Club.created_at.desc())
+    result = await session.scalars(query)
+    clubs_list = list(result.unique().all())
+    # Clean up deletion pending media
+    for club in clubs_list:
+        if club.media is not None and club.media.deletion_pending:
+            club.media = None
+            club.media_id = None
+    session.expunge_all()
+    return clubs_list

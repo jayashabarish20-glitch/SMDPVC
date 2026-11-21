@@ -79,6 +79,14 @@ class Media(UUIDPrimaryKey, TimestampMixin, Base):
     content_items: Mapped[list["ContentItem"]] = relationship(
         back_populates="media",
     )
+    sports: Mapped[list["Sport"]] = relationship(back_populates="media")
+    sports_achievements: Mapped[list["SportsAchievementPhoto"]] = relationship(
+        back_populates="media"
+    )
+    academic_information: Mapped[list["AcademicInformation"]] = relationship(
+        back_populates="media"
+    )
+    clubs: Mapped[list["Club"]] = relationship(back_populates="media")
 
 
 class PhotoConfiguration(UUIDPrimaryKey, TimestampMixin, Base):

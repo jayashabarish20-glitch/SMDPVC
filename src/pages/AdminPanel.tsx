@@ -26,8 +26,12 @@ import { HigherSecondaryLearningActivitiesGalleryManager } from '../components/a
 import { HigherSecondaryExtracurricularGalleryManager } from '../components/admin/HigherSecondaryExtracurricularGalleryManager';
 import { HigherSecondaryAcademicCalendarManager } from '../components/admin/HigherSecondaryAcademicCalendarManager';
 import { CoursesOfferedManager } from '../components/admin/CoursesOfferedManager';
-import { ToppersManager } from '../components/admin/ToppersManager';
+import { AchieversManager } from '../components/admin/AchieversManager';
 import { AlumniManager } from '../components/admin/AlumniManager';
+import { SportsManager } from '../components/admin/SportsManager';
+import { SportsAchievementsManager } from '../components/admin/SportsAchievementsManager';
+import { AcademicInformationManager } from '../components/admin/AcademicInformationManager';
+import { ClubsManager } from '../components/admin/ClubsManager';
 
 const NurseryAcademicCalendarManager = lazy(() =>
   import('../components/admin/NurseryAcademicCalendarManager').then((module) => ({
@@ -57,14 +61,19 @@ type AdminSection =
   | 'primary-about'
   | 'primary-principal'
   | 'primary-academic-calendar'
+  | 'primary-achievers'
   | 'nursery-academic-calendar'
   | 'hs-hero'
   | 'hs-about'
   | 'hs-principal'
   | 'hs-academic-calendar'
   | 'hs-courses'
-  | 'hs-toppers'
+  | 'hs-achievers'
   | 'hs-alumni'
+  | 'hs-sports'
+  | 'hs-sports-achievements'
+  | 'hs-academic-information'
+  | 'hs-clubs'
   | 'excellence'
   | 'campus-life';
 
@@ -105,6 +114,7 @@ export function AdminPanel() {
         { id: '6d', label: 'About', section: 'primary-about' },
         { id: '6e', label: 'Principal', section: 'primary-principal' },
         { id: '6f', label: 'Academic Calendar', section: 'primary-academic-calendar' },
+        { id: '6g', label: 'Achievers', section: 'primary-achievers' },
       ],
     },
     {
@@ -119,8 +129,12 @@ export function AdminPanel() {
         { id: '7e', label: 'Principal', section: 'hs-principal' },
         { id: '7f', label: 'Academic Calendar', section: 'hs-academic-calendar' },
         { id: '7g', label: 'Courses Offered (Class XI)', section: 'hs-courses' },
-        { id: '7h', label: 'School Toppers', section: 'hs-toppers' },
+        { id: '7h', label: 'Achievers', section: 'hs-achievers' },
         { id: '7i', label: 'Alumni', section: 'hs-alumni' },
+        { id: '7j', label: 'Sports Categories', section: 'hs-sports' },
+        { id: '7k', label: 'Sports Achievements', section: 'hs-sports-achievements' },
+        { id: '7l', label: 'Academic Information', section: 'hs-academic-information' },
+        { id: '7m', label: 'Clubs', section: 'hs-clubs' },
       ],
     },
     {
@@ -194,8 +208,13 @@ export function AdminPanel() {
           description="Manage the background images for the Higher Secondary page hero carousel."
         />
       )}
-      {activeSection === 'hs-toppers' && <ToppersManager />}
+      {activeSection === 'primary-achievers' && <AchieversManager />}
+      {activeSection === 'hs-achievers' && <AchieversManager />}
       {activeSection === 'hs-alumni' && <AlumniManager />}
+      {activeSection === 'hs-sports' && <SportsManager />}
+      {activeSection === 'hs-sports-achievements' && <SportsAchievementsManager />}
+      {activeSection === 'hs-academic-information' && <AcademicInformationManager />}
+      {activeSection === 'hs-clubs' && <ClubsManager />}
       {activeSection === 'excellence' && <ExcellenceManager />}
       {activeSection === 'campus-life' && <CampusLifeManager />}
       {activeSection === 'primary-about' && <PrimaryAboutManager />}

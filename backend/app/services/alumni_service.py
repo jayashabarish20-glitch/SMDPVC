@@ -48,8 +48,11 @@ async def create_alumni(
     )
     session.add(alumni)
     await session.flush()
-    await session.refresh(alumni, attribute_names=["created_at", "updated_at", "media"])
-    return alumni
+    alumni_id = alumni.id
+    await session.commit()
+    session.expunge_all()
+    alumni = await get_alumni(session, alumni_id)
+    return alumni or alumni
 
 
 async def update_alumni(
@@ -67,7 +70,9 @@ async def update_alumni(
             setattr(alumni, key, value)
 
     await session.flush()
-    await session.refresh(alumni, attribute_names=["created_at", "updated_at", "media"])
+    await session.commit()
+    session.expunge(alumni)
+    alumni = await get_alumni(session, alumni_id)
     return alumni
 
 

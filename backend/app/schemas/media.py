@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import Field, HttpUrl
+from pydantic import ConfigDict, Field, HttpUrl
 
 from app.schemas.base import EntityRead, Schema
 
@@ -29,13 +29,32 @@ class MediaUpdate(Schema):
 
 
 class MediaRead(EntityRead):
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True,
+        json_schema_extra={
+            "example": {
+                "id": "uuid",
+                "cloudinary_public_id": "public_id",
+                "imageUrl": "http://example.com/image.jpg",
+                "original_filename": "image.jpg",
+                "file_format": "jpg",
+                "file_size": 1024,
+                "width": 100,
+                "height": 100,
+                "alt_text": "Description",
+                "resource_type": "image",
+            }
+        },
+    )
+
     cloudinary_public_id: str
-    image_url: HttpUrl
+    image_url: Annotated[HttpUrl, Field(serialization_alias="imageUrl")]
     original_filename: str
     file_format: str
     file_size: int
-    width: int | None
-    height: int | None
+    width: int | None = None
+    height: int | None = None
     alt_text: str
     resource_type: str = "image"
 

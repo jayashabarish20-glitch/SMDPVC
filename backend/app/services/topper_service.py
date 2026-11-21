@@ -81,6 +81,11 @@ async def create_topper(
     display_order: int,
     is_published: bool,
     media_id: UUID | None,
+    rank: int | None = None,
+    subject: str | None = None,
+    achievement: str | None = None,
+    class_name: str | None = None,
+    section: str | None = None,
 ) -> Topper:
     await _ensure_media(session, media_id)
 
@@ -106,9 +111,11 @@ async def create_topper(
             academic_year=academic_year,
             score=score,
             stream=stream,
-            subject=None,
-            rank=None,
-            achievement=None,
+            subject=subject,
+            class_name=class_name,
+            section=section,
+            rank=rank,
+            achievement=achievement,
             centums_scored=centums_scored,
             centum_subjects=unique_subjects,
             display_order=next_order or 0,

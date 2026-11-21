@@ -70,6 +70,7 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
       { id: "primary-learning", title: "Learning Activities", description: editablePlaceholder },
       { id: "primary-calendar", title: "Academic Calendar", description: editablePlaceholder },
       { id: "primary-extracurricular", title: "Extracurricular Activities", description: editablePlaceholder },
+      { id: "primary-achievers", title: "Achievers", description: editablePlaceholder },
     ],
   },
   "higher-secondary": {
@@ -99,21 +100,13 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
       { id: "higher-classes", title: "Classes", description: editablePlaceholder },
       { id: "higher-academic-information", title: "Academic Information", description: editablePlaceholder },
       { id: "higher-learning", title: "Learning Activities", description: editablePlaceholder },
-      {
-        id: "higher-achievements",
-        title: "Achievements",
-        description:
-          "Add verified school achievements only. Do not publish sample student names, marks, or ranks.",
-        subsections: [
-          "School Toppers",
-          "Subject-wise Toppers",
-        ],
-      },
+      { id: "higher-achievers", title: "Achievers", description: editablePlaceholder },
       { id: "higher-alumni", title: "Alumni Details", description: editablePlaceholder },
+      { id: "higher-sports", title: "Sports Categories", description: editablePlaceholder },
+      { id: "higher-sports-achievements", title: "Sports Achievements", description: editablePlaceholder },
       { id: "higher-clubs", title: "Clubs", description: editablePlaceholder },
       { id: "higher-calendar", title: "Academic Calendar", description: editablePlaceholder },
       { id: "higher-extracurricular", title: "Extracurricular Activities", description: editablePlaceholder },
-      { id: "higher-sports", title: "Sports", description: editablePlaceholder },
     ],
   },
 };

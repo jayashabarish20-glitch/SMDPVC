@@ -13,13 +13,10 @@ def _default_database_url() -> str:
 
 
 def _get_env_file() -> Path:
-    """Get path to .env file (in project root, not backend directory)."""
+    """Get path to .env file from backend directory."""
     backend_dir = Path(__file__).resolve().parents[1]
-    project_root = backend_dir.parent
-    env_file = project_root / ".env"
-    if env_file.exists():
-        return env_file
-    return Path(".env")
+    env_file = backend_dir / ".env"
+    return env_file
 
 
 class Settings(BaseSettings):

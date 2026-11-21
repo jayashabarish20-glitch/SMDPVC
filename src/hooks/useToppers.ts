@@ -8,6 +8,11 @@ export interface Topper {
   academic_year: string | null;
   score: string;
   stream: string;
+  subject: string | null;
+  class_name: string | null;
+  section: string | null;
+  rank: number | null;
+  achievement: string | null;
   centums_scored: number;
   centum_subjects: string[];
   display_order: number;

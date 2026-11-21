@@ -21,6 +21,10 @@ from app.routers.admin_photos import router as admin_photos_router
 from app.routers.admin_toppers import router as admin_toppers_router
 from app.routers.admin_achievements import router as admin_achievements_router
 from app.routers.admin_alumni import router as admin_alumni_router
+from app.routers.admin_sports import router as admin_sports_router
+from app.routers.admin_sports_achievements import router as admin_sports_achievements_router
+from app.routers.admin_academic_information import router as admin_academic_information_router
+from app.routers.admin_clubs import router as admin_clubs_router
 from app.routers.health import router as health_router
 from app.routers.media import router as media_router
 from app.routers.admin_content_records import router as admin_content_records_router
@@ -87,6 +91,10 @@ app.include_router(admin_about_sections_router, prefix="/api/admin")
 app.include_router(admin_toppers_router, prefix="/api/admin")
 app.include_router(admin_achievements_router, prefix="/api/admin")
 app.include_router(admin_alumni_router, prefix="/api/admin")
+app.include_router(admin_sports_router, prefix="/api/admin")
+app.include_router(admin_sports_achievements_router, prefix="/api/admin")
+app.include_router(admin_academic_information_router, prefix="/api/admin")
+app.include_router(admin_clubs_router, prefix="/api/admin")
 app.include_router(admin_content_records_router, prefix="/api/admin")
 app.include_router(admin_photos_router, prefix="/api/admin")
 app.include_router(media_router, prefix="/api/media")

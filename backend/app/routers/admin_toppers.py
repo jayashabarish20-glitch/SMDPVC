@@ -61,6 +61,11 @@ async def create_topper(
             display_order=data.display_order,
             is_published=data.is_published,
             media_id=data.media_id,
+            rank=data.rank,
+            subject=data.subject,
+            achievement=data.achievement,
+            class_name=data.class_name,
+            section=data.section,
         )
     except service.TopperError as exc:
         raise _http_error(exc) from exc

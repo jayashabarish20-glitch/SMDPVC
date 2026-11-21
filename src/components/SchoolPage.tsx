@@ -11,6 +11,11 @@ import { Icon } from "./Icon";
 import { NurseryCalendarDownloadBlock } from "./NurseryCalendarDownloadBlock";
 import { CoursesOfferedSection } from "./CoursesOfferedSection";
 import { AlumniSection } from "./AlumniSection";
+import { SportsCarousel } from "./SportsCarousel";
+import { SportsAchievementsGallery } from "./SportsAchievementsGallery";
+import { AcademicInformationSection } from "./AcademicInformationSection";
+import { ClubsCarousel } from "./ClubsCarousel";
+import { AchieversSection } from "./AchieversSection";
 
 type SchoolPageProps = {
   page: SchoolPageConfig;
@@ -401,6 +406,18 @@ function SectionWithContentItems({
         <CoursesOfferedSection groups={courseGroups ?? []} />
       ) : section.id === "higher-alumni" ? (
         <AlumniSection />
+      ) : section.id === "higher-sports" ? (
+        <SportsCarousel />
+      ) : section.id === "higher-sports-achievements" ? (
+        <SportsAchievementsGallery />
+      ) : section.id === "higher-academic-information" ? (
+        <AcademicInformationSection />
+      ) : section.id === "higher-clubs" ? (
+        <ClubsCarousel />
+      ) : section.id === "primary-achievers" ? (
+        <AchieversSection gradeLevel="10" />
+      ) : section.id === "higher-achievers" ? (
+        <AchieversSection gradeLevel="12" />
       ) : contentItemMapping && (items.length > 0 || loading) ? (
         <div className="mt-6">
           <ContentItemCards items={items} loading={loading} />

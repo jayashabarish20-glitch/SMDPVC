@@ -9,6 +9,7 @@ from app.database import get_db
 from app.main import app
 from app.models.admin import AdminUser
 from app.models.content import LeadershipProfile
+from app.models.media import Media
 from app.services.auth_service import create_access_token, hash_password
 
 
@@ -40,6 +41,26 @@ async def leadership_profile(session: AsyncSession) -> LeadershipProfile:
     await session.commit()
     await session.refresh(profile)
     return profile
+
+
+@pytest.fixture
+async def test_media(session: AsyncSession) -> Media:
+    """Create a test media file."""
+    media = Media(
+        cloudinary_public_id="test/leadership-photo",
+        image_url="https://res.cloudinary.com/test/image/upload/test-leader.jpg",
+        original_filename="test-leader.jpg",
+        file_format="jpg",
+        file_size=2048,
+        width=1200,
+        height=800,
+        alt_text="Test Leadership Photo",
+        resource_type="image",
+    )
+    session.add(media)
+    await session.commit()
+    await session.refresh(media)
+    return media
 
 
 @pytest.mark.asyncio
@@ -179,5 +200,194 @@ async def test_get_updated_profile_after_update(
         assert updated is not None
         assert updated["name"] == "Fetched Leader"
         assert updated["designation"] == "Director"
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_create_leadership_profile_with_media_loads_relationship(
+    session: AsyncSession,
+    admin_user: AdminUser,
+    test_media: Media,
+) -> None:
+    """Test POST creates leadership profile with media and returns media relationship (MissingGreenlet regression)."""
+    async def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        token = create_access_token(data={"sub": str(admin_user.id)})
+        client = TestClient(app)
+
+        response = client.post(
+            "/api/admin/leadership-profiles",
+            json={
+                "name": "New Leader with Media",
+                "designation": "Director",
+                "category": "management",
+                "short_bio": "New leader bio",
+                "message": "New leader message",
+                "is_active": True,
+                "media_id": str(test_media.id),
+            },
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["name"] == "New Leader with Media"
+        assert data["designation"] == "Director"
+        # Verify media relationship is loaded and present
+        assert "media" in data
+        assert data["media"] is not None
+        assert data["media"]["id"] == str(test_media.id)
+        assert data["media"]["original_filename"] == "test-leader.jpg"
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_update_leadership_profile_with_media_loads_relationship(
+    session: AsyncSession,
+    admin_user: AdminUser,
+    leadership_profile: LeadershipProfile,
+    test_media: Media,
+) -> None:
+    """Test PUT updates leadership profile with media and returns media relationship (MissingGreenlet regression)."""
+    async def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        token = create_access_token(data={"sub": str(admin_user.id)})
+        client = TestClient(app)
+
+        response = client.put(
+            f"/api/admin/leadership-profiles/{leadership_profile.profile_key}",
+            json={
+                "profile_key": "test-leader",
+                "name": "Updated Leader with Media",
+                "designation": "Executive Director",
+                "category": "management",
+                "short_bio": "Updated with media",
+                "message": "Updated message with media",
+                "display_order": 1,
+                "is_active": True,
+                "media_id": str(test_media.id),
+            },
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == "Updated Leader with Media"
+        assert data["designation"] == "Executive Director"
+        # Verify media relationship is loaded and present
+        assert "media" in data
+        assert data["media"] is not None
+        assert data["media"]["id"] == str(test_media.id)
+        assert data["media"]["original_filename"] == "test-leader.jpg"
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_update_leadership_profile_without_media(
+    session: AsyncSession,
+    admin_user: AdminUser,
+    leadership_profile: LeadershipProfile,
+) -> None:
+    """Test PUT updates leadership profile without media returns null media."""
+    async def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        token = create_access_token(data={"sub": str(admin_user.id)})
+        client = TestClient(app)
+
+        response = client.put(
+            f"/api/admin/leadership-profiles/{leadership_profile.profile_key}",
+            json={
+                "profile_key": "test-leader",
+                "name": "Updated Leader without Media",
+                "designation": "Principal",
+                "category": "management",
+                "short_bio": "Updated without media",
+                "message": "Updated message",
+                "display_order": 1,
+                "is_active": True,
+                "media_id": None,
+            },
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == "Updated Leader without Media"
+        # Verify media field is present but null
+        assert "media" in data
+        assert data["media"] is None
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_fetch_leadership_profile_after_media_update(
+    session: AsyncSession,
+    admin_user: AdminUser,
+    leadership_profile: LeadershipProfile,
+    test_media: Media,
+) -> None:
+    """Test fetching leadership profile after updating with media."""
+    async def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        token = create_access_token(data={"sub": str(admin_user.id)})
+        client = TestClient(app)
+
+        # Update the profile with media
+        update_response = client.put(
+            f"/api/admin/leadership-profiles/{leadership_profile.profile_key}",
+            json={
+                "profile_key": "test-leader",
+                "name": "Fetched Leader with Media",
+                "designation": "Director",
+                "category": "management",
+                "short_bio": "Fetched bio",
+                "message": "Fetched message",
+                "display_order": 1,
+                "is_active": True,
+                "media_id": str(test_media.id),
+            },
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert update_response.status_code == 200
+
+        # Fetch all profiles to verify the update persisted with media
+        list_response = client.get(
+            "/api/admin/leadership-profiles",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert list_response.status_code == 200
+        profiles = list_response.json()
+        updated = next(
+            (p for p in profiles if p["profile_key"] == "test-leader"), None
+        )
+        assert updated is not None
+        assert updated["name"] == "Fetched Leader with Media"
+        assert updated["designation"] == "Director"
+        # Verify media is present in the fetched profile
+        assert "media" in updated
+        assert updated["media"] is not None
+        assert updated["media"]["id"] == str(test_media.id)
     finally:
         app.dependency_overrides.clear()

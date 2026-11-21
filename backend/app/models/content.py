@@ -255,6 +255,8 @@ class Topper(UUIDPrimaryKey, TimestampMixin, Base):
     score: Mapped[str] = mapped_column(String(40), nullable=False, default="")
     stream: Mapped[str] = mapped_column(String(120), nullable=False, default="")
     subject: Mapped[str | None] = mapped_column(String(120))
+    class_name: Mapped[str | None] = mapped_column(String(50), default="", server_default="")
+    section: Mapped[str | None] = mapped_column(String(10), default="", server_default="")
     rank: Mapped[int | None] = mapped_column(Integer)
     achievement: Mapped[str | None] = mapped_column(Text)
     centums_scored: Mapped[int] = mapped_column(
@@ -353,3 +355,117 @@ class Alumni(UUIDPrimaryKey, TimestampMixin, Base):
         ForeignKey("media.id", ondelete="SET NULL"),
     )
     media: Mapped["Media | None"] = relationship(back_populates="alumni")
+
+
+class Sport(UUIDPrimaryKey, TimestampMixin, Base):
+    """Higher Secondary sports categories with photo and description."""
+    __tablename__ = "sports"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_sports_display_order"),
+        Index(
+            "ix_sports_display_order",
+            "display_order",
+        ),
+    )
+
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="sports")
+
+
+class SportsAchievementPhoto(UUIDPrimaryKey, TimestampMixin, Base):
+    """Higher Secondary sports achievement photos collection."""
+    __tablename__ = "sports_achievement_photos"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_achievement_display_order"),
+        Index("ix_sports_achievement_display_order", "display_order"),
+    )
+
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="sports_achievements")
+
+
+class AcademicInformation(UUIDPrimaryKey, TimestampMixin, Base):
+    """Higher Secondary academic information with PDF files."""
+    __tablename__ = "academic_information"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_academic_info_display_order"),
+        Index("ix_academic_info_display_order", "display_order"),
+    )
+
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="academic_information")
+
+
+class Club(UUIDPrimaryKey, TimestampMixin, Base):
+    """Higher Secondary clubs with photo and description."""
+    __tablename__ = "clubs"
+    __table_args__ = (
+        CheckConstraint("display_order >= 0", name="nonnegative_clubs_display_order"),
+        Index("ix_clubs_display_order", "display_order"),
+    )
+
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    display_order: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        server_default="0",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    media_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("media.id", ondelete="SET NULL"),
+    )
+    media: Mapped["Media | None"] = relationship(back_populates="clubs")

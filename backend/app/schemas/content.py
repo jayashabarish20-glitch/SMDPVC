@@ -155,7 +155,12 @@ class TopperCreate(Schema):
     academic_year: str | None = Field(default=None, max_length=20)
     score: str = Field(min_length=1, max_length=40)
     stream: str = Field(default="", max_length=120)
+    subject: str | None = Field(default=None, max_length=120)
+    class_name: str | None = Field(default="", max_length=50)
+    section: str | None = Field(default="", max_length=10)
+    rank: int | None = Field(default=None, ge=1, le=3)
     centums_scored: int = Field(default=0, ge=0)
+    centum_subjects: list[str] = Field(default_factory=list)
     display_order: int = Field(default=0, ge=0)
     is_published: bool = True
     media_id: UUID | None = None
@@ -166,24 +171,16 @@ class TopperUpdate(Schema):
     grade_level: str | None = Field(default=None, min_length=1, max_length=32)
     academic_year: str | None = None
     score: str | None = Field(default=None, min_length=1, max_length=40)
-    stream: str | None = Field(default=None, max_length=120)
+    stream: str | None = None
+    subject: str | None = None
+    class_name: str | None = None
+    section: str | None = None
+    rank: int | None = Field(default=None, ge=1, le=3)
     centums_scored: int | None = Field(default=None, ge=0)
+    centum_subjects: list[str] | None = None
     display_order: int | None = Field(default=None, ge=0)
     is_published: bool | None = None
     media_id: UUID | None = None
-
-
-class TopperRead(EntityRead):
-    student_name: str
-    grade_level: str
-    academic_year: str | None
-    score: str
-    stream: str
-    centums_scored: int
-    display_order: int
-    is_published: bool
-    media_id: UUID | None
-    media: MediaRead | None = None
 
 
 class TopperReorder(Schema):
@@ -311,6 +308,8 @@ class TopperRead(EntityRead):
     score: str
     stream: str
     subject: str | None
+    class_name: str | None
+    section: str | None
     rank: int | None
     achievement: str | None
     centums_scored: int
@@ -390,7 +389,107 @@ class AlumniRead(EntityRead):
     media: MediaRead | None = None
 
 
+class SportCreate(Schema):
+    name: str = Field(min_length=1, max_length=200)
+    description: str = ""
+    display_order: int = Field(default=0, ge=0)
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class SportUpdate(Schema):
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    display_order: int | None = Field(default=None, ge=0)
+    is_active: bool | None = None
+    media_id: UUID | None = None
+
+
+class SportRead(EntityRead):
+    name: str
+    description: str
+    display_order: int
+    is_active: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
+class SportsAchievementPhotoCreate(Schema):
+    description: str = ""
+    display_order: int = Field(default=0, ge=0)
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class SportsAchievementPhotoUpdate(Schema):
+    description: str | None = None
+    display_order: int | None = Field(default=None, ge=0)
+    is_active: bool | None = None
+    media_id: UUID | None = None
+
+
+class SportsAchievementPhotoRead(EntityRead):
+    description: str
+    display_order: int
+    is_active: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
+class AcademicInformationCreate(Schema):
+    title: str = Field(min_length=1, max_length=200)
+    description: str = ""
+    display_order: int = Field(default=0, ge=0)
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class AcademicInformationUpdate(Schema):
+    title: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    display_order: int | None = Field(default=None, ge=0)
+    is_active: bool | None = None
+    media_id: UUID | None = None
+
+
+class AcademicInformationRead(EntityRead):
+    title: str
+    description: str
+    display_order: int
+    is_active: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
+class ClubCreate(Schema):
+    name: str = Field(min_length=1, max_length=200)
+    description: str = ""
+    display_order: int = Field(default=0, ge=0)
+    is_active: bool = True
+    media_id: UUID | None = None
+
+
+class ClubUpdate(Schema):
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    display_order: int | None = Field(default=None, ge=0)
+    is_active: bool | None = None
+    media_id: UUID | None = None
+
+
+class ClubRead(EntityRead):
+    name: str
+    description: str
+    display_order: int
+    is_active: bool
+    media_id: UUID | None
+    media: MediaRead | None = None
+
+
 __all__ = [
+    "AcademicInformationCreate",
+    "AcademicInformationRead",
+    "AcademicInformationUpdate",
     "AlumniCreate",
     "AlumniRead",
     "AlumniUpdate",
@@ -400,6 +499,9 @@ __all__ = [
     "AnnouncementCreate",
     "AnnouncementRead",
     "AnnouncementUpdate",
+    "ClubCreate",
+    "ClubRead",
+    "ClubUpdate",
     "ContentItemCreate",
     "ContentItemRead",
     "ContentItemReorder",
@@ -418,6 +520,12 @@ __all__ = [
     "SchoolSectionCreate",
     "SchoolSectionRead",
     "SchoolSectionUpdate",
+    "SportCreate",
+    "SportRead",
+    "SportUpdate",
+    "SportsAchievementPhotoCreate",
+    "SportsAchievementPhotoRead",
+    "SportsAchievementPhotoUpdate",
     "TopperCreate",
     "TopperRead",
     "TopperUpdate",
