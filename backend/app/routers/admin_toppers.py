@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.dependencies import require_admin
+from app.models.admin import AdminUser
 from app.models.content import Topper
 from app.schemas.content import (
     TopperCreate,
@@ -18,7 +19,7 @@ from app.services import topper_service as service
 
 router = APIRouter(prefix="/toppers", tags=["admin-toppers"])
 DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
-AdminAccess = Annotated[None, Depends(require_admin)]
+AdminAccess = Annotated[AdminUser, Depends(require_admin)]
 
 
 def _http_error(exc: service.TopperError) -> HTTPException:

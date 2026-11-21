@@ -149,35 +149,19 @@ class SchoolSectionRead(EntityRead):
     card_media: MediaRead | None = None
 
 
-class TopperCreate(Schema):
-    student_name: str = Field(min_length=1, max_length=160)
-    grade_level: str = Field(min_length=1, max_length=32)
-    academic_year: str | None = Field(default=None, max_length=20)
-    score: str = Field(min_length=1, max_length=40)
-    stream: str = Field(default="", max_length=120)
-    subject: str | None = Field(default=None, max_length=120)
-    class_name: str | None = Field(default="", max_length=50)
-    section: str | None = Field(default="", max_length=10)
-    rank: int | None = Field(default=None, ge=1, le=3)
-    centums_scored: int = Field(default=0, ge=0)
-    centum_subjects: list[str] = Field(default_factory=list)
-    display_order: int = Field(default=0, ge=0)
-    is_published: bool = True
-    media_id: UUID | None = None
-
-
 class TopperUpdate(Schema):
     student_name: str | None = Field(default=None, min_length=1, max_length=160)
     grade_level: str | None = Field(default=None, min_length=1, max_length=32)
     academic_year: str | None = None
-    score: str | None = Field(default=None, min_length=1, max_length=40)
+    score: str | None = Field(default=None, max_length=40)
     stream: str | None = None
     subject: str | None = None
     class_name: str | None = None
     section: str | None = None
-    rank: int | None = Field(default=None, ge=1, le=3)
+    rank: int | None = Field(default=None, gt=0)
+    achievement: str | None = None
     centums_scored: int | None = Field(default=None, ge=0)
-    centum_subjects: list[str] | None = None
+    centum_subjects: list[str] | None = Field(default=None, max_length=20)
     display_order: int | None = Field(default=None, ge=0)
     is_published: bool | None = None
     media_id: UUID | None = None
@@ -276,28 +260,14 @@ class TopperCreate(Schema):
     score: str = Field(default="", max_length=40)
     stream: str = Field(default="", max_length=120)
     subject: str | None = Field(default=None, max_length=120)
+    class_name: str | None = Field(default="", max_length=50)
+    section: str | None = Field(default="", max_length=10)
     rank: int | None = Field(default=None, gt=0)
     achievement: str | None = None
     centums_scored: int = Field(default=0, ge=0)
     centum_subjects: list[str] = Field(default_factory=list, max_length=20)
     display_order: int = Field(default=0, ge=0)
     is_published: bool = False
-    media_id: UUID | None = None
-
-
-class TopperUpdate(Schema):
-    student_name: str | None = Field(default=None, min_length=1, max_length=160)
-    grade_level: str | None = Field(default=None, min_length=1, max_length=32)
-    academic_year: str | None = Field(default=None, max_length=20)
-    score: str | None = Field(default=None, max_length=40)
-    stream: str | None = Field(default=None, max_length=120)
-    subject: str | None = Field(default=None, max_length=120)
-    rank: int | None = Field(default=None, gt=0)
-    achievement: str | None = None
-    centums_scored: int | None = Field(default=None, ge=0)
-    centum_subjects: list[str] | None = Field(default=None, max_length=20)
-    display_order: int | None = Field(default=None, ge=0)
-    is_published: bool | None = None
     media_id: UUID | None = None
 
 
