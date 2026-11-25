@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getToken } from '../../utils/storage';
 import { handleFileInput, type UploadedImage } from '../../utils/imageUpload';
 import { Icon } from '../Icon';
+import { mediaUrl, type MediaRef } from '../../utils/mediaUrl';
 import { SectionHeader } from './SectionHeader';
 
 interface Club {
@@ -11,7 +12,7 @@ interface Club {
   display_order: number;
   is_active: boolean;
   media_id: string | null;
-  media?: { id: string; image_url: string } | null;
+  media?: { id: string } & MediaRef | null;
 }
 
 interface ClubFormData {
@@ -69,7 +70,7 @@ export function ClubsManager() {
       formData.append('file', file);
       formData.append('alt_text', 'Club photo');
 
-      const response = await fetch('/api/media/upload-topper', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -284,8 +285,8 @@ export function ClubsManager() {
           <h3 className="font-serif text-xl font-bold text-school-navy">Saved Clubs ({clubs.length})</h3>
           {clubs.map((club) => (
             <div key={club.id} className="flex gap-4 pb-4 border-b border-school-navy/10 last:pb-0 last:border-b-0">
-              {club.media?.image_url && (
-                <img src={club.media.image_url} alt={club.name} className="h-16 w-16 rounded object-cover" />
+              {mediaUrl(club.media) && (
+                <img src={mediaUrl(club.media) ?? undefined} alt={club.name} className="h-16 w-16 rounded object-cover" />
               )}
               <div className="flex-1">
                 <h4 className="font-semibold text-school-navy">{club.name}</h4>

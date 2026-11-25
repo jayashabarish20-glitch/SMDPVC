@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { getToken } from '../../utils/storage';
 import { Icon } from '../Icon';
+import { mediaUrl, type MediaRef } from '../../utils/mediaUrl';
 import { SectionHeader } from './SectionHeader';
 
 interface AcademicInfo {
@@ -10,7 +11,7 @@ interface AcademicInfo {
   display_order: number;
   is_active: boolean;
   media_id: string | null;
-  media?: { id: string; image_url: string } | null;
+  media?: { id: string } & MediaRef | null;
 }
 
 interface InfoFormData {
@@ -67,7 +68,7 @@ export function AcademicInformationManager() {
       formData.append('file', file);
       formData.append('alt_text', 'Academic PDF');
 
-      const response = await fetch('/api/media/upload-topper', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -282,9 +283,9 @@ export function AcademicInformationManager() {
                 {info.description && <p className="text-sm text-school-muted mt-1">{info.description}</p>}
               </div>
               <div className="flex gap-2">
-                {info.media?.image_url && (
+                {mediaUrl(info.media) && (
                   <a
-                    href={info.media.image_url}
+                    href={mediaUrl(info.media) ?? undefined}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-2 text-sm font-semibold text-school-gold hover:text-school-gold-hover"

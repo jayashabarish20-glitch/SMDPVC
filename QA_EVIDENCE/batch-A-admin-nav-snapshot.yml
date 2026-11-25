@@ -1,0 +1,59 @@
+- generic [ref=f2e33]:
+  - navigation [ref=f2e34]:
+    - generic [ref=f2e36]:
+      - generic [ref=f2e37]:
+        - heading "Admin Panel" [level=1] [ref=f2e38]
+        - paragraph [ref=f2e39]: Photo Management
+      - button "Logout" [ref=f2e40] [cursor=pointer]
+    - generic [ref=f2e44]:
+      - generic [ref=f2e45]:
+        - button "Home Page" [expanded] [ref=f2e46] [cursor=pointer]
+        - generic [ref=f2e50]:
+          - button "Home Page Hero Carousel" [ref=f2e51] [cursor=pointer]
+          - button "School Sections Cards" [ref=f2e52] [cursor=pointer]
+          - button "Hero 3D Cards" [ref=f2e53] [cursor=pointer]
+      - button "Nursery" [ref=f2e55] [cursor=pointer]
+      - button "Primary" [ref=f2e60] [cursor=pointer]
+      - button "Higher Secondary" [ref=f2e65] [cursor=pointer]
+      - button "Common Sections" [ref=f2e70] [cursor=pointer]
+    - link "Back to Website" [ref=f2e75] [cursor=pointer]:
+      - /url: /
+  - main [ref=f2e78]:
+    - generic [ref=f2e80]:
+      - generic [ref=f2e81]:
+        - generic [ref=f2e82]: HOME PAGE
+        - heading "Hero Carousel Images" [level=2] [ref=f2e83]
+        - paragraph [ref=f2e84]: Manage the background images for the home page hero carousel. Add, remove, or reorder images that rotate in the hero section.
+      - generic [ref=f2e86]:
+        - generic [ref=f2e87]:
+          - heading "Hero Carousel Images" [level=3] [ref=f2e88]
+          - button "Add Photo" [ref=f2e89] [cursor=pointer]
+        - generic [ref=f2e91]:
+          - generic [ref=f2e92]:
+            - img "brave_screenshot_search.brave.com.png" [ref=f2e94]
+            - generic [ref=f2e95]:
+              - paragraph [ref=f2e96]: brave_screenshot_search.brave.com.png
+              - paragraph [ref=f2e97]: ASDFGHJ
+              - paragraph [ref=f2e98]: 11/24/2026
+            - button [ref=f2e99] [cursor=pointer]
+          - generic [ref=f2e103]:
+            - img "WhatsApp Image 2026-05-09 at 1.47.42 PM.jpeg" [ref=f2e105]
+            - generic [ref=f2e106]:
+              - paragraph [ref=f2e107]: WhatsApp Image 2026-05-09 at 1.47.42 PM.jpeg
+              - paragraph [ref=f2e108]: asdfgh
+              - paragraph [ref=f2e109]: 11/24/2026
+            - button [ref=f2e110] [cursor=pointer]
+          - generic [ref=f2e114]:
+            - img "5650514.jpg" [ref=f2e116]
+            - generic [ref=f2e117]:
+              - paragraph [ref=f2e118]: 5650514.jpg
+              - paragraph [ref=f2e119]: asdfgh
+              - paragraph [ref=f2e120]: 11/24/2026
+            - button [ref=f2e121] [cursor=pointer]
+          - generic [ref=f2e125]:
+            - img "wp14234797.png" [ref=f2e127]
+            - generic [ref=f2e128]:
+              - paragraph [ref=f2e129]: wp14234797.png
+              - paragraph [ref=f2e130]: asdfgh
+              - paragraph [ref=f2e131]: 11/24/2026
+            - button [ref=f2e132] [cursor=pointer]

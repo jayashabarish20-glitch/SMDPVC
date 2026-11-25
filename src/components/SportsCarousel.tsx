@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Icon } from './Icon';
 import { usePublicApi } from '../hooks/usePublicApi';
+import { MediaImage } from './MediaImage';
+import { mediaUrl, type MediaRef } from '../utils/mediaUrl';
 
 interface Sport {
   id: string;
   name: string;
   description: string;
-  media?: { image_url: string } | null;
+  media?: MediaRef | null;
 }
 
 export function SportsCarousel() {
@@ -37,17 +39,16 @@ export function SportsCarousel() {
         <div className="grid gap-6 md:gap-8 lg:grid-cols-2 items-center">
           {/* Photo */}
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-school-navy/10 to-school-navy/5">
-            {currentSport.media?.image_url ? (
-              <img
-                src={currentSport.media.image_url}
-                alt={currentSport.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-school-muted">
-                <Icon name="image" className="h-12 w-12" />
-              </div>
-            )}
+            <MediaImage
+              src={mediaUrl(currentSport.media)}
+              alt={currentSport.name}
+              className="w-full h-full object-cover"
+              fallback={
+                <div className="flex items-center justify-center h-full text-school-muted">
+                  <Icon name="image" className="h-12 w-12" />
+                </div>
+              }
+            />
           </div>
 
           {/* Content and Navigation */}

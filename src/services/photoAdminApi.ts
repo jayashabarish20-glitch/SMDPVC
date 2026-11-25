@@ -12,6 +12,7 @@ const API_BASE = '/api';
 export interface MediaResponse {
   id: string;
   image_url: string;
+  imageUrl?: string;
   alt_text?: string;
   created_at?: string;
   updated_at?: string;

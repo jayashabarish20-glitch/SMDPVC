@@ -78,6 +78,11 @@ export function useAdminToppers(gradeLevel?: string) {
     academic_year: string | null;
     score: string;
     stream: string;
+    subject?: string | null;
+    rank?: number | null;
+    achievement?: string | null;
+    class_name?: string | null;
+    section?: string | null;
     centums_scored: number;
     centum_subjects: string[];
     media_id: string | null;

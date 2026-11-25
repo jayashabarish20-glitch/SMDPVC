@@ -1,10 +1,7 @@
 /// <reference types="vite/client" />
 import { useEffect, useMemo, useState, type PointerEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import schoolIntroImage3 from "../../assests/images/School intro image3.jpeg";
-import schoolIntroIma2e1 from "../../assests/images/School intro ima2e1.jpeg";
-import schoolIntroImage1 from "../../assests/images/School intro image1.jpeg";
-import { campusImages, heroSlides } from "../data";
+import { heroSlides } from "../data";
 import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
 import { usePublicPhotos } from "../hooks/usePublicPhotos";
@@ -23,12 +20,6 @@ type GalleryImageProps = {
   alt: string;
   className: string;
 };
-
-const homepageHeroImages = [
-  schoolIntroImage3,
-  schoolIntroIma2e1,
-  schoolIntroImage1,
-];
 
 function GalleryImage({ src, alt, className }: GalleryImageProps) {
   if (src) {
@@ -63,32 +54,29 @@ export function Hero({ pageHero, pageTitle, heroPhotoKey = HOME_HERO_KEY }: Hero
   const { photos: publicPhotos } = usePublicPhotos();
   const slides = pageHero?.slides ?? heroSlides;
 
-  // Backend content always wins. Static data is used only when the backend
-  // has no photos for that key.
+  // Backend content always wins. If the backend returns no active images,
+  // the image array is empty (no static fallbacks).
   const backendUrls = (key: string) =>
     publicPhotos
       .filter((photo) => photo.config_key === key)
-      .map((photo) => photo.media?.image_url)
+      .map((photo) => photo.media?.imageUrl || photo.media?.image_url)
       .filter((image): image is string => Boolean(image));
   const firstBackendUrl = (key: string) => backendUrls(key)[0];
 
   const images = useMemo(
     () => {
       const savedHeroImages = backendUrls(heroPhotoKey);
-      const imageArray: string[] =
-        savedHeroImages.length > 0
-          ? savedHeroImages
-          : (pageHero?.images ?? homepageHeroImages);
-      return imageArray.filter(
+      return savedHeroImages.filter(
         (image): image is string => Boolean(image),
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pageHero?.images, publicPhotos, heroPhotoKey],
+    [publicPhotos, heroPhotoKey],
   );
 
-  const sportsImage = firstBackendUrl("campusImages.sports") ?? campusImages.sports;
-  const principalImage = firstBackendUrl("campusImages.principal") ?? campusImages.principal;
+  const sportsImage = firstBackendUrl("campusImages.sports") || "";
+  const principalImage = firstBackendUrl("campusImages.principal") || "";
+  const classroomImage = images[1] ?? images[0] ?? "";
 
   useEffect(() => {
     if (slides.length < 2) return;
@@ -131,7 +119,7 @@ export function Hero({ pageHero, pageTitle, heroPhotoKey = HOME_HERO_KEY }: Hero
       aria-roledescription="carousel"
     >
       {/* Background Slides with Apple-grade cinematic cross-fade */}
-      {images.map((image: string, index: number) => (
+      {images.length > 0 && images.map((image: string, index: number) => (
         <div
           key={`${image}-${index}`}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -254,7 +242,7 @@ export function Hero({ pageHero, pageTitle, heroPhotoKey = HOME_HERO_KEY }: Hero
               >
                 <GalleryImage
                   className="h-full w-full rounded-2xl object-cover"
-                  src={campusImages.hero[1]}
+                  src={classroomImage}
                   alt="Students learning together in modern classroom"
                 />
                 <span className="absolute bottom-2 left-0 right-0 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-school-navy">

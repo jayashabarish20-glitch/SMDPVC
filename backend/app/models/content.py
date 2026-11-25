@@ -255,8 +255,8 @@ class Topper(UUIDPrimaryKey, TimestampMixin, Base):
     score: Mapped[str] = mapped_column(String(40), nullable=False, default="")
     stream: Mapped[str] = mapped_column(String(120), nullable=False, default="")
     subject: Mapped[str | None] = mapped_column(String(120))
-    class_name: Mapped[str | None] = mapped_column(String(50), default="", server_default="")
-    section: Mapped[str | None] = mapped_column(String(10), default="", server_default="")
+    class_name: Mapped[str | None] = mapped_column(String(50), nullable=True, default=None)
+    section: Mapped[str | None] = mapped_column(String(10), nullable=True, default=None)
     rank: Mapped[int | None] = mapped_column(Integer)
     achievement: Mapped[str | None] = mapped_column(Text)
     centums_scored: Mapped[int] = mapped_column(

@@ -52,7 +52,9 @@ async def create_alumni(
     await session.commit()
     session.expunge_all()
     alumni = await get_alumni(session, alumni_id)
-    return alumni or alumni
+    if not alumni:
+        raise ValueError(f"Failed to retrieve created alumni with id {alumni_id}")
+    return alumni
 
 
 async def update_alumni(
@@ -81,9 +83,10 @@ async def delete_alumni(session: AsyncSession, alumni_id: UUID) -> bool:
     alumni = await get_alumni(session, alumni_id)
     if not alumni:
         return False
-    
+
     await session.delete(alumni)
     await session.flush()
+    await session.commit()
     return True
 
 
@@ -98,6 +101,7 @@ async def reorder_alumni(
             alumni.display_order = order
 
     await session.flush()
+    await session.commit()
 
     # Return reordered list with media loaded
     return await list_alumni(session)

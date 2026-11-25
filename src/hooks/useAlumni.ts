@@ -10,7 +10,7 @@ export interface Alumni {
   media_id: string | null;
   media: {
     id: string;
-    image_url: string;
+    imageUrl: string;
     alt_text: string;
   } | null;
 }

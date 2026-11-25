@@ -49,7 +49,13 @@ async def list_public_leadership_profiles(
             LeadershipProfile.profile_key,
         )
     )
-    return list(result.unique().all())
+    profiles = list(result.unique().all())
+    for profile in profiles:
+        if profile.media is not None and profile.media.deletion_pending:
+            profile.media = None
+            profile.media_id = None
+    session.expunge_all()
+    return profiles
 
 
 @router.get("/content-items", response_model=list[ContentItemRead])

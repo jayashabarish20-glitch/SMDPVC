@@ -13,14 +13,6 @@ export async function uploadImage(
   file: File,
   altText: string = "",
 ): Promise<UploadedMedia> {
-  // For now, use the temporary topper endpoint which doesn't require Cloudinary
-  return uploadToppingImage(file, altText);
-}
-
-export async function uploadToppingImage(
-  file: File,
-  altText: string = "",
-): Promise<UploadedMedia> {
   const token = getToken();
   if (!token) {
     throw new Error("Please log in again to upload images.");
@@ -31,8 +23,7 @@ export async function uploadToppingImage(
   formData.append("alt_text", altText);
 
   try {
-    // Use temporary topper upload endpoint that uses local storage
-    const response = await fetch(`${API_BASE}/media/upload-topper`, {
+    const response = await fetch(`${API_BASE}/media/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,4 +57,11 @@ export async function uploadToppingImage(
     }
     throw new Error("An unexpected error occurred during upload");
   }
+}
+
+export async function uploadToppingImage(
+  file: File,
+  altText: string = "",
+): Promise<UploadedMedia> {
+  return uploadImage(file, altText);
 }

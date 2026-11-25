@@ -70,7 +70,6 @@ export const schoolPages: Record<string, SchoolPageConfig> = {
       { id: "primary-learning", title: "Learning Activities", description: editablePlaceholder },
       { id: "primary-calendar", title: "Academic Calendar", description: editablePlaceholder },
       { id: "primary-extracurricular", title: "Extracurricular Activities", description: editablePlaceholder },
-      { id: "primary-achievers", title: "Achievers", description: editablePlaceholder },
     ],
   },
   "higher-secondary": {

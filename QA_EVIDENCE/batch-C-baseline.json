@@ -1,0 +1,172 @@
+{
+ "alembic_version": 1,
+ "achievements": 0,
+ "admin_users": 6,
+ "announcements": 0,
+ "gallery_collections": 0,
+ "media": 136,
+ "permissions": 0,
+ "roles": 0,
+ "website_settings": 0,
+ "admin_user_roles": 0,
+ "gallery_images": 0,
+ "leadership_profiles": 6,
+ "photo_configurations": 41,
+ "role_permissions": 0,
+ "school_sections": 0,
+ "cloudinary_cleanup": 0,
+ "content_items": 0,
+ "about_sections": 3,
+ "toppers": 6,
+ "alumni": 0,
+ "content_records": 13,
+ "content_record_media": 0,
+ "sports": 0,
+ "sports_achievement_photos": 0,
+ "academic_information": 0,
+ "clubs": 0,
+ "_cols": {
+  "toppers": [
+   "student_name",
+   "grade_level",
+   "academic_year",
+   "score",
+   "stream",
+   "subject",
+   "rank",
+   "achievement",
+   "display_order",
+   "is_published",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at",
+   "centums_scored",
+   "centum_subjects",
+   "class_name",
+   "section"
+  ],
+  "alumni": [
+   "name",
+   "batch_year",
+   "description",
+   "display_order",
+   "is_published",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at"
+  ],
+  "sports": [
+   "name",
+   "description",
+   "display_order",
+   "is_active",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at"
+  ],
+  "academic_information": [
+   "title",
+   "description",
+   "display_order",
+   "is_active",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at"
+  ],
+  "clubs": [
+   "name",
+   "description",
+   "display_order",
+   "is_active",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at"
+  ],
+  "leadership_profiles": [
+   "profile_key",
+   "name",
+   "designation",
+   "category",
+   "short_bio",
+   "message",
+   "display_order",
+   "is_active",
+   "media_id",
+   "id",
+   "created_at",
+   "updated_at"
+  ],
+  "media": [
+   "cloudinary_public_id",
+   "image_url",
+   "original_filename",
+   "file_format",
+   "file_size",
+   "width",
+   "height",
+   "alt_text",
+   "id",
+   "created_at",
+   "updated_at",
+   "deletion_pending",
+   "resource_type"
+  ]
+ },
+ "_leadership_order": [
+  [
+   "leader-6b9f349d7cf6",
+   1
+  ],
+  [
+   "leader-85b6e9c9662c",
+   2
+  ],
+  [
+   "leader-63b4e617b2dd",
+   3
+  ],
+  [
+   "leader-e18418237762",
+   4
+  ],
+  [
+   "leader-3b07833e2a69",
+   5
+  ],
+  [
+   "leader-74d965801e9f",
+   6
+  ]
+ ],
+ "_toppers_order": [
+  [
+   "33dd0ef5adc940d28440f190f4e1eeab",
+   0
+  ],
+  [
+   "e4fb24c545934d6b9f50f106e26a829f",
+   1
+  ],
+  [
+   "49d3d10776c947a798c4128b5bf3361c",
+   1
+  ],
+  [
+   "fcd672d9fcc643229513d6228fbb859f",
+   2
+  ],
+  [
+   "58724a55d21c4331856358bddc152cfa",
+   2
+  ],
+  [
+   "50da71821ea1441c9a7a13f0b7fb9be4",
+   6
+  ]
+ ]
+}

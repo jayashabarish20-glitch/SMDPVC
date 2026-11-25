@@ -1,9 +1,11 @@
 import { usePublicApi } from '../hooks/usePublicApi';
+import { MediaImage } from './MediaImage';
+import { mediaUrl, type MediaRef } from '../utils/mediaUrl';
 
 interface Achievement {
   id: string;
   description: string;
-  media?: { image_url: string } | null;
+  media?: MediaRef | null;
 }
 
 export function SportsAchievementsGallery() {
@@ -27,13 +29,11 @@ export function SportsAchievementsGallery() {
               className="rounded-2xl overflow-hidden border border-school-navy/10 bg-white shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="aspect-square bg-gradient-to-br from-school-navy/10 to-school-navy/5 overflow-hidden">
-                {achievement.media?.image_url ? (
-                  <img
-                    src={achievement.media.image_url}
-                    alt={achievement.description}
-                    className="w-full h-full object-cover"
-                  />
-                ) : null}
+                <MediaImage
+                  src={mediaUrl(achievement.media)}
+                  alt={achievement.description}
+                  className="w-full h-full object-cover"
+                />
               </div>
               {achievement.description && (
                 <div className="p-4">

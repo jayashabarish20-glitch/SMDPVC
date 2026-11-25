@@ -1,0 +1,35 @@
+Total messages: 34 (Errors: 31, Warnings: 0)
+Returning 31 messages for level "error"
+
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:5173/api/admin/content-records/higher-secondary.course-groups:1
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:5173/api/admin/content-records/higher-secondary.course-groups:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/upload:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/dcbb92c4-1d92-482e-8b3c-a0aa19a0b1c6:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/media/3a591a6c-7342-4455-94c5-7b8f0bbb8fdf:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/principal.higherSecondary:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/principal.higherSecondary:1
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/api/admin/about-sections/qa-20261125-about:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/about-sections:1
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/api/admin/about-sections/qa-20261125-missing:1
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/api/admin/about-sections/qa-20261125-missing:1
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/api/admin/about-sections/qa-20261125-about:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/principal.higherSecondary:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/principal.higherSecondary:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/principal.higherSecondary:1
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:5173/api/admin/content-records/qa-20261125-record:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/QA-Upper:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/qa-20261125-record:1
+[ERROR] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) @ http://localhost:5173/api/admin/content-records/qa-20261125-record:1
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/api/admin/content-records/qa-20261125-missing:1
+dialog.dismiss: Cannot dismiss dialog which is already handled!
+    at _Page.handler (evalmachine.<anonymous>:4:67)

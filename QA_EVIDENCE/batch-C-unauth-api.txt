@@ -1,0 +1,37 @@
+GET   /api/admin/toppers                  401
+POST  /api/admin/toppers                  401
+PATCH /api/admin/toppers/<uuid>           401
+DELETE /api/admin/toppers/<uuid>          401
+PUBLIC /api/public/toppers                200 0.225262s items= 8 keys= ['academic_year', 'achievement', 'centum_subjects', 'centums_scored', 'class_name', 'created_at', 'display_order', 'grade_level', 'id', 'is_published', 'media', 'media_id', 'rank', 'score', 'section', 'stream', 'student_name', 'subject', 'updated_at']
+GET   /api/admin/alumni                   401
+POST  /api/admin/alumni                   401
+PATCH /api/admin/alumni/<uuid>            401
+DELETE /api/admin/alumni/<uuid>           401
+PUBLIC /api/public/alumni                 200 0.222488s items= 0 keys= 
+GET   /api/admin/sports                   401
+POST  /api/admin/sports                   401
+PATCH /api/admin/sports/<uuid>            401
+DELETE /api/admin/sports/<uuid>           401
+PUBLIC /api/public/sports                 200 0.217164s items= 0 keys= 
+GET   /api/admin/sports-achievements      401
+POST  /api/admin/sports-achievements      401
+PATCH /api/admin/sports-achievements/<uuid> 401
+DELETE /api/admin/sports-achievements/<uuid> 401
+PUBLIC /api/public/sports-achievements    200 0.219594s items= 0 keys= 
+GET   /api/admin/academic-information     401
+POST  /api/admin/academic-information     401
+PATCH /api/admin/academic-information/<uuid> 401
+DELETE /api/admin/academic-information/<uuid> 401
+PUBLIC /api/public/academic-information   200 0.229155s items= 0 keys= 
+GET   /api/admin/clubs                    401
+POST  /api/admin/clubs                    401
+PATCH /api/admin/clubs/<uuid>             401
+DELETE /api/admin/clubs/<uuid>            401
+PUBLIC /api/public/clubs                  200 0.212120s items= 0 keys= 
+GET   /api/admin/leadership-profiles      401
+POST  /api/admin/leadership-profiles      401
+PATCH /api/admin/leadership-profiles/<uuid> 405
+DELETE /api/admin/leadership-profiles/<uuid> 401
+PUBLIC /api/public/leadership-profiles    200 0.232346s items= 6 keys= ['category', 'created_at', 'designation', 'display_order', 'id', 'is_active', 'media', 'media_id', 'message', 'name', 'profile_key', 'short_bio', 'updated_at']
+POST /api/media/upload (no auth) 401
+POST /api/media/upload-topper (no auth) {"detail":"Missing authorization header"} 401

@@ -124,6 +124,7 @@ async def create_topper(
         )
         session.add(topper)
         await session.commit()
+        await session.refresh(topper)
         await session.refresh(topper, ["media"])
         return topper
     except SQLAlchemyError as exc:
@@ -190,6 +191,7 @@ async def update_topper(
 
         session.add(topper)
         await session.commit()
+        await session.refresh(topper)
         await session.refresh(topper, ["media"])
         return topper
     except TopperNotFoundError:

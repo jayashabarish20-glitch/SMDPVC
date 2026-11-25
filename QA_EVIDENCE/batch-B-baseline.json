@@ -1,0 +1,119 @@
+{
+ "photo_configurations": [
+  {
+   "config_key": "academic-calendar.higher-secondary",
+   "media_id": "021db66d11b040f1892aa1df255db996",
+   "display_order": 0,
+   "id": "9febd9369bc142808f4438d31666dd01",
+   "updated_at": "2026-11-24 18:41:59"
+  },
+  {
+   "config_key": "academic-calendar.nursery",
+   "media_id": "de8716f3443d4c51abd87e41a9976a8a",
+   "display_order": 0,
+   "id": "f11dca829f7549978a94027bfbb359bf",
+   "updated_at": "2026-11-24 13:12:36"
+  },
+  {
+   "config_key": "academic-calendar.primary",
+   "media_id": "1d9e7fb25b9b48e993f842b503ec09df",
+   "display_order": 0,
+   "id": "6d99087bea8f41838c7abed0d19c8c68",
+   "updated_at": "2026-11-24 13:19:38"
+  },
+  {
+   "config_key": "campusImages.principal",
+   "media_id": "a8db8f7077e747e39ca3608e76265293",
+   "display_order": 0,
+   "id": "1c0c95e41d094d159176363a3c4b6ffa",
+   "updated_at": "2026-11-24 13:03:11"
+  },
+  {
+   "config_key": "campusImages.sports",
+   "media_id": "93a988a3d56c4f8892d2c2284833df19",
+   "display_order": 0,
+   "id": "e067c0250b46431fabd124c7b3c7c55d",
+   "updated_at": "2026-11-24 13:03:01"
+  },
+  {
+   "config_key": "principal.higherSecondary",
+   "media_id": "fbbfacaa34c1415182fd1d4e133934a9",
+   "display_order": 0,
+   "id": "06a10dd0a7694ee08f4e39f5c28a8071",
+   "updated_at": "2026-11-24 13:31:07"
+  },
+  {
+   "config_key": "principal.nursery",
+   "media_id": "d29338f7b2b24442afa2b3755618d0f6",
+   "display_order": 0,
+   "id": "1313496c2aa84c61a9bb46026a0f5747",
+   "updated_at": "2026-11-24 13:11:59"
+  },
+  {
+   "config_key": "principal.primary",
+   "media_id": "c2ae3ee0c40b41329ebf01603a68fd26",
+   "display_order": 0,
+   "id": "a7c8f51fbfd34e01a4e62d672bc2eb6c",
+   "updated_at": "2026-11-24 13:19:20"
+  },
+  {
+   "config_key": "schoolSectionPhotos.higherSecondary",
+   "media_id": "de103f93156546ee9d4e68aab99ac6e9",
+   "display_order": 0,
+   "id": "4a85932aa7d14f528dbed4f6917beed7",
+   "updated_at": "2026-11-24 13:02:17"
+  },
+  {
+   "config_key": "schoolSectionPhotos.nursery",
+   "media_id": "3a591a6c7342445594c57b8f0bbb8fdf",
+   "display_order": 0,
+   "id": "ecdd7e47e0d743308a588af3c8e63127",
+   "updated_at": "2026-11-24 13:01:37"
+  },
+  {
+   "config_key": "schoolSectionPhotos.primary",
+   "media_id": "782186e4561946e897566f1e1616dd6c",
+   "display_order": 0,
+   "id": "628a18c73dd14fddbec4003909b08e5c",
+   "updated_at": "2026-11-24 13:02:06"
+  }
+ ],
+ "content_records": [
+  {
+   "record_key": "higher-secondary.course-groups",
+   "payload": "{\"description\": \"{\\\"groups\\\":[{\\\"id\\\":\\\"group-custom-1795545627248\\\",\\\"name\\\":\\\"bio maths\\\",\\\"order\\\":1,\\\"subjects\\\":[\\\"eng\\\",\\\"tam\\\",\\\"chem\\\",\\\"bio\\\",\\\"phy\\\",\\\"math\\\"]}]}\"}",
+   "updated_at": "2026-11-24 18:41:00"
+  },
+  {
+   "record_key": "principal.nursery",
+   "payload": "{\"description\": \"{\\\"name\\\":\\\"raji\\\",\\\"message\\\":\\\"nothing\\\"}\"}",
+   "updated_at": "2026-11-24 13:11:59"
+  },
+  {
+   "record_key": "principal.primary",
+   "payload": "{\"description\": \"{\\\"name\\\":\\\"sailaja\\\",\\\"message\\\":\\\"nothing\\\"}\"}",
+   "updated_at": "2026-11-24 13:19:21"
+  }
+ ],
+ "about_sections": [
+  {
+   "section_key": "nursery",
+   "description": "PRIYA",
+   "media_id": "4882d69985ee4356bf82088519418534",
+   "updated_at": "2026-11-24 18:08:05"
+  },
+  {
+   "section_key": "primary",
+   "description": "priya",
+   "media_id": "2b2a6df50ec04149856eccb439860512",
+   "updated_at": "2026-11-24 13:20:34"
+  },
+  {
+   "section_key": "higher-secondary",
+   "description": "priya",
+   "media_id": "a9c9bef534a74470a853dafdca0e2d77",
+   "updated_at": "2026-11-24 13:30:36"
+  }
+ ],
+ "media_count": 136
+}

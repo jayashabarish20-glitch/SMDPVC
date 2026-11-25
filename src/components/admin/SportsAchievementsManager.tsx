@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getToken } from '../../utils/storage';
 import { handleFileInput, type UploadedImage } from '../../utils/imageUpload';
 import { Icon } from '../Icon';
+import { mediaUrl, type MediaRef } from '../../utils/mediaUrl';
 import { SectionHeader } from './SectionHeader';
 
 interface Achievement {
@@ -10,7 +11,7 @@ interface Achievement {
   display_order: number;
   is_active: boolean;
   media_id: string | null;
-  media?: { id: string; image_url: string } | null;
+  media?: { id: string } & MediaRef | null;
 }
 
 interface AchievementFormData {
@@ -66,7 +67,7 @@ export function SportsAchievementsManager() {
       formData.append('file', file);
       formData.append('alt_text', 'Sports achievement photo');
 
-      const response = await fetch('/api/media/upload-topper', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -268,8 +269,8 @@ export function SportsAchievementsManager() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {achievements.map((achievement) => (
               <div key={achievement.id} className="rounded-lg overflow-hidden border border-school-navy/10">
-                {achievement.media?.image_url && (
-                  <img src={achievement.media.image_url} alt="Achievement" className="w-full h-40 object-cover" />
+                {mediaUrl(achievement.media) && (
+                  <img src={mediaUrl(achievement.media) ?? undefined} alt="Achievement" className="w-full h-40 object-cover" />
                 )}
                 <div className="p-3">
                   <p className="text-sm text-school-muted">{achievement.description || 'No description'}</p>

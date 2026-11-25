@@ -17,13 +17,11 @@ export function SchoolSections() {
   const cards = [...schoolSectionCards]
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((card) => {
-      // Backend content wins; the static card image is used only when the
-      // backend has no photo for this card.
+      // Backend content only: show uploaded image if active in backend, else undefined (placeholder)
       const key = CARD_PHOTO_KEYS[card.href];
-      const backendUrl = key
-        ? publicPhotos.find((photo) => photo.config_key === key)?.media?.image_url
-        : undefined;
-      return { ...card, image: backendUrl || card.image };
+      const photo = key ? publicPhotos.find((p) => p.config_key === key) : undefined;
+      const backendUrl = photo?.media?.imageUrl || photo?.media?.image_url;
+      return { ...card, image: backendUrl || undefined };
     });
 
   return (

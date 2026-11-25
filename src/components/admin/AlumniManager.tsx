@@ -134,7 +134,7 @@ export function AlumniManager() {
       formData.append('file', file);
       formData.append('alt_text', 'Alumni photo');
 
-      const response = await fetch('/api/media/upload-topper', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

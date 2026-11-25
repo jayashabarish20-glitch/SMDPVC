@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getToken } from '../../utils/storage';
 import { handleFileInput, type UploadedImage } from '../../utils/imageUpload';
 import { Icon } from '../Icon';
+import { mediaUrl, type MediaRef } from '../../utils/mediaUrl';
 import { SectionHeader } from './SectionHeader';
 
 interface Sport {
@@ -11,7 +12,7 @@ interface Sport {
   display_order: number;
   is_active: boolean;
   media_id: string | null;
-  media?: { id: string; image_url: string } | null;
+  media?: { id: string } & MediaRef | null;
 }
 
 interface SportFormData {
@@ -69,7 +70,7 @@ export function SportsManager() {
       formData.append('file', file);
       formData.append('alt_text', 'Sport photo');
 
-      const response = await fetch('/api/media/upload-topper', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -295,8 +296,8 @@ export function SportsManager() {
           <h3 className="font-serif text-xl font-bold text-school-navy">Saved Sports ({sports.length})</h3>
           {sports.map((sport) => (
             <div key={sport.id} className="flex gap-4 pb-4 border-b border-school-navy/10 last:pb-0 last:border-b-0">
-              {sport.media?.image_url && (
-                <img src={sport.media.image_url} alt={sport.name} className="h-16 w-16 rounded object-cover" />
+              {mediaUrl(sport.media) && (
+                <img src={mediaUrl(sport.media) ?? undefined} alt={sport.name} className="h-16 w-16 rounded object-cover" />
               )}
               <div className="flex-1">
                 <h4 className="font-semibold text-school-navy">{sport.name}</h4>

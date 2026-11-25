@@ -1,11 +1,12 @@
 import { Icon } from './Icon';
 import { usePublicApi } from '../hooks/usePublicApi';
+import { cloudinaryDownloadUrl, mediaUrl, type MediaRef } from '../utils/mediaUrl';
 
 interface AcademicInfo {
   id: string;
   title: string;
   description: string;
-  media?: { image_url: string } | null;
+  media?: MediaRef | null;
 }
 
 export function AcademicInformationSection() {
@@ -23,7 +24,10 @@ export function AcademicInformationSection() {
         <h2 className="font-serif text-3xl font-bold text-school-navy mb-12 text-center">Academic Information</h2>
 
         <div className="space-y-4">
-          {infos.map((info) => (
+          {infos.map((info) => {
+            const pdfUrl = mediaUrl(info.media);
+            const downloadUrl = cloudinaryDownloadUrl(pdfUrl);
+            return (
             <div
               key={info.id}
               className="flex items-center justify-between p-5 rounded-lg border border-school-navy/10 bg-school-cream hover:bg-school-cream-alt transition-colors"
@@ -38,19 +42,30 @@ export function AcademicInformationSection() {
                 </div>
               </div>
 
-              {info.media?.image_url && (
-                <a
-                  href={info.media.image_url}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
-                  className="ml-4 px-4 py-2 rounded-lg bg-school-gold text-school-navy font-semibold text-sm hover:bg-school-gold-hover transition-colors whitespace-nowrap"
-                >
-                  Download
-                </a>
+              {pdfUrl && (
+                <div className="ml-4 flex flex-shrink-0 gap-2">
+                  <a
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 rounded-lg bg-school-gold text-school-navy font-semibold text-sm hover:bg-school-gold-hover transition-colors whitespace-nowrap"
+                  >
+                    View PDF
+                  </a>
+                  {downloadUrl && (
+                    <a
+                      href={downloadUrl}
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg border border-school-navy/15 text-school-navy font-semibold text-sm hover:bg-school-cream-alt transition-colors whitespace-nowrap"
+                    >
+                      Download
+                    </a>
+                  )}
+                </div>
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

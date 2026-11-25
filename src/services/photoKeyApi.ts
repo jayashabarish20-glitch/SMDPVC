@@ -7,6 +7,12 @@
  */
 
 import { getToken } from "../utils/storage";
+import {
+  clearSingleSlotPhoto,
+  replaceSingleSlotPhoto,
+  type SingleSlotApi,
+  type SlotResult,
+} from "./singlePhotoSlot";
 
 const API_BASE = "/api";
 
@@ -24,7 +30,8 @@ export interface KeyedPhoto {
 
 interface MediaBody {
   id: string;
-  image_url: string;
+  image_url?: string;
+  imageUrl?: string;
   alt_text: string;
   original_filename: string;
   updated_at: string;
@@ -61,7 +68,8 @@ async function request<T>(
       typeof body?.detail === "string"
         ? body.detail
         : `Request failed with status ${response.status}`;
-    throw new Error(detail);
+    // Attach the HTTP status so callers can tell "already gone" (404) from real failures.
+    throw Object.assign(new Error(detail), { status: response.status });
   }
   const text = await response.text();
   return (text ? JSON.parse(text) : undefined) as T;
@@ -72,7 +80,7 @@ function toKeyedPhoto(item: PhotoConfigBody): KeyedPhoto {
     configId: item.id,
     mediaId: item.media.id,
     displayOrder: item.display_order,
-    imageUrl: item.media.image_url,
+    imageUrl: item.media.imageUrl || item.media.image_url || "",
     alt: item.media.alt_text || "",
     filename: item.media.original_filename,
     updatedAt: item.media.updated_at,
@@ -190,6 +198,53 @@ export async function replaceKeyedPhoto(mediaId: string, file: File): Promise<vo
 export async function removeKeyedPhoto(configId: string, mediaId: string): Promise<void> {
   await request(`/admin/photos/${configId}`, { method: "DELETE" }, true);
   await request(`/media/${mediaId}`, { method: "DELETE" }, true);
+}
+
+/** Real-endpoint adapter for single-photo slots (see singlePhotoSlot.ts). */
+const singleSlotApi: SingleSlotApi = {
+  async listConfigs(configKey) {
+    // Admin endpoint only: mutations must be based on the authoritative current rows.
+    return listAdminKey(configKey);
+  },
+  async uploadMedia(file, altText) {
+    const form = new FormData();
+    form.append("file", file);
+    if (altText) form.append("alt_text", altText);
+    return request<MediaBody>("/media/upload", { method: "POST", body: form }, true);
+  },
+  async assign(mediaId, configKey, displayOrder) {
+    return request<PhotoConfigBody>(
+      "/admin/photos/assign",
+      {
+        method: "POST",
+        body: JSON.stringify({ media_id: mediaId, config_key: configKey, display_order: displayOrder }),
+      },
+      true,
+    );
+  },
+  async unlink(configId) {
+    await request(`/admin/photos/${configId}`, { method: "DELETE" }, true);
+  },
+  async reorder(configId, displayOrder) {
+    await request(
+      `/admin/photos/${configId}/reorder`,
+      { method: "PUT", body: JSON.stringify({ display_order: displayOrder }) },
+      true,
+    );
+  },
+  async deleteMedia(mediaId) {
+    await request(`/media/${mediaId}`, { method: "DELETE" }, true);
+  },
+};
+
+/** Replace the single photo of a key; the old photo stays linked until the new one is. */
+export function replaceSinglePhoto(file: File, configKey: string, altText = ""): Promise<SlotResult> {
+  return replaceSingleSlotPhoto(singleSlotApi, file, configKey, altText);
+}
+
+/** Remove every photo linked to a single-photo key (based on fresh server state). */
+export function clearSinglePhoto(configKey: string): Promise<SlotResult> {
+  return clearSingleSlotPhoto(singleSlotApi, configKey);
 }
 
 /** Save a new order (PhotoConfiguration ids, in display order). */

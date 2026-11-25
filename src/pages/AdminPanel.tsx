@@ -61,7 +61,6 @@ type AdminSection =
   | 'primary-about'
   | 'primary-principal'
   | 'primary-academic-calendar'
-  | 'primary-achievers'
   | 'nursery-academic-calendar'
   | 'hs-hero'
   | 'hs-about'
@@ -114,7 +113,6 @@ export function AdminPanel() {
         { id: '6d', label: 'About', section: 'primary-about' },
         { id: '6e', label: 'Principal', section: 'primary-principal' },
         { id: '6f', label: 'Academic Calendar', section: 'primary-academic-calendar' },
-        { id: '6g', label: 'Achievers', section: 'primary-achievers' },
       ],
     },
     {
@@ -208,7 +206,6 @@ export function AdminPanel() {
           description="Manage the background images for the Higher Secondary page hero carousel."
         />
       )}
-      {activeSection === 'primary-achievers' && <AchieversManager />}
       {activeSection === 'hs-achievers' && <AchieversManager />}
       {activeSection === 'hs-alumni' && <AlumniManager />}
       {activeSection === 'hs-sports' && <SportsManager />}
