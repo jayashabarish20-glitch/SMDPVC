@@ -18,6 +18,7 @@ from app.models.content import (
     SchoolSection,
     Topper,
 )
+from app.models.content_record import ContentRecordMedia
 from app.models.media import CloudinaryCleanup, Media, PhotoConfiguration
 from app.services.cloudinary_service import (
     CloudinaryStorage,
@@ -36,6 +37,13 @@ EXTENSION_FORMATS = {
     extension: image_format
     for image_format, extensions in SUPPORTED_FORMATS.items()
     for extension in extensions
+}
+# Non-image uploads: extension -> (Cloudinary resource type, stored format)
+DOCUMENT_VIDEO_TYPES = {
+    "pdf": ("image", "pdf"),
+    "mp4": ("video", "mp4"),
+    "mov": ("video", "mov"),
+    "webm": ("video", "webm"),
 }
 
 
@@ -73,18 +81,21 @@ async def upload_media(
     alt_text: str = "",
     storage: ImageStorage | None = None,
 ) -> Media:
-    data, image_format, width, height, filename = await _read_valid_image(upload)
+    data, image_format, width, height, filename, resource_type = (
+        await _read_valid_upload(upload)
+    )
     storage = storage or CloudinaryStorage()
-    asset = await storage.upload(data, filename)
+    asset = await storage.upload(data, filename, **_storage_kwargs(resource_type))
     media = Media(
         cloudinary_public_id=asset.public_id,
         image_url=asset.secure_url,
         original_filename=filename,
-        file_format=asset.format or image_format.lower(),
+        file_format=asset.format or image_format,
         file_size=len(data),
         width=asset.width or width,
         height=asset.height or height,
         alt_text=alt_text,
+        resource_type=resource_type,
     )
 
     try:
@@ -98,6 +109,7 @@ async def upload_media(
             session,
             storage,
             asset.public_id,
+            resource_type,
         )
         message = "Could not save uploaded image metadata"
         message = _append_cleanup_status(message, cleanup_status)
@@ -113,7 +125,9 @@ async def replace_media(
     alt_text: str | None = None,
     storage: ImageStorage | None = None,
 ) -> Media:
-    data, image_format, width, height, filename = await _read_valid_image(upload)
+    data, image_format, width, height, filename, resource_type = (
+        await _read_valid_upload(upload)
+    )
     media = await _get_media_for_update(session, media_id)
     if media.deletion_pending:
         await session.rollback()
@@ -121,22 +135,29 @@ async def replace_media(
 
     storage = storage or CloudinaryStorage()
     try:
-        new_asset = await storage.upload(data, filename)
+        new_asset = await storage.upload(
+            data, filename, **_storage_kwargs(resource_type)
+        )
     except CloudinaryStorageError:
         await session.rollback()
         raise
 
     old_public_id = media.cloudinary_public_id
+    old_resource_type = media.resource_type
     media.cloudinary_public_id = new_asset.public_id
+    media.resource_type = resource_type
     media.image_url = new_asset.secure_url
     media.original_filename = filename
-    media.file_format = new_asset.format or image_format.lower()
+    media.file_format = new_asset.format or image_format
     media.file_size = len(data)
     media.width = new_asset.width or width
     media.height = new_asset.height or height
     if alt_text is not None:
         media.alt_text = alt_text
-    cleanup_record = CloudinaryCleanup(public_id=old_public_id)
+    cleanup_record = CloudinaryCleanup(
+        public_id=old_public_id,
+        resource_type=old_resource_type,
+    )
 
     try:
         session.add(cleanup_record)
@@ -149,13 +170,14 @@ async def replace_media(
             session,
             storage,
             new_asset.public_id,
+            resource_type,
         )
         message = "Could not save replacement image metadata"
         message = _append_cleanup_status(message, cleanup_status)
         raise MediaPersistenceError(message) from exc
 
     try:
-        await storage.delete(old_public_id)
+        await storage.delete(old_public_id, **_storage_kwargs(old_resource_type))
     except CloudinaryStorageError as exc:
         logger.exception("Could not clean up replaced Cloudinary asset")
         raise MediaCleanupError(
@@ -195,7 +217,9 @@ async def delete_media(
 
     storage = storage or CloudinaryStorage()
     try:
-        await storage.delete(media.cloudinary_public_id)
+        await storage.delete(
+            media.cloudinary_public_id, **_storage_kwargs(media.resource_type)
+        )
     except CloudinaryStorageError as exc:
         raise MediaCleanupError(
             "Image is pending deletion; Cloudinary cleanup can be retried"
@@ -229,7 +253,9 @@ async def retry_pending_cloudinary_cleanup(
     completed = 0
     for record in records:
         try:
-            await storage.delete(record.public_id)
+            await storage.delete(
+                record.public_id, **_storage_kwargs(record.resource_type)
+            )
         except CloudinaryStorageError as exc:
             await session.rollback()
             raise MediaCleanupError(
@@ -306,6 +332,56 @@ async def _read_valid_image(
     return data, image_format, width, height, filename
 
 
+def _storage_kwargs(resource_type: str) -> dict[str, str]:
+    """Only non-image types pass resource_type, keeping image calls unchanged."""
+    return {} if resource_type == "image" else {"resource_type": resource_type}
+
+
+async def _read_valid_upload(
+    upload: UploadFile,
+) -> tuple[bytes, str, int | None, int | None, str, str]:
+    """Validate an upload as an image, PDF, or video.
+
+    Returns (data, format, width, height, filename, cloudinary_resource_type).
+    Images keep the existing PIL-based validation path.
+    """
+    filename = _safe_filename(upload.filename or "")
+    extension = PurePosixPath(filename).suffix.lower().lstrip(".")
+    if extension not in DOCUMENT_VIDEO_TYPES:
+        data, image_format, width, height, filename = await _read_valid_image(upload)
+        return data, image_format.lower(), width, height, filename, "image"
+
+    resource_type, file_format = DOCUMENT_VIDEO_TYPES[extension]
+    data = await _read_limited(upload)
+    if file_format == "pdf":
+        valid = data.startswith(b"%PDF-")
+    elif file_format == "webm":
+        valid = data.startswith(b"\x1aE\xdf\xa3")
+    else:  # mp4 and mov share the ISO base media "ftyp" box
+        valid = data[4:8] == b"ftyp"
+    if not valid:
+        raise InvalidImageError(
+            "The uploaded file content does not match its extension"
+        )
+    return data, file_format, None, None, filename, resource_type
+
+
+async def _read_limited(upload: UploadFile) -> bytes:
+    maximum_size = get_settings().max_upload_size_bytes
+    chunks: list[bytes] = []
+    total_size = 0
+    while chunk := await upload.read(64 * 1024):
+        total_size += len(chunk)
+        if total_size > maximum_size:
+            raise UploadTooLargeError(
+                f"File exceeds the maximum size of {maximum_size} bytes"
+            )
+        chunks.append(chunk)
+    if total_size == 0:
+        raise InvalidImageError("The uploaded file is empty")
+    return b"".join(chunks)
+
+
 def _safe_filename(filename: str) -> str:
     normalized = filename.replace("\\", "/")
     basename = PurePosixPath(normalized).name.strip()
@@ -338,6 +414,7 @@ async def _count_media_references(session: AsyncSession, media_id: UUID) -> int:
         (Topper, Topper.media_id),
         (ContentItem, ContentItem.media_id),
         (PhotoConfiguration, PhotoConfiguration.media_id),
+        (ContentRecordMedia, ContentRecordMedia.media_id),
     )
     try:
         total = 0
@@ -358,9 +435,10 @@ async def _cleanup_after_database_failure(
     session: AsyncSession,
     storage: ImageStorage,
     public_id: str,
+    resource_type: str = "image",
 ) -> str:
     try:
-        await storage.delete(public_id)
+        await storage.delete(public_id, **_storage_kwargs(resource_type))
         return "deleted"
     except CloudinaryStorageError:
         logger.exception(
@@ -369,7 +447,9 @@ async def _cleanup_after_database_failure(
         )
 
     try:
-        session.add(CloudinaryCleanup(public_id=public_id))
+        session.add(
+            CloudinaryCleanup(public_id=public_id, resource_type=resource_type)
+        )
         await session.commit()
         return "queued"
     except SQLAlchemyError:

@@ -1,6 +1,17 @@
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
+import { useState } from 'react';
+import { usePhotoKey } from '../../hooks/usePhotoKey';
+import type { PhotoMetadata } from '../../data/photoService';
+import type { KeyedPhoto } from '../../services/photoKeyApi';
+import {
+  addKeyedPhoto,
+  dataUrlToFile,
+  nextOrder,
+  removeKeyedPhoto,
+  reorderKeyedPhotos,
+} from '../../services/photoKeyApi';
 import { SectionHeader } from './SectionHeader';
 import { PhotoGridManager } from './PhotoGridManager';
+import { LegacyImportNotice } from './LegacyImportNotice';
 
 interface SchoolPageHeroManagerProps {
   pageKey: 'nursery' | 'primary' | 'higherSecondary';
@@ -9,16 +20,40 @@ interface SchoolPageHeroManagerProps {
   description: string;
 }
 
+function toMetadata(photo: KeyedPhoto): PhotoMetadata {
+  return {
+    id: photo.configId,
+    filename: photo.filename,
+    alt: photo.alt,
+    updatedAt: photo.updatedAt,
+    imageUrl: photo.imageUrl,
+    dataUrl: photo.imageUrl,
+  };
+}
+
 export function SchoolPageHeroManager({
   pageKey,
   pageTitle,
   pagePath,
   description,
 }: SchoolPageHeroManagerProps) {
-  const { config, updateSchoolPageHeroes, addPhoto, removePhoto } =
-    usePhotoConfig();
+  const configKey = `schoolPageHeroes.${pageKey}`;
+  const { photos: backendPhotos, reload, setError, error } = usePhotoKey(configKey);
+  const [busy, setBusy] = useState(false);
+  const photos = backendPhotos.map(toMetadata);
 
-  const photos = config.schoolPageHeroes[pageKey];
+  const run = async (action: () => Promise<void>) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await action();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Action failed. Please try again.');
+    } finally {
+      await reload();
+      setBusy(false);
+    }
+  };
 
   return (
     <div>
@@ -28,20 +63,32 @@ export function SchoolPageHeroManager({
         description={description}
       />
 
+      <LegacyImportNotice configKeys={[configKey]} onImported={() => void reload()} />
+
       <div className="rounded-2xl border border-school-navy/10 bg-white p-8">
+        {error && (
+          <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </p>
+        )}
         <PhotoGridManager
           title={`${pageTitle} Hero Images`}
           photos={photos}
           onAddPhoto={(photo) => {
-            addPhoto(`schoolPageHeroes.${pageKey}`, photo);
+            if (busy) return;
+            void run(async () => {
+              const file = await dataUrlToFile(photo.dataUrl as string, photo.filename || 'photo.jpg');
+              await addKeyedPhoto(file, configKey, nextOrder(backendPhotos));
+            });
           }}
           onRemovePhoto={(id) => {
-            removePhoto(`schoolPageHeroes.${pageKey}`, id);
+            const target = backendPhotos.find((p) => p.configId === id);
+            if (!target || busy) return;
+            void run(() => removeKeyedPhoto(target.configId, target.mediaId));
           }}
-          onReorderPhotos={(reorderedPhotos) => {
-            updateSchoolPageHeroes({
-              [pageKey]: reorderedPhotos,
-            });
+          onReorderPhotos={(reordered) => {
+            if (busy) return;
+            void run(() => reorderKeyedPhotos(configKey, reordered.map((p) => p.id)));
           }}
           emptyMessage={`No hero images added for ${pageTitle} yet.`}
           maxPhotos={3}

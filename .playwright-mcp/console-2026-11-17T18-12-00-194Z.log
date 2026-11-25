@@ -1,0 +1,19 @@
+[     506ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  287162ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  316512ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  320270ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  326063ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  330758ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  338176ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=34380764:22163
+[  391117ms] [ERROR] [vite] SyntaxError: The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper' @ http://localhost:5173/@vite/client:809
+[  391122ms] [ERROR] [vite] Failed to reload /src/pages/AdminPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:809
+[  399786ms] [ERROR] [vite] SyntaxError: The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper' @ http://localhost:5173/@vite/client:809
+[  399787ms] [ERROR] [vite] Failed to reload /src/pages/AdminPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:809
+[  409872ms] [ERROR] [vite] SyntaxError: The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper' @ http://localhost:5173/@vite/client:809
+[  409873ms] [ERROR] [vite] Failed to reload /src/pages/AdminPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:809
+[  417734ms] [ERROR] [vite] SyntaxError: The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper' @ http://localhost:5173/@vite/client:809
+[  417734ms] [ERROR] [vite] Failed to reload /src/pages/AdminPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:809
+[  441117ms] The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper'
+[  445941ms] The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper'
+[  493127ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5173/@vite/client:865
+[  494993ms] The requested module '/src/hooks/useToppers.ts' does not provide an export named 'Topper'

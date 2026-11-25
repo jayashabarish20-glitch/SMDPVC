@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { campusImages, centumScores, sportsAchievements, toppers10 } from "../data";
+import { campusImages, centumScores, sportsAchievements } from "../data";
 import { useInView } from "../hooks/useInView";
+import { useToppers } from "../hooks/useToppers";
+import { useAchievements } from "../hooks/useAchievements";
 import { Icon } from "./Icon";
+import { ImageZoomViewer } from "./ImageZoomViewer";
 
 type AchievementsTab = "academic" | "sports";
 type ClassTab = "12" | "10";
@@ -10,8 +13,18 @@ export function Excellence() {
   const { ref, isInView } = useInView({ threshold: 0.1 });
   const [tab, setTab] = useState<AchievementsTab>("academic");
   const [classTab, setClassTab] = useState<ClassTab>("12");
+  const [showSchoolToppers, setShowSchoolToppers] = useState(false);
+  const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
 
-  const toppers = classTab === "12" ? campusImages.toppers12 : toppers10;
+  const { toppers: toppers12, loading: loading12 } = useToppers("12");
+  const { toppers: toppers10, loading: loading10 } = useToppers("10");
+  const toppers = classTab === "12" ? toppers12 : toppers10;
+  const loading = classTab === "12" ? loading12 : loading10;
+
+  // Fetch sports achievements from API
+  const { achievements: apiSportsAchievements } = useAchievements("sports");
+  // Use API data if available, otherwise fall back to hardcoded data
+  const displaySportsAchievements = apiSportsAchievements.length > 0 ? apiSportsAchievements : sportsAchievements;
 
   return (
     <section id="excellence" className="relative scroll-mt-20 bg-school-cream py-24 lg:py-36 overflow-hidden">
@@ -33,6 +46,182 @@ export function Excellence() {
             Recognizing the diligence, discipline, and extraordinary accomplishments
             of our students in academics and competitive sports.
           </p>
+        </div>
+
+        {/* School Toppers Inline Accordion */}
+        <div className="mb-12">
+          <button
+            onClick={() => setShowSchoolToppers(!showSchoolToppers)}
+            className="w-full max-w-2xl mx-auto block rounded-2xl border border-school-navy/8 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:border-school-gold/30"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-left">
+                <h3 className="font-serif text-lg font-bold text-school-navy">
+                  School Toppers
+                </h3>
+                <p className="mt-1 text-sm text-school-muted">
+                  View our highest achievers across all classes
+                </p>
+              </div>
+              <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-school-gold/15 transition-transform duration-300 ${showSchoolToppers ? 'rotate-180' : ''}`}>
+                <Icon name="arrow" className="h-5 w-5 text-school-gold transform -rotate-90" />
+              </div>
+            </div>
+          </button>
+
+          {/* School Toppers Content */}
+          {showSchoolToppers && (
+            <div className="mt-6 space-y-8 animate-in fade-in duration-300">
+              {/* Class XII Toppers */}
+              <div>
+                <h4 className="mb-4 text-center font-serif text-xl font-bold text-school-navy">
+                  Class XII Toppers
+                </h4>
+                <div className="grid gap-6 md:grid-cols-3">
+                  {loading12 ? (
+                    <div className="col-span-full text-center py-8 text-school-muted">
+                      Loading Class XII toppers...
+                    </div>
+                  ) : toppers12.length === 0 ? (
+                    <div className="col-span-full text-center py-8 text-school-muted">
+                      No Class XII toppers available yet.
+                    </div>
+                  ) : (
+                    toppers12.map((student, index) => (
+                      <div
+                        key={student.id}
+                        className={`relative rounded-3xl bg-white p-8 text-center shadow-[0_10px_35px_rgba(11,23,54,0.04)] border border-school-navy/8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                          index === 0 ? "ring-2 ring-school-gold" : ""
+                        }`}
+                      >
+                        {index === 0 && (
+                          <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-4 py-1 text-[10px] font-extrabold uppercase tracking-widest text-school-navy shadow-md">
+                            ★ School Rank 1
+                          </span>
+                        )}
+                        <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full ring-4 ring-school-cream shadow-inner">
+                          {student.media?.imageUrl ? (
+                            <img
+                              src={student.media.imageUrl}
+                              alt={student.media.alt || student.student_name}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="h-full w-full bg-school-cream-alt flex items-center justify-center">
+                              <Icon name="user" className="h-10 w-10 text-school-muted" />
+                            </div>
+                          )}
+                        </div>
+                        <h3 className="mt-5 font-serif text-xl font-bold text-school-navy">
+                          {student.student_name}
+                        </h3>
+                        <p className="mt-2 text-3xl font-extrabold tracking-tight text-school-gold-hover">
+                          {student.score}
+                        </p>
+                        {student.stream && (
+                          <span className="mt-2 inline-block rounded-full bg-school-navy/5 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-school-muted">
+                            {student.stream}
+                          </span>
+                        )}
+                        {student.centums_scored > 0 && (
+                          <div className="mt-3">
+                            <div className="text-xs font-semibold text-school-gold">
+                              {student.centums_scored} Centum{student.centums_scored !== 1 ? 's' : ''}
+                            </div>
+                            {student.centum_subjects && student.centum_subjects.length > 0 && (
+                              <ul className="mt-2 space-y-1 text-[11px] text-school-muted">
+                                {student.centum_subjects.map((subject, idx) => (
+                                  <li key={idx}>• {subject}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
+                        {student.academic_year && (
+                          <p className="mt-3 text-xs font-medium text-school-muted-light">
+                            {student.academic_year}
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Class X Toppers */}
+              <div>
+                <h4 className="mb-4 text-center font-serif text-xl font-bold text-school-navy">
+                  Class X Toppers
+                </h4>
+                <div className="grid gap-6 md:grid-cols-3">
+                  {loading10 ? (
+                    <div className="col-span-full text-center py-8 text-school-muted">
+                      Loading Class X toppers...
+                    </div>
+                  ) : toppers10.length === 0 ? (
+                    <div className="col-span-full text-center py-8 text-school-muted">
+                      No Class X toppers available yet.
+                    </div>
+                  ) : (
+                    toppers10.map((student, index) => (
+                      <div
+                        key={student.id}
+                        className={`relative rounded-3xl bg-white p-8 text-center shadow-[0_10px_35px_rgba(11,23,54,0.04)] border border-school-navy/8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                          index === 0 ? "ring-2 ring-school-gold" : ""
+                        }`}
+                      >
+                        {index === 0 && (
+                          <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-4 py-1 text-[10px] font-extrabold uppercase tracking-widest text-school-navy shadow-md">
+                            ★ School Rank 1
+                          </span>
+                        )}
+                        <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full ring-4 ring-school-cream shadow-inner">
+                          {student.media?.imageUrl ? (
+                            <img
+                              src={student.media.imageUrl}
+                              alt={student.media.alt || student.student_name}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="h-full w-full bg-school-cream-alt flex items-center justify-center">
+                              <Icon name="user" className="h-10 w-10 text-school-muted" />
+                            </div>
+                          )}
+                        </div>
+                        <h3 className="mt-5 font-serif text-xl font-bold text-school-navy">
+                          {student.student_name}
+                        </h3>
+                        <p className="mt-2 text-3xl font-extrabold tracking-tight text-school-gold-hover">
+                          {student.score}
+                        </p>
+                        {student.centums_scored > 0 && (
+                          <div className="mt-3">
+                            <div className="text-xs font-semibold text-school-gold">
+                              {student.centums_scored} Centum{student.centums_scored !== 1 ? 's' : ''}
+                            </div>
+                            {student.centum_subjects && student.centum_subjects.length > 0 && (
+                              <ul className="mt-2 space-y-1 text-[11px] text-school-muted">
+                                {student.centum_subjects.map((subject, idx) => (
+                                  <li key={idx}>• {subject}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
+                        {student.academic_year && (
+                          <p className="mt-3 text-xs font-medium text-school-muted-light">
+                            {student.academic_year}
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Primary Tab Switcher (Academic vs Sports) */}
@@ -87,37 +276,69 @@ export function Excellence() {
 
             {/* Toppers Cards */}
             <div className="grid gap-6 md:grid-cols-3">
-              {toppers.map((student, index) => (
-                <div
-                  key={student.name}
-                  className={`relative rounded-3xl bg-white p-8 text-center shadow-[0_10px_35px_rgba(11,23,54,0.04)] border border-school-navy/8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                    index === 0 ? "ring-2 ring-school-gold" : ""
-                  }`}
-                >
-                  {index === 0 && (
-                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-4 py-1 text-[10px] font-extrabold uppercase tracking-widest text-school-navy shadow-md">
-                      ★ School Rank 1
-                    </span>
-                  )}
-                  <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full ring-4 ring-school-cream shadow-inner">
-                    <img
-                      src={student.image}
-                      alt={student.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                  <h3 className="mt-5 font-serif text-xl font-bold text-school-navy">
-                    {student.name}
-                  </h3>
-                  <p className="mt-2 text-3xl font-extrabold tracking-tight text-school-gold-hover">
-                    {student.score}
-                  </p>
-                  <span className="mt-2 inline-block rounded-full bg-school-navy/5 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-school-muted">
-                    {student.stream}
-                  </span>
+              {loading ? (
+                <div className="col-span-full text-center py-12 text-school-muted">
+                  Loading toppers...
                 </div>
-              ))}
+              ) : toppers.length === 0 ? (
+                <div className="col-span-full text-center py-12 text-school-muted">
+                  No toppers available yet.
+                </div>
+              ) : (
+                toppers.map((student, index) => (
+                  <div
+                    key={student.id}
+                    className={`relative rounded-3xl bg-white p-8 text-center shadow-[0_10px_35px_rgba(11,23,54,0.04)] border border-school-navy/8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                      index === 0 ? "ring-2 ring-school-gold" : ""
+                    }`}
+                  >
+                    {index === 0 && (
+                      <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-school-gold-light to-school-gold px-4 py-1 text-[10px] font-extrabold uppercase tracking-widest text-school-navy shadow-md">
+                        ★ School Rank 1
+                      </span>
+                    )}
+                    <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full ring-4 ring-school-cream shadow-inner">
+                      {student.media?.imageUrl ? (
+                        <img
+                          src={student.media.imageUrl}
+                          alt={student.media.alt || student.student_name}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-school-cream-alt flex items-center justify-center">
+                          <Icon name="user" className="h-10 w-10 text-school-muted" />
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="mt-5 font-serif text-xl font-bold text-school-navy">
+                      {student.student_name}
+                    </h3>
+                    <p className="mt-2 text-3xl font-extrabold tracking-tight text-school-gold-hover">
+                      {student.score}
+                    </p>
+                    {classTab === "12" && student.stream && (
+                      <span className="mt-2 inline-block rounded-full bg-school-navy/5 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-school-muted">
+                        {student.stream}
+                      </span>
+                    )}
+                    {student.centums_scored > 0 && (
+                      <div className="mt-3">
+                        <div className="text-xs font-semibold text-school-gold">
+                          {student.centums_scored} Centum{student.centums_scored !== 1 ? 's' : ''}
+                        </div>
+                        {student.centum_subjects && student.centum_subjects.length > 0 && (
+                          <ul className="mt-2 space-y-1 text-[11px] text-school-muted">
+                            {student.centum_subjects.map((subject, idx) => (
+                              <li key={idx}>• {subject}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
 
             {/* Centum Scorers Banner */}
@@ -151,7 +372,7 @@ export function Excellence() {
           /* Sports & Athletics Content */
           <div className="grid items-stretch gap-8 lg:grid-cols-[1.3fr_0.7fr]">
             <div className="grid gap-4 sm:grid-cols-2">
-              {sportsAchievements.map((item) => (
+              {displaySportsAchievements.map((item: any) => (
                 <div
                   key={item.title}
                   className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-sm border border-school-navy/6 transition-all duration-200 hover:shadow-md"
@@ -176,13 +397,24 @@ export function Excellence() {
             </div>
 
             {/* Sports Showcase Card */}
-            <div className="relative min-h-[320px] overflow-hidden rounded-3xl bg-school-navy shadow-lg">
+            <div className="relative min-h-[320px] overflow-hidden rounded-3xl bg-school-navy shadow-lg group cursor-pointer"
+              onClick={() => setZoomImageUrl(campusImages.sports)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setZoomImageUrl(campusImages.sports);
+                }
+              }}
+              aria-label="Click to zoom sports image"
+            >
               <img
                 src={campusImages.sports}
                 alt="Athletics champions"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
               <div className="absolute inset-0 bg-gradient-to-t from-school-navy via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white">
                 <span className="rounded-full bg-school-gold px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-school-navy">
@@ -198,6 +430,14 @@ export function Excellence() {
             </div>
           </div>
         )}
+
+        {/* Image Zoom Viewer */}
+        <ImageZoomViewer
+          imageUrl={zoomImageUrl || ""}
+          alt="Zoomed achievement image"
+          isOpen={zoomImageUrl !== null}
+          onClose={() => setZoomImageUrl(null)}
+        />
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { AcademicCalendarManager } from './AcademicCalendarManager';
+import { CALENDAR_KEYS } from '../../hooks/useKeyedGallery';
 
 export function PrimaryAcademicCalendarManager() {
   return (
@@ -6,7 +7,7 @@ export function PrimaryAcademicCalendarManager() {
       badge="PRIMARY PAGE"
       title="Primary – Academic Calendar"
       description="Upload and manage the academic calendar PDF for the Primary page."
-      calendarKey="primary"
+      configKey={CALENDAR_KEYS.primary}
     />
   );
 }

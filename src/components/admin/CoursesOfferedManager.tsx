@@ -1,17 +1,31 @@
-import { useState, useCallback, useId } from 'react';
+import { useState, useCallback, useId, useEffect } from 'react';
 import { SectionHeader } from './SectionHeader';
 import { Icon } from '../Icon';
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
 import type { CourseGroup } from '../../data/photoService';
+import {
+  fetchAdminKeyedDescription,
+  fetchPublicKeyedDescription,
+  saveKeyedDescription,
+} from '../../services/photoKeyApi';
+
+export const COURSE_GROUPS_RECORD_KEY = 'higher-secondary.course-groups';
+
+export const DEFAULT_COURSE_GROUPS: CourseGroup[] = [
+  { id: 'group-1', name: 'GROUP 1', order: 1, subjects: ['Tamil', 'English', 'Physics', 'Chemistry', 'Mathematics', 'Biology'] },
+  { id: 'group-2', name: 'GROUP 2', order: 2, subjects: ['Tamil', 'English', 'Physics', 'Chemistry', 'Mathematics', 'C.S.'] },
+  { id: 'group-3-em', name: 'GROUP 3 (EM)', order: 3, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'C.Application'] },
+  { id: 'group-4-tm', name: 'GROUP 4 (TM)', order: 4, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'C.Application'] },
+  { id: 'group-5', name: 'GROUP 5', order: 5, subjects: ['Tamil', 'English', 'Commerce', 'Accountancy', 'Economics', 'B.Maths'] },
+];
 
 /**
  * Admin panel component for managing Class XI Course Groups.
- * Connects to usePhotoConfig → photoService → localStorage.
- * Changes persist and appear on the public Higher Secondary page.
+ * Fully backed by FastAPI & SQLite content_records.
  */
 export function CoursesOfferedManager() {
-  const { config, updateCourseGroups } = usePhotoConfig();
-  const groups: CourseGroup[] = config.courseGroups ?? [];
+  const [groups, setGroups] = useState<CourseGroup[]>([]);
+  const [, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Per-group new-subject input state: map groupId → input value
   const [subjectInputs, setSubjectInputs] = useState<Record<string, string>>({});
@@ -31,9 +45,51 @@ export function CoursesOfferedManager() {
     setTimeout(() => setSuccessMessage(''), 3000);
   }, []);
 
+  const loadGroups = useCallback(async () => {
+    try {
+      setLoading(true);
+      const raw = await fetchAdminKeyedDescription(COURSE_GROUPS_RECORD_KEY).catch(() =>
+        fetchPublicKeyedDescription(COURSE_GROUPS_RECORD_KEY)
+      );
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          setGroups(parsed.groups || DEFAULT_COURSE_GROUPS);
+        } catch {
+          setGroups(DEFAULT_COURSE_GROUPS);
+        }
+      } else {
+        setGroups(DEFAULT_COURSE_GROUPS);
+      }
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load course groups');
+      setGroups(DEFAULT_COURSE_GROUPS);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadGroups();
+  }, [loadGroups]);
+
+  const saveGroupsToBackend = async (newGroups: CourseGroup[], successMsg?: string) => {
+    try {
+      setGroups(newGroups);
+      await saveKeyedDescription(
+        COURSE_GROUPS_RECORD_KEY,
+        JSON.stringify({ groups: newGroups })
+      );
+      if (successMsg) showSuccess(successMsg);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to persist course groups');
+    }
+  };
+
   /* ── Add Subject to a Group ── */
   const handleAddSubject = useCallback(
-    (groupId: string) => {
+    async (groupId: string) => {
       const raw = (subjectInputs[groupId] ?? '').trim();
       if (!raw) {
         setSubjectErrors((e) => ({ ...e, [groupId]: 'Subject name cannot be empty.' }));
@@ -53,42 +109,42 @@ export function CoursesOfferedManager() {
       const updated = groups.map((g) =>
         g.id === groupId ? { ...g, subjects: [...g.subjects, raw] } : g
       );
-      updateCourseGroups(updated);
       setSubjectInputs((inp) => ({ ...inp, [groupId]: '' }));
       setSubjectErrors((e) => ({ ...e, [groupId]: '' }));
-      showSuccess(`Subject "${raw}" added to ${group.name}.`);
+      await saveGroupsToBackend(updated, `Subject "${raw}" added to ${group.name}.`);
     },
-    [groups, subjectInputs, updateCourseGroups, showSuccess]
+    [groups, subjectInputs, saveGroupsToBackend]
   );
 
   /* ── Remove Subject from a Group ── */
   const handleRemoveSubject = useCallback(
-    (groupId: string, subject: string) => {
+    async (groupId: string, subject: string) => {
       const updated = groups.map((g) =>
         g.id === groupId
           ? { ...g, subjects: g.subjects.filter((s) => s !== subject) }
           : g
       );
-      updateCourseGroups(updated);
-      showSuccess(`Subject "${subject}" removed.`);
+      await saveGroupsToBackend(updated, `Subject "${subject}" removed.`);
     },
-    [groups, updateCourseGroups, showSuccess]
+    [groups, saveGroupsToBackend]
   );
 
   /* ── Delete an Entire Group ── */
   const handleDeleteGroup = useCallback(
-    (groupId: string) => {
+    async (groupId: string) => {
       const group = groups.find((g) => g.id === groupId);
       if (!group) return;
       if (!window.confirm(`Delete "${group.name}" and all its subjects? This cannot be undone.`)) return;
-      updateCourseGroups(groups.filter((g) => g.id !== groupId));
-      showSuccess(`Group "${group.name}" deleted.`);
+      await saveGroupsToBackend(
+        groups.filter((g) => g.id !== groupId),
+        `Group "${group.name}" deleted.`
+      );
     },
-    [groups, updateCourseGroups, showSuccess]
+    [groups, saveGroupsToBackend]
   );
 
   /* ── Add New Group ── */
-  const handleAddGroup = useCallback(() => {
+  const handleAddGroup = useCallback(async () => {
     const raw = newGroupName.trim();
     if (!raw) {
       setNewGroupError('Group name cannot be empty.');
@@ -105,20 +161,26 @@ export function CoursesOfferedManager() {
       order: groups.length + 1,
       subjects: [],
     };
-    updateCourseGroups([...groups, newGroup]);
     setNewGroupName('');
     setNewGroupError('');
     setShowNewGroupInput(false);
-    showSuccess(`Group "${raw}" created.`);
-  }, [groups, newGroupName, updateCourseGroups, showSuccess]);
+    await saveGroupsToBackend([...groups, newGroup], `Group "${raw}" created.`);
+  }, [groups, newGroupName, saveGroupsToBackend]);
 
   return (
     <div className="space-y-8">
       <SectionHeader
         badge="HIGHER SECONDARY"
         title="Courses Offered – Class XI"
-        description="Manage the groups and subjects shown in the Higher Secondary Courses Offered section. Changes appear immediately on the public page."
+        description="Manage the groups and subjects shown in the Higher Secondary Courses Offered section. Saved directly to SQLite database."
       />
+
+      {/* Error message */}
+      {error && (
+        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       {/* Success message */}
       {successMessage && (
@@ -131,17 +193,15 @@ export function CoursesOfferedManager() {
         </div>
       )}
 
-      {/* Groups */}
+      {/* Groups List */}
       <div className="space-y-6">
         {groups.map((group) => {
-          const inputId = `${uid}-input-${group.id}`;
-          const errorId = `${uid}-error-${group.id}`;
+          const errorId = `${uid}-err-${group.id}`;
           return (
             <div
               key={group.id}
-              className="rounded-2xl border border-school-navy/10 bg-white p-6 sm:p-8"
+              className="rounded-2xl border border-school-navy/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
             >
-              {/* Group Header */}
               <div className="flex items-start justify-between gap-4">
                 <h3 className="font-serif text-lg font-bold text-school-navy">{group.name}</h3>
                 <button
@@ -153,15 +213,12 @@ export function CoursesOfferedManager() {
                 </button>
               </div>
 
-              {/* Subject chips */}
+              {/* Subject Badges */}
               <div className="mt-4 flex flex-wrap gap-2">
-                {group.subjects.length === 0 && (
-                  <p className="text-xs text-school-muted">No subjects yet. Add one below.</p>
-                )}
                 {group.subjects.map((subject) => (
                   <span
                     key={subject}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-school-navy/15 bg-school-cream px-3 py-1 text-xs font-semibold text-school-navy"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-school-navy/10 bg-school-cream-alt px-3 py-1 text-xs font-medium text-school-navy"
                   >
                     {subject}
                     <button
@@ -178,15 +235,12 @@ export function CoursesOfferedManager() {
               {/* Add Subject Input */}
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="flex-1">
-                  <label htmlFor={inputId} className="sr-only">
-                    New subject for {group.name}
-                  </label>
                   <input
-                    id={inputId}
                     type="text"
                     value={subjectInputs[group.id] ?? ''}
                     onChange={(e) => {
-                      setSubjectInputs((inp) => ({ ...inp, [group.id]: e.target.value }));
+                      const val = e.target.value;
+                      setSubjectInputs((prev) => ({ ...prev, [group.id]: val }));
                       setSubjectErrors((err) => ({ ...err, [group.id]: '' }));
                     }}
                     onKeyDown={(e) => {
@@ -290,4 +344,3 @@ export function CoursesOfferedManager() {
     </div>
   );
 }
-

@@ -24,7 +24,8 @@ class CloudinaryNotConfiguredError(CloudinaryStorageError):
 class CloudinaryAsset:
     public_id: str
     secure_url: str
-    format: str
+    # Cloudinary omits "format" for raw uploads (PDFs); callers fall back to the detected format.
+    format: str | None
     width: int | None
     height: int | None
 
@@ -33,6 +34,11 @@ class ImageStorage(Protocol):
     async def upload(self, data: bytes, filename: str) -> CloudinaryAsset: ...
 
     async def delete(self, public_id: str) -> None: ...
+
+
+# Cloudinary resource types. Images use "image"; PDFs and videos are stored
+# as "raw" and "video" respectively so Cloudinary serves them correctly.
+ALLOWED_RESOURCE_TYPES = frozenset({"image", "raw", "video"})
 
 
 class CloudinaryStorage:
@@ -58,17 +64,28 @@ class CloudinaryStorage:
             secure=True,
         )
 
-    async def upload(self, data: bytes, filename: str) -> CloudinaryAsset:
+    async def upload(
+        self,
+        data: bytes,
+        filename: str,
+        resource_type: str = "image",
+    ) -> CloudinaryAsset:
+        if resource_type not in ALLOWED_RESOURCE_TYPES:
+            raise CloudinaryStorageError("Unsupported Cloudinary resource type")
         self._configure()
+        options: dict[str, Any] = {
+            "resource_type": resource_type,
+            "use_filename": False,
+            "unique_filename": True,
+            "overwrite": False,
+        }
+        if resource_type != "raw":
+            options["filename_override"] = filename
         try:
             response = await run_in_threadpool(
                 uploader.upload,
                 BytesIO(data),
-                resource_type="image",
-                filename_override=filename,
-                use_filename=False,
-                unique_filename=True,
-                overwrite=False,
+                **options,
             )
             return _asset_from_response(response)
         except CloudinaryStorageError:
@@ -77,13 +94,15 @@ class CloudinaryStorage:
             logger.exception("Cloudinary image upload failed")
             raise CloudinaryStorageError("Cloudinary image upload failed") from exc
 
-    async def delete(self, public_id: str) -> None:
+    async def delete(self, public_id: str, resource_type: str = "image") -> None:
+        if resource_type not in ALLOWED_RESOURCE_TYPES:
+            raise CloudinaryStorageError("Unsupported Cloudinary resource type")
         self._configure()
         try:
             response: Any = await run_in_threadpool(
                 uploader.destroy,
                 public_id,
-                resource_type="image",
+                resource_type=resource_type,
                 invalidate=True,
             )
         except Exception as exc:
@@ -106,8 +125,6 @@ def _asset_from_response(response: Any) -> CloudinaryAsset:
         or not public_id
         or not isinstance(secure_url, str)
         or not secure_url.startswith("https://")
-        or not isinstance(file_format, str)
-        or not file_format
     ):
         raise CloudinaryStorageError("Cloudinary returned incomplete image metadata")
 
@@ -121,7 +138,7 @@ def _asset_from_response(response: Any) -> CloudinaryAsset:
     return CloudinaryAsset(
         public_id=public_id,
         secure_url=secure_url,
-        format=file_format.lower(),
+        format=file_format.lower() if isinstance(file_format, str) and file_format else None,
         width=width,
         height=height,
     )

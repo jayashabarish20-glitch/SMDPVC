@@ -11,6 +11,7 @@ from app.models.content import (
     Topper,
     WebsiteSetting,
 )
+from app.models.content_record import ContentRecord, ContentRecordMedia
 from app.models.media import CloudinaryCleanup, Media, PhotoConfiguration
 
 __all__ = [
@@ -20,6 +21,8 @@ __all__ = [
     "Base",
     "CloudinaryCleanup",
     "ContentItem",
+    "ContentRecord",
+    "ContentRecordMedia",
     "GalleryCollection",
     "GalleryImage",
     "LeadershipProfile",

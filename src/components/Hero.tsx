@@ -1,10 +1,7 @@
 /// <reference types="vite/client" />
 import { useEffect, useMemo, useState, type PointerEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import schoolIntroImage3 from "../../assests/images/School intro image3.jpeg";
-import schoolIntroIma2e1 from "../../assests/images/School intro ima2e1.jpeg";
-import schoolIntroImage1 from "../../assests/images/School intro image1.jpeg";
-import { campusImages, heroSlides } from "../data";
+import { heroSlides } from "../data";
 import type { SchoolPageConfig } from "../schoolPageData";
 import { Icon, scrollToSection } from "./Icon";
 import { usePublicPhotos } from "../hooks/usePublicPhotos";
@@ -12,19 +9,17 @@ import { usePublicPhotos } from "../hooks/usePublicPhotos";
 type HeroProps = {
   pageHero?: SchoolPageConfig["hero"];
   pageTitle?: string;
+  /** Backend config_key for this hero's carousel. Defaults to the home hero. */
+  heroPhotoKey?: string;
 };
+
+const HOME_HERO_KEY = "campusImages.hero";
 
 type GalleryImageProps = {
   src: string;
   alt: string;
   className: string;
 };
-
-const homepageHeroImages = [
-  schoolIntroImage3,
-  schoolIntroIma2e1,
-  schoolIntroImage1,
-];
 
 function GalleryImage({ src, alt, className }: GalleryImageProps) {
   if (src) {
@@ -52,28 +47,36 @@ function GalleryImage({ src, alt, className }: GalleryImageProps) {
   );
 }
 
-export function Hero({ pageHero, pageTitle }: HeroProps) {
+export function Hero({ pageHero, pageTitle, heroPhotoKey = HOME_HERO_KEY }: HeroProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const shouldReduceMotion = useReducedMotion();
   const [galleryTilt, setGalleryTilt] = useState({ x: 0, y: 0 });
   const { photos: publicPhotos } = usePublicPhotos();
   const slides = pageHero?.slides ?? heroSlides;
 
+  // Backend content always wins. If the backend returns no active images,
+  // the image array is empty (no static fallbacks).
+  const backendUrls = (key: string) =>
+    publicPhotos
+      .filter((photo) => photo.config_key === key)
+      .map((photo) => photo.media?.imageUrl || photo.media?.image_url)
+      .filter((image): image is string => Boolean(image));
+  const firstBackendUrl = (key: string) => backendUrls(key)[0];
+
   const images = useMemo(
     () => {
-      const savedHeroImages = publicPhotos
-        .filter((photo) => photo.config_key === "campusImages.hero")
-        .map((photo) => photo.media?.image_url)
-        .filter((image): image is string => Boolean(image));
-      const imageArray: string[] =
-        pageHero?.images ??
-        (savedHeroImages.length > 0 ? savedHeroImages : homepageHeroImages);
-      return imageArray.filter(
+      const savedHeroImages = backendUrls(heroPhotoKey);
+      return savedHeroImages.filter(
         (image): image is string => Boolean(image),
       );
     },
-    [pageHero?.images, publicPhotos],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [publicPhotos, heroPhotoKey],
   );
+
+  const sportsImage = firstBackendUrl("campusImages.sports") || "";
+  const principalImage = firstBackendUrl("campusImages.principal") || "";
+  const classroomImage = images[1] ?? images[0] ?? "";
 
   useEffect(() => {
     if (slides.length < 2) return;
@@ -116,7 +119,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
       aria-roledescription="carousel"
     >
       {/* Background Slides with Apple-grade cinematic cross-fade */}
-      {images.map((image: string, index: number) => (
+      {images.length > 0 && images.map((image: string, index: number) => (
         <div
           key={`${image}-${index}`}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -183,7 +186,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
               >
                 <GalleryImage
                   className="h-full w-full rounded-xl object-cover"
-                  src={campusImages.sports}
+                  src={sportsImage}
                   alt="Students taking part in school sports"
                 />
                 <span className="absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest text-school-navy">
@@ -211,7 +214,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
               >
                 <GalleryImage
                   className="h-full w-full rounded-xl object-cover object-top"
-                  src={campusImages.principal}
+                  src={principalImage}
                   alt="School leadership"
                 />
                 <span className="absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-bold uppercase tracking-widest text-school-navy">
@@ -239,7 +242,7 @@ export function Hero({ pageHero, pageTitle }: HeroProps) {
               >
                 <GalleryImage
                   className="h-full w-full rounded-2xl object-cover"
-                  src={campusImages.hero[1]}
+                  src={classroomImage}
                   alt="Students learning together in modern classroom"
                 />
                 <span className="absolute bottom-2 left-0 right-0 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-school-navy">

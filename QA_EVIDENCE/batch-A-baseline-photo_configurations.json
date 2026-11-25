@@ -1,0 +1,248 @@
+[
+ {
+  "id": "9febd9369bc142808f4438d31666dd01",
+  "config_key": "academic-calendar.higher-secondary",
+  "media_id": "021db66d11b040f1892aa1df255db996",
+  "display_order": 0
+ },
+ {
+  "id": "f11dca829f7549978a94027bfbb359bf",
+  "config_key": "academic-calendar.nursery",
+  "media_id": "de8716f3443d4c51abd87e41a9976a8a",
+  "display_order": 0
+ },
+ {
+  "id": "6d99087bea8f41838c7abed0d19c8c68",
+  "config_key": "academic-calendar.primary",
+  "media_id": "1d9e7fb25b9b48e993f842b503ec09df",
+  "display_order": 0
+ },
+ {
+  "id": "199a50cc62b04dba9d938f3afa3b61de",
+  "config_key": "campusImages.hero",
+  "media_id": "adc0e60c45dd4e9b8526965d7022b4b1",
+  "display_order": 0
+ },
+ {
+  "id": "3aa8420efc4149a58f0c9c9d368a0efe",
+  "config_key": "campusImages.hero",
+  "media_id": "432ed1e459dc4e70b9c13fcaa067d5b2",
+  "display_order": 1
+ },
+ {
+  "id": "10840cb10be143159de64a8ed846300a",
+  "config_key": "campusImages.hero",
+  "media_id": "c085d75c8de94f37b85e0b4d311eee53",
+  "display_order": 2
+ },
+ {
+  "id": "9d012f3a4a664ea8bfdaf2f343ced69d",
+  "config_key": "campusImages.hero",
+  "media_id": "2450da1e93854bc8ac111de584a9cfe2",
+  "display_order": 3
+ },
+ {
+  "id": "1c0c95e41d094d159176363a3c4b6ffa",
+  "config_key": "campusImages.principal",
+  "media_id": "a8db8f7077e747e39ca3608e76265293",
+  "display_order": 0
+ },
+ {
+  "id": "e067c0250b46431fabd124c7b3c7c55d",
+  "config_key": "campusImages.sports",
+  "media_id": "93a988a3d56c4f8892d2c2284833df19",
+  "display_order": 0
+ },
+ {
+  "id": "0c1c1172228949e89ec7d790693e0d78",
+  "config_key": "higher-secondary.classes.gallery",
+  "media_id": "20d0da6275784d5888a886318a98a867",
+  "display_order": 0
+ },
+ {
+  "id": "dcfc56dfd2da499c9e931a295d21eaed",
+  "config_key": "higher-secondary.classes.gallery",
+  "media_id": "f0114e342a634969ba665e5c8c5ff959",
+  "display_order": 1
+ },
+ {
+  "id": "7499db4eb0134badb827f271feb9f624",
+  "config_key": "higher-secondary.extracurricular.gallery",
+  "media_id": "93d9b775dace4a7098ae6a7aba3a3374",
+  "display_order": 0
+ },
+ {
+  "id": "e645919f9ba04bf8b7c0de01f8812702",
+  "config_key": "higher-secondary.extracurricular.gallery",
+  "media_id": "1454dcc3cb94484ebe101baaf6d1f65b",
+  "display_order": 1
+ },
+ {
+  "id": "d02ed9001fef42a192cf5fda5b94bc67",
+  "config_key": "higher-secondary.learning.gallery",
+  "media_id": "44377148cbf94b3db3afe66313ef2e1a",
+  "display_order": 0
+ },
+ {
+  "id": "13572c3f5f3f4c8bbd97a866c69495b4",
+  "config_key": "higher-secondary.learning.gallery",
+  "media_id": "d0ab0b2d170d46eb8024982a5f98b598",
+  "display_order": 1
+ },
+ {
+  "id": "ce6ef06d9d4449139298901b903efd81",
+  "config_key": "nursery.classes.gallery",
+  "media_id": "044277a2cdc74c16a79072301b172168",
+  "display_order": 0
+ },
+ {
+  "id": "7202f85db9ca47f29d17208bc9d6f46a",
+  "config_key": "nursery.classes.gallery",
+  "media_id": "57fb00e10b54403cb5e2af9d360696d8",
+  "display_order": 1
+ },
+ {
+  "id": "d83d1a787f74417fae7fc9d60204f93d",
+  "config_key": "nursery.extracurricular.gallery",
+  "media_id": "8df70db2724344b9a5fee2df507eaa2d",
+  "display_order": 0
+ },
+ {
+  "id": "b0df6030d65c4b4f872882713fcfa2ca",
+  "config_key": "nursery.learning.gallery",
+  "media_id": "02133e6ad237419abb3b2cef64705ac9",
+  "display_order": 0
+ },
+ {
+  "id": "6e1f2199b27d40fbb235af13d195f93e",
+  "config_key": "nursery.learning.gallery",
+  "media_id": "832d0f9589c54277ad40b84ce7db33c2",
+  "display_order": 1
+ },
+ {
+  "id": "3168e4cc83064bed94e3bc8c427c7bc3",
+  "config_key": "primary.classes.gallery",
+  "media_id": "c01d25562e0442139395b4e01e490fd8",
+  "display_order": 0
+ },
+ {
+  "id": "64b60f955ae04cc4917130634d03f7e1",
+  "config_key": "primary.classes.gallery",
+  "media_id": "7de77aa81f464033b6b7b9cf57f5100f",
+  "display_order": 1
+ },
+ {
+  "id": "33965dea13694c1298870cd38ad9278c",
+  "config_key": "primary.extracurricular.gallery",
+  "media_id": "4e2cee7d186d4f23b5ec73fd3534a0f0",
+  "display_order": 0
+ },
+ {
+  "id": "51fd8a8a7cf34d0db339db8cdf27191f",
+  "config_key": "primary.extracurricular.gallery",
+  "media_id": "017c12800a754754bfb26c93ce291143",
+  "display_order": 1
+ },
+ {
+  "id": "d80bedc93af245fa8cc4e2d2bab8f136",
+  "config_key": "primary.learning.gallery",
+  "media_id": "aaa28f7aff34414da564dea0d881bd09",
+  "display_order": 0
+ },
+ {
+  "id": "2ed6c18f91e648a0b841afc0e68d7ae6",
+  "config_key": "primary.learning.gallery",
+  "media_id": "39371610bd0744549e7ecd444877a431",
+  "display_order": 1
+ },
+ {
+  "id": "06a10dd0a7694ee08f4e39f5c28a8071",
+  "config_key": "principal.higherSecondary",
+  "media_id": "fbbfacaa34c1415182fd1d4e133934a9",
+  "display_order": 0
+ },
+ {
+  "id": "1313496c2aa84c61a9bb46026a0f5747",
+  "config_key": "principal.nursery",
+  "media_id": "d29338f7b2b24442afa2b3755618d0f6",
+  "display_order": 0
+ },
+ {
+  "id": "a7c8f51fbfd34e01a4e62d672bc2eb6c",
+  "config_key": "principal.primary",
+  "media_id": "c2ae3ee0c40b41329ebf01603a68fd26",
+  "display_order": 0
+ },
+ {
+  "id": "028ff196ae7847d3b9c1dedb19b92bc7",
+  "config_key": "schoolPageHeroes.higherSecondary",
+  "media_id": "2ff82fa1395f454aab049c7d63b0f4c3",
+  "display_order": 0
+ },
+ {
+  "id": "4a06a4ec911645a1b22ba31b263feaa8",
+  "config_key": "schoolPageHeroes.higherSecondary",
+  "media_id": "e75168cd0617487cb41e1e0356c9374f",
+  "display_order": 1
+ },
+ {
+  "id": "7290303bf6cd4c238c10d2db2f62ee49",
+  "config_key": "schoolPageHeroes.higherSecondary",
+  "media_id": "ca1f459629a748ba8d2f2fd7548c19d9",
+  "display_order": 2
+ },
+ {
+  "id": "82c23b46659847b382ff3e78d332b0ff",
+  "config_key": "schoolPageHeroes.nursery",
+  "media_id": "18a939c0ad664042a60bc861409d9252",
+  "display_order": 0
+ },
+ {
+  "id": "1cd12d79c02d4131bcb28cfc513eb64a",
+  "config_key": "schoolPageHeroes.nursery",
+  "media_id": "7203e2b3404b4079aa1c85005487afb3",
+  "display_order": 1
+ },
+ {
+  "id": "e23b6abe9cf54f26bca17c09c70c6ede",
+  "config_key": "schoolPageHeroes.nursery",
+  "media_id": "1897961580e34eb2b93b0304587b79b6",
+  "display_order": 2
+ },
+ {
+  "id": "42f4aaeee7e744d6b9810b8110bd78b5",
+  "config_key": "schoolPageHeroes.primary",
+  "media_id": "ca15782e65464f198e9cb7928f2ae3b0",
+  "display_order": 0
+ },
+ {
+  "id": "bf2bbf9dd2b44cef8a2b12fe861a2025",
+  "config_key": "schoolPageHeroes.primary",
+  "media_id": "4e0648ba9d77475f9c1653cba56b7456",
+  "display_order": 1
+ },
+ {
+  "id": "0840d85d3f99413cba4b89886ca15cb6",
+  "config_key": "schoolPageHeroes.primary",
+  "media_id": "68a5b6027cb6491ba7d8a80dfed9d2b0",
+  "display_order": 2
+ },
+ {
+  "id": "4a85932aa7d14f528dbed4f6917beed7",
+  "config_key": "schoolSectionPhotos.higherSecondary",
+  "media_id": "de103f93156546ee9d4e68aab99ac6e9",
+  "display_order": 0
+ },
+ {
+  "id": "ecdd7e47e0d743308a588af3c8e63127",
+  "config_key": "schoolSectionPhotos.nursery",
+  "media_id": "3a591a6c7342445594c57b8f0bbb8fdf",
+  "display_order": 0
+ },
+ {
+  "id": "628a18c73dd14fddbec4003909b08e5c",
+  "config_key": "schoolSectionPhotos.primary",
+  "media_id": "782186e4561946e897566f1e1616dd6c",
+  "display_order": 0
+ }
+]

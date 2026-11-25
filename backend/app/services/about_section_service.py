@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from app.models.content import AboutSection
 from app.models.media import Media
@@ -28,18 +29,22 @@ class AboutSectionPersistenceError(AboutSectionError):
 async def get_about_section(
     session: AsyncSession, section_key: str
 ) -> AboutSection | None:
-    """Get an about section by key."""
+    """Get an about section by key with media loaded."""
     result = await session.execute(
         select(AboutSection)
+        .options(joinedload(AboutSection.media))
         .where(AboutSection.section_key == section_key)
     )
-    return result.scalar_one_or_none()
+    return result.unique().scalar_one_or_none()
 
 
 async def list_about_sections(session: AsyncSession) -> list[AboutSection]:
-    """List all about sections."""
-    result = await session.execute(select(AboutSection))
-    return list(result.scalars().all())
+    """List all about sections with media loaded."""
+    result = await session.execute(
+        select(AboutSection)
+        .options(joinedload(AboutSection.media))
+    )
+    return list(result.unique().scalars().all())
 
 
 async def create_or_update_about_section(
@@ -55,8 +60,6 @@ async def create_or_update_about_section(
         if section:
             section.description = description
             section.media_id = media_id
-            await session.flush()
-            await session.refresh(section, ["media"])
         else:
             section = AboutSection(
                 section_key=section_key,
@@ -64,10 +67,9 @@ async def create_or_update_about_section(
                 media_id=media_id,
             )
             session.add(section)
-            await session.flush()
-            await session.refresh(section, ["media"])
 
-        return section
+        await session.commit()
+        return await get_about_section(session, section_key)
     except Exception as exc:
         await session.rollback()
         logger.error(f"Failed to create/update about section: {exc}")
@@ -88,7 +90,7 @@ async def delete_about_section(
             )
 
         await session.delete(section)
-        await session.flush()
+        await session.commit()
         return True
     except Exception as exc:
         await session.rollback()

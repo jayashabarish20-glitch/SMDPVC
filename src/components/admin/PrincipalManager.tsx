@@ -1,9 +1,22 @@
-import { useState, useRef } from 'react';
-import { usePhotoConfig } from '../../hooks/usePhotoConfig';
-import type { PhotoMetadata } from '../../data/photoService';
-import { handleFileInput, type UploadedImage, type ImageUploadError } from '../../utils/imageUpload';
+import { useState, useRef, useEffect } from 'react';
+import {
+  fetchAdminKeyedDescription,
+  fetchPublicKeyedDescription,
+  saveKeyedDescription,
+  listAdminKey,
+  listPublicKey,
+  replaceSinglePhoto,
+  clearSinglePhoto,
+} from '../../services/photoKeyApi';
+import { principalRecordKey } from '../../hooks/usePublicPrincipal';
 import { Icon } from '../Icon';
 import { SectionHeader } from './SectionHeader';
+
+export interface PrincipalData {
+  name: string;
+  message: string;
+  photoUrl: string | null;
+}
 
 interface PrincipalManagerProps {
   badge: string;
@@ -15,114 +28,180 @@ interface PrincipalManagerProps {
 export function PrincipalManager({
   badge,
   title,
-  description,
+  description: headerDescription,
   sectionKey,
 }: PrincipalManagerProps) {
-  const { config, updatePrimaryPrincipal, updateNurseryPrincipal, updateHigherSecondaryPrincipal } = usePhotoConfig();
+  const configKey = `principal.${sectionKey}`;
+  const recordKey = principalRecordKey(sectionKey);
 
-  const principal =
-    sectionKey === 'primary'
-      ? config.primaryPrincipal
-      : sectionKey === 'nursery'
-        ? config.nurseryPrincipal
-        : config.higherSecondaryPrincipal;
-
-  const updatePrincipal =
-    sectionKey === 'primary'
-      ? updatePrimaryPrincipal
-      : sectionKey === 'nursery'
-        ? updateNurseryPrincipal
-        : updateHigherSecondaryPrincipal;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Photo state
-  const [photo, setPhoto] = useState<PhotoMetadata | null>(principal?.photo ?? null);
-  const [photoChanged, setPhotoChanged] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [currentConfigId, setCurrentConfigId] = useState<string | null>(null);
+  const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [removePhotoPending, setRemovePhotoPending] = useState(false);
 
-  // Text fields state
-  const [name, setName] = useState<string>(principal?.name ?? '');
-  const [message, setMessage] = useState<string>(principal?.message ?? '');
+  // Text state
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
   const [textChanged, setTextChanged] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUploadError(null);
-    setIsUploading(true);
-
-    try {
-      const result = await handleFileInput(e);
-      if ('type' in result && (result as ImageUploadError).type) {
-        setUploadError((result as ImageUploadError).message);
-        return;
-      }
-
-      const uploaded = result as UploadedImage;
-      const filename = e.target.files?.[0]?.name || 'photo.jpg';
-
-      setPhoto({
-        id: `${sectionKey}-principal-${Date.now()}`,
-        filename,
-        alt: `${title} Principal`,
-        updatedAt: new Date().toISOString(),
-        dataUrl: uploaded.dataUrl,
-      });
-      setPhotoChanged(true);
-      setSuccessMessage(null);
-    } catch (error) {
-      console.error('Failed to upload photo:', error);
-      setUploadError(
-        error instanceof Error ? error.message : 'Failed to upload image. Please try again.'
-      );
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+  const applyPhotos = (photos: Awaited<ReturnType<typeof listAdminKey>>) => {
+    if (photos.length > 0) {
+      const p = photos[photos.length - 1];
+      setCurrentConfigId(p.configId);
+      setCurrentPhotoUrl(p.imageUrl);
+    } else {
+      setCurrentConfigId(null);
+      setCurrentPhotoUrl(null);
     }
   };
 
-  const handleDelete = () => {
+  /** Re-sync only the photo with the server (keeps unsaved text edits). */
+  const refreshPhoto = async () => {
+    try {
+      applyPhotos(await listAdminKey(configKey));
+      setPendingFile(null);
+      setPreviewUrl(null);
+      setRemovePhotoPending(false);
+    } catch {
+      // Leave current state; next save re-reads server state anyway.
+    }
+  };
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [photos, desc] = await Promise.all([
+        listAdminKey(configKey).catch(() => listPublicKey(configKey)),
+        fetchAdminKeyedDescription(recordKey).catch(() => fetchPublicKeyedDescription(recordKey)),
+      ]);
+
+      applyPhotos(photos);
+
+      // Payload JSON holds name and message
+      try {
+        const parsed = JSON.parse(desc);
+        setName(parsed.name || '');
+        setMessage(parsed.message || '');
+      } catch {
+        setName(desc || '');
+        setMessage('');
+      }
+
+      setPendingFile(null);
+      setPreviewUrl(null);
+      setRemovePhotoPending(false);
+      setTextChanged(false);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load principal details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadData();
+  }, [sectionKey]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (!file) return;
+
+    setError(null);
+    setPendingFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setRemovePhotoPending(false);
+    setDeleteConfirm(false);
+  };
+
+  const handleRemovePhoto = () => {
     if (!deleteConfirm) {
       setDeleteConfirm(true);
       return;
     }
-    updatePrincipal(null);
-    setPhoto(null);
-    setName('');
-    setMessage('');
-    setPhotoChanged(false);
-    setTextChanged(false);
+    setPendingFile(null);
+    setPreviewUrl(null);
+    setRemovePhotoPending(true);
     setDeleteConfirm(false);
-    setSuccessMessage(null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name.trim()) {
-      setUploadError('Please enter the Principal\'s name.');
-      return;
-    }
-    if (!photo) {
-      setUploadError('Please upload a photograph.');
+      setError("Please enter the Principal's name.");
       return;
     }
 
-    setUploadError(null);
-    updatePrincipal({ photo, name: name.trim(), message });
-    setPhotoChanged(false);
-    setTextChanged(false);
-    setSuccessMessage('Principal details saved successfully.');
-    setDeleteConfirm(false);
+    setIsSaving(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    let photoChanged = false;
+    try {
+      // 1. Photo: replace/clear based on fresh server state (never cached config ids).
+      //    The old photo stays linked until the new one is fully assigned.
+      let warnings: string[] = [];
+      if (pendingFile) {
+        ({ warnings } = await replaceSinglePhoto(pendingFile, configKey, `${title} photo`));
+        photoChanged = true;
+      } else if (removePhotoPending && currentConfigId) {
+        ({ warnings } = await clearSinglePhoto(configKey));
+        photoChanged = true;
+      }
+      warnings.forEach((w) => console.warn('Principal photo:', w));
+
+      // 2. Save text in SQLite content_records
+      const payloadString = JSON.stringify({ name: name.trim(), message: message.trim() });
+      await saveKeyedDescription(recordKey, payloadString);
+
+      setSuccessMessage(
+        warnings.length
+          ? `Principal details saved. Note: ${warnings.join(' ')}`
+          : 'Principal details saved to database & Cloudinary.',
+      );
+      setTimeout(() => setSuccessMessage(null), 4000);
+      await loadData();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to save principal details';
+      if (photoChanged) {
+        // Photo step succeeded; sync photo state with the server but keep the typed text.
+        await refreshPhoto();
+        setError(`Photo saved, but principal details could not be saved: ${msg}`);
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
+
+  const photoToShow = previewUrl || (removePhotoPending ? null : currentPhotoUrl);
 
   return (
     <div>
-      <SectionHeader
-        badge={badge}
-        title={title}
-        description={description}
-      />
+      <SectionHeader badge={badge} title={title} description={headerDescription} />
+
+      {error && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+          {successMessage}
+        </div>
+      )}
 
       <div className="rounded-2xl border border-school-navy/10 bg-white p-6 sm:p-8 space-y-6">
         {/* Photo Section */}
@@ -131,11 +210,11 @@ export function PrincipalManager({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
+            disabled={isSaving || loading}
             className="inline-flex items-center gap-2 rounded-lg bg-school-gold px-4 py-2.5 text-sm font-semibold text-school-navy transition-colors hover:bg-school-gold-hover disabled:opacity-50"
           >
-            <Icon name={photo ? 'upload' : 'image'} className="h-4 w-4" />
-            {isUploading ? 'Uploading…' : photo ? 'Replace Photo' : 'Upload Photo'}
+            <Icon name={photoToShow ? 'upload' : 'image'} className="h-4 w-4" />
+            {isSaving ? 'Uploading…' : photoToShow ? 'Replace Photo' : 'Upload Photo'}
           </button>
         </div>
 
@@ -144,47 +223,41 @@ export function PrincipalManager({
           type="file"
           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
-          disabled={isUploading}
+          disabled={isSaving || loading}
           className="hidden"
           aria-label="Upload principal photo"
         />
 
-        {uploadError && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {uploadError}
-          </p>
-        )}
-
-        {successMessage && (
-          <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-            {successMessage}
-          </p>
-        )}
-
-        {photo ? (
+        {photoToShow ? (
           <div className="rounded-2xl border border-school-navy/10 overflow-hidden bg-school-cream">
             <div className="aspect-[4/3] flex items-center justify-center overflow-hidden bg-gradient-to-br from-school-navy via-school-navy-light to-school-deep">
-              {photo.dataUrl ? (
-                <img
-                  src={photo.dataUrl}
-                  alt={photo.alt}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <Icon name="image" className="h-12 w-12 text-white/30" />
-              )}
+              <img src={photoToShow} alt={title} className="h-full w-full object-cover" />
             </div>
+
             <div className="p-4 space-y-3">
-              <div>
-                <p className="text-xs font-semibold text-school-muted/70">Filename</p>
-                <p className="truncate text-sm font-semibold text-school-navy">{photo.filename}</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-school-muted/70">Uploaded</p>
-                <p className="text-xs text-school-muted">
-                  {new Date(photo.updatedAt).toLocaleDateString()}
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                disabled={isSaving}
+                className={`w-full rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
+                  deleteConfirm
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'border border-red-200 text-red-700 hover:bg-red-50'
+                }`}
+              >
+                <Icon name={deleteConfirm ? 'x' : 'trash'} className="inline h-4 w-4 mr-2" />
+                {deleteConfirm ? 'Confirm Remove' : 'Remove Photo'}
+              </button>
+
+              {deleteConfirm && (
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirm(false)}
+                  className="w-full rounded-lg border border-school-navy/15 px-3 py-2.5 text-sm font-semibold text-school-navy hover:bg-school-cream transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         ) : (
@@ -193,18 +266,16 @@ export function PrincipalManager({
             onClick={() => fileInputRef.current?.click()}
           >
             <Icon name="image" className="mx-auto mb-3 h-10 w-10 text-school-gold/40" />
-            <p className="text-sm text-school-muted">No photo yet. Click to add one.</p>
+            <p className="text-sm text-school-muted">No photo yet. Click to upload to Cloudinary.</p>
           </div>
         )}
-
-        <p className="text-[11px] text-school-muted">JPG, PNG, WebP · Max 5 MB</p>
+        <p className="text-[11px] text-school-muted">Cloudinary upload · JPG, PNG, WebP · Max 5 MB</p>
       </div>
 
       {/* Name and Message Section */}
       <div className="mt-6 rounded-2xl border border-school-navy/10 bg-white p-6 sm:p-8 space-y-4">
         <h3 className="font-serif text-xl font-bold text-school-navy">Principal Details</h3>
 
-        {/* Name Field */}
         <div>
           <label htmlFor="principal-name" className="block text-sm font-semibold text-school-navy mb-2">
             Principal's Name
@@ -222,7 +293,6 @@ export function PrincipalManager({
           />
         </div>
 
-        {/* Message Field */}
         <div>
           <label htmlFor="principal-message" className="block text-sm font-semibold text-school-navy mb-2">
             Message to Students
@@ -240,57 +310,14 @@ export function PrincipalManager({
           />
         </div>
 
-        {/* Preview */}
-        <div className="rounded-lg border border-school-navy/10 bg-school-cream/60 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-school-muted">Public preview</p>
-          {name ? (
-            <div className="mt-2">
-              <p className="text-sm font-bold text-school-navy">{name}</p>
-              {message && <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-school-navy">{message}</p>}
-            </div>
-          ) : (
-            <p className="mt-2 text-sm italic text-school-muted">No principal details yet.</p>
-          )}
-        </div>
-
-        {/* Save Button */}
         <button
           type="button"
           onClick={handleSave}
-          disabled={!photoChanged && !textChanged}
+          disabled={isSaving || (!textChanged && !pendingFile && !removePhotoPending)}
           className="w-full rounded-lg bg-school-navy px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-school-navy-light disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Save Principal
+          {isSaving ? 'Saving to Database & Cloudinary…' : `Save ${title}`}
         </button>
-
-        {/* Delete Button */}
-        {principal && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className={`w-full rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
-              deleteConfirm
-                ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'border border-red-200 text-red-700 hover:bg-red-50'
-            }`}
-          >
-            <Icon
-              name={deleteConfirm ? 'x' : 'trash'}
-              className="inline h-4 w-4 mr-2"
-            />
-            {deleteConfirm ? 'Confirm Delete' : 'Remove Principal'}
-          </button>
-        )}
-
-        {deleteConfirm && (
-          <button
-            type="button"
-            onClick={() => setDeleteConfirm(false)}
-            className="w-full rounded-lg border border-school-navy/15 px-3 py-2.5 text-sm font-semibold text-school-navy hover:bg-school-cream transition-colors"
-          >
-            Cancel
-          </button>
-        )}
       </div>
     </div>
   );

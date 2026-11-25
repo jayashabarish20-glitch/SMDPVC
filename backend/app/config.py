@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field, field_validator
+from pydantic import AliasChoices, Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.exc import ArgumentError
 from sqlalchemy.engine import make_url
@@ -13,13 +13,10 @@ def _default_database_url() -> str:
 
 
 def _get_env_file() -> Path:
-    """Get path to .env file (in project root, not backend directory)."""
+    """Get path to .env file from backend directory."""
     backend_dir = Path(__file__).resolve().parents[1]
-    project_root = backend_dir.parent
-    env_file = project_root / ".env"
-    if env_file.exists():
-        return env_file
-    return Path(".env")
+    env_file = backend_dir / ".env"
+    return env_file
 
 
 class Settings(BaseSettings):
@@ -74,11 +71,81 @@ class Settings(BaseSettings):
         validation_alias="ADMIN_PASSWORD",
     )
 
+    # --- Public AI chatbot (Gemini). The key is a SecretStr so it never appears in repr/logs.
+    gemini_api_key: SecretStr | None = Field(
+        default=None,
+        validation_alias="GEMINI_API_KEY",
+    )
+    # Model choice measured 2026-11-25 (see chatbot performance report): the lite models with
+    # minimal thinking answer in ~1-2s; the larger flash models were overloaded/quota-limited.
+    gemini_model: str = Field(
+        default="gemini-3.5-flash-lite",
+        min_length=1,
+        validation_alias="GEMINI_MODEL",
+    )
+    # Comma-separated, tried in order. Verified on this API key 2026-11-25: gemini-3.5-flash-lite
+    # (primary) and gemini-3.5-flash generated text; gemini-3.1-flash-lite worked earlier the same
+    # day but was returning 503 "high demand". GEMINI_FALLBACK_MODEL (singular) is still accepted.
+    gemini_fallback_models: str = Field(
+        default="gemini-3.5-flash,gemini-3.1-flash-lite",
+        validation_alias=AliasChoices("GEMINI_FALLBACK_MODELS", "GEMINI_FALLBACK_MODEL"),
+    )
+    # "minimal" | "low" | "medium" | "high" | "default" (model default). Models that reject the
+    # level are retried automatically without it.
+    gemini_thinking_level: str = Field(
+        default="minimal",
+        pattern=r"^(default|minimal|low|medium|high)$",
+        validation_alias="GEMINI_THINKING_LEVEL",
+    )
+    # Max wait for one chunk (first token or between chunks) before giving up on a model.
+    gemini_timeout_seconds: float = Field(
+        default=20.0,
+        gt=0,
+        le=120,
+        validation_alias="GEMINI_TIMEOUT_SECONDS",
+    )
+    # If the primary model has not produced its first token after this long, the fallback model
+    # is started in parallel and whichever streams first is used (hedged request).
+    gemini_hedge_after_seconds: float = Field(
+        default=4.0,
+        gt=0,
+        le=60,
+        validation_alias="GEMINI_HEDGE_AFTER_SECONDS",
+    )
+    # Public-knowledge cache lifetime. Every request still validates the cache with one cheap
+    # fingerprint query, and content writes in this process invalidate it immediately.
+    chat_knowledge_cache_seconds: float = Field(
+        default=60.0,
+        ge=0,
+        le=3600,
+        validation_alias="CHAT_KNOWLEDGE_CACHE_SECONDS",
+    )
+    chat_rate_limit_per_minute: int = Field(
+        default=10,
+        gt=0,
+        validation_alias="CHAT_RATE_LIMIT_PER_MINUTE",
+    )
+    chat_max_message_chars: int = Field(
+        default=1000,
+        gt=0,
+        le=5000,
+        validation_alias="CHAT_MAX_MESSAGE_CHARS",
+    )
+
     model_config = SettingsConfigDict(
         env_file=_get_env_file(),
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @property
+    def gemini_fallback_model_list(self) -> list[str]:
+        """GEMINI_FALLBACK_MODELS parsed into an ordered, de-duplicated list (primary excluded)."""
+        out: list[str] = []
+        for name in (part.strip() for part in self.gemini_fallback_models.split(",")):
+            if name and name != self.gemini_model and name not in out:
+                out.append(name)
+        return out
 
     @field_validator("secret_key")
     @classmethod

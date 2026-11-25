@@ -15,7 +15,7 @@ export interface LeadershipProfile {
   media_id: string | null;
   media: {
     id: string;
-    image_url: string;
+    imageUrl: string;
     alt_text: string;
     original_filename: string;
   } | null;

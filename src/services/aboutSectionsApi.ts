@@ -4,9 +4,11 @@ const API_BASE = "/api";
 
 export interface MediaInfo {
   id: string;
-  image_url: string;
-  alt_text: string;
-  original_filename: string;
+  image_url?: string;
+  imageUrl?: string;
+  alt_text?: string;
+  altText?: string;
+  original_filename?: string;
 }
 
 export interface AboutSection {

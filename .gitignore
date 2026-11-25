@@ -11,3 +11,9 @@ __pycache__/
 .venv/
 venv/
 backend/data/
+# Local upload folders: new files must not be committed (existing tracked
+# files are left as they are).
+uploads/
+backend/uploads/
+.playwright-mcp/
+test-results/

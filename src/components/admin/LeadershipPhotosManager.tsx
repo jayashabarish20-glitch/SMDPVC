@@ -546,7 +546,7 @@ export function LeadershipPhotosManager() {
                     filename: profile.media.original_filename,
                     alt: profile.media.alt_text,
                     updatedAt: '',
-                    imageUrl: profile.media.image_url,
+                    imageUrl: (profile.media as any).image_url ?? (profile.media as any).imageUrl,
                   }
                 : null;
               const savedText: ProfileFormState = {

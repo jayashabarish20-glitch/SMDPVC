@@ -16,7 +16,7 @@ export function Leadership() {
         category: profile.category || "",
         shortBio: profile.short_bio || "",
         message: profile.message || "",
-        photo: profile.media?.image_url || null,
+        photo: profile.media?.imageUrl || null,
         isActive: profile.is_active,
         displayOrder: profile.display_order,
       }))

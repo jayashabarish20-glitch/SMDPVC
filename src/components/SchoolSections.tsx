@@ -1,26 +1,27 @@
 import { motion, useReducedMotion } from "motion/react";
 import { schoolSectionCards } from "../homepageContent";
 import { Icon } from "./Icon";
-import { usePhotoConfig } from "../hooks/usePhotoConfig";
+import { usePublicPhotos } from "../hooks/usePublicPhotos";
+
+// Backend config_key for each card, keyed by the card's link.
+const CARD_PHOTO_KEYS: Record<string, string> = {
+  "/nursery": "schoolSectionPhotos.nursery",
+  "/primary": "schoolSectionPhotos.primary",
+  "/higher-secondary": "schoolSectionPhotos.higherSecondary",
+};
 
 export function SchoolSections() {
   const shouldReduceMotion = useReducedMotion();
-  const { config } = usePhotoConfig();
+  const { photos: publicPhotos } = usePublicPhotos();
 
   const cards = [...schoolSectionCards]
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((card) => {
-      let image = card.image;
-
-      if (card.href === '/nursery' && config.schoolSectionPhotos.nursery?.imageUrl) {
-        image = config.schoolSectionPhotos.nursery.imageUrl;
-      } else if (card.href === '/primary' && config.schoolSectionPhotos.primary?.imageUrl) {
-        image = config.schoolSectionPhotos.primary.imageUrl;
-      } else if (card.href === '/higher-secondary' && config.schoolSectionPhotos.higherSecondary?.imageUrl) {
-        image = config.schoolSectionPhotos.higherSecondary.imageUrl;
-      }
-
-      return { ...card, image };
+      // Backend content only: show uploaded image if active in backend, else undefined (placeholder)
+      const key = CARD_PHOTO_KEYS[card.href];
+      const photo = key ? publicPhotos.find((p) => p.config_key === key) : undefined;
+      const backendUrl = photo?.media?.imageUrl || photo?.media?.image_url;
+      return { ...card, image: backendUrl || undefined };
     });
 
   return (
