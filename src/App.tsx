@@ -15,6 +15,7 @@ import { SchoolSections } from "./components/SchoolSections";
 import { AdminPanel } from "./pages/AdminPanel";
 import { AdminLogin } from "./pages/AdminLogin";
 import { useAuth } from "./hooks/useAuth";
+import { ChatbotWidget } from "./components/chatbot/ChatbotWidget";
 
 function currentPath() {
   const path = window.location.pathname.replace(/\/+$/, "");
@@ -155,6 +156,7 @@ export function App() {
         </motion.div>
       </AnimatePresence>
       <Footer />
+      <ChatbotWidget />
       <AnimatePresence>
         {showScrollTop && (
           <motion.button

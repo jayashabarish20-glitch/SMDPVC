@@ -29,6 +29,7 @@ from app.routers.health import router as health_router
 from app.routers.media import router as media_router
 from app.routers.admin_content_records import router as admin_content_records_router
 from app.routers.public import router as public_router
+from app.routers.public_chat import router as public_chat_router
 from app.services.admin_bootstrap import bootstrap_admin_user
 
 logger = logging.getLogger(__name__)
@@ -99,6 +100,7 @@ app.include_router(admin_content_records_router, prefix="/api/admin")
 app.include_router(admin_photos_router, prefix="/api/admin")
 app.include_router(media_router, prefix="/api/media")
 app.include_router(public_router, prefix="/api")
+app.include_router(public_chat_router, prefix="/api")
 
 # Temporary: Mount local uploads directory for topper images
 # This will be removed when switching back to Cloudinary
